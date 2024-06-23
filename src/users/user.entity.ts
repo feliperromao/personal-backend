@@ -9,10 +9,13 @@ export class User {
   name: string;
 
   @Field()
+  password: string;
+
+  @Field()
   email: string;
 
   @Field()
-  blocked: string;
+  blocked: boolean;
 
   @Field()
   personal_id: string;

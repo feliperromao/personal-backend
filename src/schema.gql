@@ -5,8 +5,9 @@
 type User {
   id: String!
   name: String!
+  password: String!
   email: String!
-  blocked: String!
+  blocked: Boolean!
   personal_id: String!
 }
 
@@ -17,6 +18,7 @@ type Query {
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
+  login(authCredentialsDto: AuthCredentialsDto!): String!
 }
 
 input CreateUserInput {
@@ -25,4 +27,9 @@ input CreateUserInput {
   password: String!
   personal_id: String!
   blocked: Boolean!
+}
+
+input AuthCredentialsDto {
+  email: String!
+  password: String!
 }

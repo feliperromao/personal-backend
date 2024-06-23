@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './user.model';
-import { User as UserEntity } from './user.entity'
-import { CreateUserInput } from './create-user.input';
+import { CreateUserInput } from './inputs/create-user.input';
 
 @Injectable()
 export class UserRepository {
@@ -22,6 +21,10 @@ export class UserRepository {
       blocked: userCreated.blocked,
       personal_id: userCreated.personal_id,
     }
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return this.userModel.findOne({ email }).exec();
   }
 
   async findAll(): Promise<User[]> {

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
-import { CreateUserInput } from './create-user.input';
+import { CreateUserInput } from './inputs/create-user.input';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -14,15 +15,19 @@ export class UsersService {
     return `user ${id}`;
   }
 
+  async findByEmail(email: string): Promise<User | undefined> {
+    return await this.repository.findByEmail(email);
+  }
+
   async createUser(dto: CreateUserInput): Promise<User> {
     return await this.repository.create({
       ...dto,
-      password: this.encryptPassword(dto.password)
+      password: await this.encryptPassword(dto.password)
     });
   }
 
-  //TODO: implement
-  encryptPassword(password: string) {
-    return `hashed:start-${password}-end`;
+  async encryptPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt();
+    return await bcrypt.hash(password, salt);
   }
 }
