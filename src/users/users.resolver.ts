@@ -1,26 +1,27 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { User } from './user.entity';
-import { CreateUserInput } from './inputs/create-user.input';
+import { User } from './entity/user.entity';
+import { CreateStudentInput } from './inputs/create-student.input';
+import { CreatePersonalInput } from './inputs/create-personal.input';
 
 @Resolver(of => User)
 export class UsersResolver {
   constructor(private usersService: UsersService) {}
 
-  @Query(returns => [User])
+  @Query(() => [User])
   users() {
-    console.log('resolver users');
     return this.usersService.findAll();
   }
 
-  @Query(returns => User)
-  user(@Args('id') id: number) {
-    return this.usersService.findOneById(id);
+  @Mutation(() => User)
+  createStudent(@Args('user') requestData: CreateStudentInput) {
+    console.log("🚀 ~ UsersResolver ~ createStudent:", requestData)
+    return this.usersService.createStudent(requestData);
   }
 
-  @Mutation(returns => User)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    console.log("🚀 ~ UsersResolver ~ createUser ~ createUserInput:", createUserInput)
-    return this.usersService.createUser(createUserInput);
+  @Mutation(() => User)
+  createPersonal(@Args('user') requestData: CreatePersonalInput) {
+    console.log("🚀 ~ UsersResolver ~ createPersonal:", requestData)
+    return this.usersService.createPersonal(requestData);
   }
 }

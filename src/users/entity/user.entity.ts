@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class User {
@@ -16,6 +16,9 @@ export class User {
 
   @Field()
   blocked: boolean;
+
+  @Field()
+  type: string;
 
   @Field()
   personal_id: string;

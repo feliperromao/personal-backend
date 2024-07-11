@@ -8,24 +8,32 @@ type User {
   password: String!
   email: String!
   blocked: Boolean!
+  type: String!
   personal_id: String!
 }
 
 type Query {
   users: [User!]!
-  user(id: Float!): User!
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
+  createStudent(user: CreateStudentInput!): User!
+  createPersonal(user: CreatePersonalInput!): User!
   login(authCredentialsDto: AuthCredentialsDto!): String!
 }
 
-input CreateUserInput {
+input CreateStudentInput {
   name: String!
   email: String!
   password: String!
   personal_id: String!
+  blocked: Boolean!
+}
+
+input CreatePersonalInput {
+  name: String!
+  email: String!
+  password: String!
   blocked: Boolean!
 }
 

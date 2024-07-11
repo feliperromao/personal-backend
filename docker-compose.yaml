@@ -23,8 +23,6 @@ services:
       - personal_network
     ports:
       - ${APP_PORT}:3000 # API
-      - 9220:9220 # Debug
-      - 5042:8080 # Docs
 
   personal_mongo:
     image: mongo:3.6.10
