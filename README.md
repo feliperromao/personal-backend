@@ -1,14 +1,15 @@
 ## TODO
-- [ ] Login
-- [ ] Proteger rotas de criar usuarios aluno
-- [ ] Proteter rota de criar usuarios personal
+- [x] Login
+- [x] Proteger rotas de criar usuarios aluno
+- [x] Proteter rota de criar usuarios personal
+- [ ] implementar cache para salvar dados do usuario e utilizar na buscar do login e nos guards de autenticação
 
 # Casos de uso
 ## Criar usuario personal
-- [ ] Criar guard para somente usuarios admins
+- [x] Criar guard para somente usuarios admins
 
 ## Criar usuario aluno
-- [ ] Criar guard para somente usuarios personal
+- [x] Criar guard para somente usuarios personal
 
 ## Criar cadastro de exercicios
 - [ ] Criar guard para somente usuarios personal
