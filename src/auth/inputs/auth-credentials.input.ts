@@ -1,4 +1,3 @@
-// dto/auth-credentials.dto.ts
 import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()

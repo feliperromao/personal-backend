@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { User } from './entity/user.entity';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { CreateStudentInput } from './inputs/create-student.input';
 import EncryptPassword from 'src/@infra/encrypt/encrypt.interface';
 import Bcrypt from 'src/@infra/encrypt/bcrypt';
 import { CreatePersonalInput } from './inputs/create-personal.input';
-import UserFactory from './user.factory';
-import { USER_TYPE } from './enum/user.type';
+import { USER_TYPE } from 'src/@domain/users/enum/user.type';
+import UserFactory from 'src/@domain/users/user.factory';
+import User from 'src/@domain/users/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -16,6 +16,11 @@ export class UsersService {
   }
   async findAll() {
     return await this.repository.findAll();
+  }
+
+  async findById(id: string): Promise<User> {
+    const model = await this.repository.findById(id);
+    return UserFactory.create(model);
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
@@ -40,9 +45,12 @@ export class UsersService {
 
   private async createUser(data): Promise<User> {
     const checkIfUserExists = await this.findByEmail(data.email);
-    if (checkIfUserExists) throw new Error('User already exists');
+    if (checkIfUserExists) {
+      throw new BadRequestException("user already exists");
+    }
     const userCrated = await this.repository.create({
       ...data,
+      blocked: false,
       password: await this.encrypt.encrypt(data.password)
     });
     return UserFactory.create(userCrated);

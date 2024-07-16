@@ -27,14 +27,12 @@ input CreateStudentInput {
   email: String!
   password: String!
   personal_id: String!
-  blocked: Boolean!
 }
 
 input CreatePersonalInput {
   name: String!
   email: String!
   password: String!
-  blocked: Boolean!
 }
 
 input AuthCredentialsDto {

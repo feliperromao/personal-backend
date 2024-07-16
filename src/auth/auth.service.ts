@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { AuthCredentialsDto } from './inputs/auth-credentials.input';
 import Bcrypt from 'src/@infra/encrypt/bcrypt';
 import EncryptPassword from 'src/@infra/encrypt/encrypt.interface';
 
@@ -15,26 +14,19 @@ export class AuthService {
     this.encrypt = new Bcrypt();
   }
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async login(email: string, password: string) {
+    console.log("🚀 ~ AuthService ~ login ~ email:", email)
+    console.log("🚀 ~ AuthService ~ login ~ password:", password)
     const user = await this.usersService.findByEmail(email);
+    console.log("🚀 ~ user found:", JSON.stringify(user))
     if (!user) {
-      return null;
+      throw new UnauthorizedException("invalid credentials");
     }
-    const compared = await this.encrypt.compare(password, user.password)
-    if (compared){
-      const { password, ...result } = user;
-      return result;
+    const compared = await this.encrypt.compare(password, user.password);
+    if (!compared){
+      throw new UnauthorizedException("invalid credentials");
     }
-    return null;
-  }
-
-  async login(user: AuthCredentialsDto) {
-    const payload = { email: user.email, sub: user.password };
-    const loginSuccess = await this.validateUser(user.email, user.password);
-    if (!loginSuccess) {
-      throw new Error('Invalid credentials')
-    }
-    console.log('loginSuccess', loginSuccess)
+    const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };

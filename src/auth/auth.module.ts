@@ -13,7 +13,7 @@ import { AuthResolver } from './auth.resolver';
     PassportModule,
     JwtModule.register({
       secret: process.env.APP_KEY,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '30d' },
     }),
   ],
   controllers: [AuthController],

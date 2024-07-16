@@ -3,6 +3,11 @@ import { UsersService } from './users.service';
 import { User } from './entity/user.entity';
 import { CreateStudentInput } from './inputs/create-student.input';
 import { CreatePersonalInput } from './inputs/create-personal.input';
+import { Roles } from 'src/guards/roles.decorator';
+import { USER_TYPE } from 'src/@domain/users/enum/user.type';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
+import { GqlRolesGuard } from 'src/guards/gql-roles.guard';
 
 @Resolver(of => User)
 export class UsersResolver {
@@ -14,14 +19,30 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  createStudent(@Args('user') requestData: CreateStudentInput) {
-    console.log("🚀 ~ UsersResolver ~ createStudent:", requestData)
-    return this.usersService.createStudent(requestData);
+  @Roles(USER_TYPE.PERSONAL)
+  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  async createStudent(@Args('user') requestData: CreateStudentInput): Promise<User> {
+    const user = await this.usersService.createStudent(requestData);
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      type: user.type,
+      blocked: user.blocked,
+      personal_id: user.personal_id,
+    } as User
   }
 
   @Mutation(() => User)
-  createPersonal(@Args('user') requestData: CreatePersonalInput) {
-    console.log("🚀 ~ UsersResolver ~ createPersonal:", requestData)
-    return this.usersService.createPersonal(requestData);
+  @Roles(USER_TYPE.ADMIN)
+  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  async createPersonal(@Args('user') requestData: CreatePersonalInput): Promise<User> {
+    const user = await this.usersService.createPersonal(requestData);
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      type: user.type,
+    } as User
   }
 }
