@@ -29,7 +29,6 @@ export class AuthGuard implements CanActivate {
       );
 
       const user = await this.usersService.findById(payload.sub);
-      console.log("🚀 ~ AuthGuard ~ canActivate ~ user:", user)
 
       request['user'] = {
         id: user.id,

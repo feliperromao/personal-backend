@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '../@infra/users/models/mongoose/user.model';
-import { UserRepository } from './user.repository';
+import { User, UserSchema } from '../@infra/models/user/mongoose/user.model';
+import { UserRepository } from '../@infra/repository/user/user.repository';
 import { UsersController } from './users.controller';
 import { JwtService } from '@nestjs/jwt';
 

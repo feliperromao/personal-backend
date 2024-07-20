@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserRepository } from './user.repository';
+import { UserRepository } from '../@infra/repository/user/user.repository';
 import { CreateStudentInput } from './inputs/create-student.input';
 import EncryptPassword from 'src/@infra/encrypt/encrypt.interface';
 import Bcrypt from 'src/@infra/encrypt/bcrypt';
 import { CreatePersonalInput } from './inputs/create-personal.input';
-import { USER_TYPE } from 'src/@domain/users/enum/user.type';
-import UserFactory from 'src/@domain/users/user.factory';
-import User from 'src/@domain/users/user.entity';
+import { USER_TYPE } from 'src/users/enum/user.type';
+import UserFactory from './user.factory';
+import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
@@ -16,6 +16,10 @@ export class UsersService {
   }
   async findAll() {
     return await this.repository.findAll();
+  }
+
+  async getAllByPersonal(personal_id: string) {
+    return await this.repository.getAllByPersonal(personal_id);
   }
 
   async findById(id: string): Promise<User> {

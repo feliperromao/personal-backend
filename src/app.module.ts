@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { GraphqlModule } from './graphql.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { MongodbModule } from './@infra/database/mongodb.module';
+import { MongodbModule } from './mongodb.module';
+import { ExercisesModule } from './exercises/exercises.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { MongodbModule } from './@infra/database/mongodb.module';
     GraphqlModule,
     UsersModule,
     AuthModule,
+    ExercisesModule,
   ],
   controllers: [],
   providers: [],

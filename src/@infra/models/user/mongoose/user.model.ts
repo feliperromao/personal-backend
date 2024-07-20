@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { USER_TYPE } from 'src/@domain/users/enum/user.type';
+import { USER_TYPE } from 'src/users/enum/user.type';
 
 @Schema()
 export class User extends Document {  
@@ -17,7 +17,7 @@ export class User extends Document {
   password: string;
 
   @Prop({ required: false })
-  personal_id: string;
+  personal_id?: string;
 
   @Prop({ required: true })
   type: USER_TYPE;

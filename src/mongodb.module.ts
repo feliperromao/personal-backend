@@ -8,7 +8,7 @@ const user = process.env.MONGODB_USER
 const pwd = process.env.MONGODB_PWD
 
 const MONGODB_URI = `mongodb://${host}:${port}/admin`
-console.log("🚀 ~ MONGODB_URI:", MONGODB_URI)
+console.log("🛢 ~ MONGODB_URI:", MONGODB_URI)
 
 @Module({
   imports: [
