@@ -39,4 +39,13 @@ export class UserRepository {
   async save(user: User[]): Promise<void> {
     await this.model.insertMany(user)
   }
+
+  async update(id: string, data: User): Promise<User> {
+    await this.model.findByIdAndUpdate(id, data);
+    return await this.model.findById(id);
+  }
+
+  async delete(ids: string[]): Promise<void> {
+    await this.model.deleteMany({_id: {$in: ids}}).exec();
+  }
 }

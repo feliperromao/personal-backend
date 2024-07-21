@@ -26,14 +26,17 @@ type Exercise {
 
 type Query {
   users(id: ID, personal_id: String!, name: String): [User!]!
+  getAllExercises(id: ID, personal_id: String!, name: String): [Exercise!]!
 }
 
 type Mutation {
   createStudent(user: CreateStudentInput!): User!
+  deleteStudents(ids: [ID!]!): Boolean!
+  updateStudents(user: UpdateStudentInput!): User!
   createPersonal(user: CreatePersonalInput!): User!
   login(authCredentialsDto: AuthCredentialsDto!): String!
   createExercise(exercise: CreateExerciseInput!): Exercise!
-  getAllExercises(id: ID, personal_id: String!, name: String): Exercise!
+  updateExercise(exercise: UpdateExerciseInput!): Exercise!
   deleteExercise(ids: [ID!]!): Boolean!
 }
 
@@ -41,6 +44,14 @@ input CreateStudentInput {
   name: String!
   email: String!
   password: String!
+  personal_id: String!
+}
+
+input UpdateStudentInput {
+  id: ID!
+  name: String!
+  email: String!
+  password: String
   personal_id: String!
 }
 
@@ -56,6 +67,18 @@ input AuthCredentialsDto {
 }
 
 input CreateExerciseInput {
+  name: String!
+  personal_id: String!
+  instructions: String
+  video: String
+  rest: Float!
+  load: Float!
+  load_progress: Boolean!
+  series: Float!
+}
+
+input UpdateExerciseInput {
+  id: ID!
   name: String!
   personal_id: String!
   instructions: String

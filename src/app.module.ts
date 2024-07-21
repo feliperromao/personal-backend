@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MongodbModule } from './mongodb.module';
 import { ExercisesModule } from './exercises/exercises.module';
+import { TrainingsModule } from './trainings/trainings.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ExercisesModule } from './exercises/exercises.module';
     UsersModule,
     AuthModule,
     ExercisesModule,
+    TrainingsModule,
   ],
   controllers: [],
   providers: [],

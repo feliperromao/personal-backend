@@ -1,0 +1,73 @@
+## cadatrar exercicio
+mutation {
+  createExercise(exercise: {
+    name: "Supino reto alteres",
+    personal_id: "66930805698bbdc15b94a8f1",
+    instructions: "Supino com alteres 4x12",
+    video: "https://www.youtube.com/shorts/hlV6f0kHmeo"
+    rest: 60
+    load: 25
+    load_progress: true,
+    series: 4
+  })
+  
+  {
+    id
+    name
+    personal_id
+    instructions
+    video
+    rest
+    load
+    load_progress
+    series
+  }
+}
+
+## Listar todos os exercicios de um personal
+{
+  getAllExercises(personal_id: "66930805698bbdc15b94a8f1")
+  {
+    id,
+    name,
+    personal_id,
+    instructions,
+    video,
+    rest,
+    load,
+    load_progress,
+    series
+  }
+}
+
+## Excluir exercicios
+mutation {
+  deleteExercise(ids: ["669ab9506b4ff1666e7ecfbc", "669ae847f196879bf85d614d"])
+}
+
+## Atualizar exercicio
+mutation {
+  updateExercise(exercise: {
+    id: "669d6257ab78da238d5eaca4",
+    name: "Supino Inclinado double",
+    personal_id: "66930805698bbdc15b94a8f1",
+    instructions: "Supino com alteres 4x12",
+    video: "https://www.youtube.com/shorts/hlV6f0kHmeo"
+    rest: 60
+    load: 25
+    load_progress: true,
+    series: 4
+  })
+  
+  {
+    id
+    name
+    personal_id
+    instructions
+    video
+    rest
+    load
+    load_progress
+    series
+  }
+}

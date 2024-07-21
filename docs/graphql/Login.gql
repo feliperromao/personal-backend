@@ -1,0 +1,7 @@
+## Login
+mutation {
+  login(authCredentialsDto: {
+    password: "123456k",
+    email: "feliperomaocad@gmail.com"
+  })
+}

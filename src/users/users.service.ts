@@ -47,6 +47,21 @@ export class UsersService {
     });
   }
 
+  async updateStudents(requestData): Promise<User> {
+    const { id } = requestData;
+    delete requestData.id;
+    requestData.type = USER_TYPE.STUDENT;
+    if (requestData.password) {
+      requestData.password = await this.encrypt.encrypt(requestData.password);
+    }
+    const model = await this.repository.update(id, requestData);
+    return UserFactory.create(model);
+  }
+
+  async deleteStudents(ids: string[]): Promise<void> {
+    this.repository.delete(ids);
+  }
+
   private async createUser(data): Promise<User> {
     const checkIfUserExists = await this.findByEmail(data.email);
     if (checkIfUserExists) {

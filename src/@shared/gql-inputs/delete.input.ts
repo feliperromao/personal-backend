@@ -1,7 +1,7 @@
 import { Field, ArgsType, ID } from '@nestjs/graphql';
 
 @ArgsType()
-export default class DeleteExercisesInput {
+export default class DeleteInput {
   @Field(() => [ID])
   ids: string[];
 }

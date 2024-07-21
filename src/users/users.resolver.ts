@@ -9,6 +9,8 @@ import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
 import { GqlRolesGuard } from 'src/guards/gql-roles.guard';
 import GetUsersInput from './inputs/get-users.input';
+import DeleteInput from 'src/@shared/gql-inputs/delete.input';
+import { UpdateStudentInput } from './inputs/update-student.input';
 
 @Resolver(of => User)
 export class UsersResolver {
@@ -26,27 +28,33 @@ export class UsersResolver {
   @Roles(USER_TYPE.PERSONAL)
   @UseGuards(GqlAuthGuard, GqlRolesGuard)
   async createStudent(@Args('user') requestData: CreateStudentInput,): Promise<User> {
-    const user = await this.usersService.createStudent(requestData);
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      type: user.type,
-      blocked: user.blocked,
-      personal_id: user.personal_id,
-    } as User
+    return await this.usersService.createStudent(requestData);
+  }
+
+  @Mutation(() => Boolean, {name: 'deleteStudents'})
+  @Roles(USER_TYPE.PERSONAL)
+  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  async deleteStudents(@Args() args: DeleteInput,): Promise<boolean> {
+    const { ids } = args
+    try {
+      await this.usersService.deleteStudents(ids);
+      return true
+    } catch (error) {
+      return false;
+    }
+  }
+
+  @Mutation(() => User)
+  @Roles(USER_TYPE.PERSONAL)
+  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  async updateStudents(@Args('user') requestData: UpdateStudentInput): Promise<User> {
+    return await this.usersService.updateStudents(requestData);
   }
 
   @Mutation(() => User)
   @Roles(USER_TYPE.ADMIN)
   @UseGuards(GqlAuthGuard, GqlRolesGuard)
   async createPersonal(@Args('user') requestData: CreatePersonalInput): Promise<User> {
-    const user = await this.usersService.createPersonal(requestData);
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      type: user.type,
-    } as User
+    return await this.usersService.createPersonal(requestData);
   }
 }
