@@ -1,14 +1,15 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
+@InputType('TrainingExerciseInput')
 export class Exercise {
-  @Field()
+  @Field(() => ID, {nullable: true})
   id: string;
 
   @Field()
   name: string;
 
-  @Field()
+  @Field({nullable: true})
   personal_id: string;
 
   @Field()

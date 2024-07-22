@@ -1,0 +1,62 @@
+## Lista todos os treinos de um personal
+{
+  trainings(personal_id: "66930805698bbdc15b94a8f1"){
+    id,
+    name,
+    description,
+    show_to_student,
+    student_id,
+    personal_id,
+    exercises{
+      id,
+      name,
+      instructions,
+      video,
+      rest,
+      load,
+      load_progress,
+      series
+    }
+  }
+}
+
+## Cria novo treino para um aluno
+mutation{
+  createTraining(training: {
+    name: "Segunda",
+    description: "Peito, triceps, ombro",
+    show_to_student: true,
+    student_id: "669d8b9f44c31eb3f0a0498e",
+    personal_id: "66930805698bbdc15b94a8f1",
+    exercises: [
+      {
+        id: "669d6257ab78da238d5eaca4",
+        name: "Supino Inclinado double",
+        personal_id: "66930805698bbdc15b94a8f1",
+        instructions: "Supino com alteres 4x12",
+        video: "https://www.youtube.com/shorts/hlV6f0kHmeo",
+        rest: 60,
+        load: 25,
+        load_progress: true,
+        series: 4
+      }
+    ]
+  }) {
+    id,
+    name,
+    description,
+    show_to_student,
+    student_id,
+    personal_id,
+    exercises{
+      id,
+      name,
+      instructions,
+      video,
+      rest,
+      load,
+      load_progress,
+      series
+    }
+  }
+}

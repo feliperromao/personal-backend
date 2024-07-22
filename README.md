@@ -4,6 +4,8 @@
 - [x] Proteter rota de criar usuarios personal
 - [ ] implementar cache para salvar dados do usuario e utilizar na buscar do login e nos guards de autenticação
 
+## ideias
+- [ ] implementar chat com personal durante a execução de um treino
 
 # CRUD
 **Cadatros de recursos da aplicação**

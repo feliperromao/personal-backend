@@ -13,9 +13,31 @@ type User {
 }
 
 type Exercise {
-  id: String!
+  id: ID
   name: String!
+  personal_id: String
+  instructions: String!
+  video: String!
+  rest: Float!
+  load: Float!
+  load_progress: Boolean!
+  series: Float!
+}
+
+type Training {
+  id: ID!
+  name: String!
+  description: String
+  show_to_student: Boolean!
+  student_id: String!
   personal_id: String!
+  exercises: [Exercise!]
+}
+
+input TrainingExerciseInput {
+  id: ID
+  name: String!
+  personal_id: String
   instructions: String!
   video: String!
   rest: Float!
@@ -27,6 +49,8 @@ type Exercise {
 type Query {
   users(id: ID, personal_id: String!, name: String): [User!]!
   getAllExercises(id: ID, personal_id: String!, name: String): [Exercise!]!
+  trainings(id: ID, personal_id: String!, name: String): [Training!]!
+  studentTrainigs(student_id: String!): [Training!]!
 }
 
 type Mutation {
@@ -38,6 +62,9 @@ type Mutation {
   createExercise(exercise: CreateExerciseInput!): Exercise!
   updateExercise(exercise: UpdateExerciseInput!): Exercise!
   deleteExercise(ids: [ID!]!): Boolean!
+  createTraining(training: CreateTrainingInput!): Training!
+  updateTraining(training: UpdateTrainingInput!): Training!
+  deleteTraining(ids: [ID!]!): Boolean!
 }
 
 input CreateStudentInput {
@@ -87,4 +114,23 @@ input UpdateExerciseInput {
   load: Float!
   load_progress: Boolean!
   series: Float!
+}
+
+input CreateTrainingInput {
+  name: String!
+  description: String
+  show_to_student: Boolean!
+  student_id: String!
+  personal_id: String!
+  exercises: [TrainingExerciseInput!]!
+}
+
+input UpdateTrainingInput {
+  id: ID!
+  name: String!
+  description: String
+  show_to_student: Boolean!
+  student_id: String!
+  personal_id: String!
+  exercises: [TrainingExerciseInput!]!
 }

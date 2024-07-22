@@ -9,6 +9,7 @@ import UpdateExerciseInput from "src/exercises/inputs/update-exercise.input";
 @Injectable()
 export class ExerciseRepository {
   constructor(@InjectModel(Exercise.name) private model: Model<Exercise>) { }
+  
   async create(exerciseData: CreateExerciseInput): Promise<Exercise> {
     const exerciseCreated = new this.model({
       _id: new ObjectId(),
