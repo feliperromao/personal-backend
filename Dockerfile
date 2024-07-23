@@ -18,3 +18,20 @@ EXPOSE 3020
 
 # Comando para iniciar a aplicação
 CMD ["npm", "run", "start:dev"]
+
+FROM node:20-alpine3.20 AS production
+
+WORKDIR /usr/src/app
+
+COPY --from=develop /usr/src/app/package.json ./
+COPY --from=develop /usr/src/app/package-lock.json ./
+# COPY --from=develop /usr/src/app/dist ./dist
+# COPY --from=develop /usr/src/app/node_modules ./node_modules
+
+RUN npm ci --only=production
+
+ENV NODE_ENV=production
+
+EXPOSE 3020
+
+CMD ["node", "dist/main"]

@@ -26,7 +26,6 @@ export class UserRepository {
     const CACHE_KEY = `user-${email}`;
     const value = await this.cacheManager.get(CACHE_KEY);
     if (value) {
-      console.log("cache user.(email)..", value)
       return {...JSON.parse(value.toString()) } as User
     };
     const user = await this.model.findOne({ email: email }).exec();
@@ -46,7 +45,6 @@ export class UserRepository {
     const CACHE_KEY = `user-${id}`;
     const value = await this.cacheManager.get(CACHE_KEY);
     if (value) {
-      console.log("cache user...", value)
       return {...JSON.parse(value.toString()) } as User
     };
     const user = await this.model.findOne({_id: id}).exec();

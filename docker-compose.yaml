@@ -10,6 +10,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: develop
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"

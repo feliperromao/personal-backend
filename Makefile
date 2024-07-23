@@ -18,3 +18,8 @@ bash:
 
 nest-build:
 	docker exec -ti personal_app npm run build
+
+create-tag:
+	# command: make create-tag version="1.0.0"
+	@[ "${version}" ] || ( echo ">> var version is not set"; exit 1 )
+	DOCKER_BUILDKIT=1 docker build --no-cache  --target production -t personal-backend:${version} .
