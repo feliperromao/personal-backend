@@ -6,10 +6,12 @@ import { User, UserSchema } from '../@infra/models/user/mongoose/user.model';
 import { UserRepository } from '../@infra/repository/user/user.repository';
 import { UsersController } from './users.controller';
 import { JwtService } from '@nestjs/jwt';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    CacheModule.register()
   ],
   providers: [UsersService, UsersResolver, UserRepository, JwtService],
   exports: [UsersService],
