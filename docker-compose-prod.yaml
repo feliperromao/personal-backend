@@ -1,0 +1,39 @@
+version: '3.7'
+
+networks:
+  personal_network:
+    name: personal_network
+
+services:
+  personal_app:
+    image: personal-backend:${APP_IMAGE_VERSION}
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on: 
+      - personal_mongo
+    env_file: ".env"
+    volumes:
+      - ./:/usr/src/app/
+      - /usr/src/app/node_modules
+    networks: 
+      - personal_network
+    ports:
+      - ${APP_PORT}:3000
+  personal_mongo:
+    image: mongo:3.6.10
+    container_name: personal_mongo
+    networks:
+      personal_network:
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_NAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PWD}
+    volumes:
+      - ./.files/dbdata:/data/db
+    ports:
+      - '27017:27017'
+    command: mongod --smallfiles --logpath=/dev/stdout # --quiet
+    restart: unless-stopped
+    tty: true
