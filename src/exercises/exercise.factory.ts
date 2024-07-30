@@ -1,5 +1,5 @@
-import { Exercise as ExerciseMongoModel } from "src/@infra/models/exercise/mongoose/exercise.model";
-import { Exercise } from "src/exercises/exercise.entity";
+import { Exercise as ExerciseMongoModel } from "@src/@infra/models/exercise/mongoose/exercise.model";
+import { Exercise } from "@src/exercises/exercise.entity";
 
 export default class ExerciseFactory {
   static create(model: ExerciseMongoModel): Exercise {

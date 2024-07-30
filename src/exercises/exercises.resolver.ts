@@ -1,14 +1,14 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { USER_TYPE } from 'src/users/enum/user.type';
-import { Roles } from 'src/guards/roles.decorator';
+import { USER_TYPE } from '@src/users/enum/user.type';
+import { Roles } from '@src/guards/roles.decorator';
 import { Exercise } from './exercise.entity';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
-import { GqlRolesGuard } from 'src/guards/gql-roles.guard';
+import { GqlAuthGuard } from '@src/guards/gql-auth.guard';
+import { GqlRolesGuard } from '@src/guards/gql-roles.guard';
 import CreateExerciseInput from './inputs/create-exercise.input';
 import { ExercisesService } from './exercises.service';
 import GetExercisesInput from './inputs/get-exercises.input';
-import DeleteInput from 'src/@shared/gql-inputs/delete.input';
+import DeleteInput from '@src/@shared/gql-inputs/delete.input';
 import UpdateExerciseInput from './inputs/update-exercise.input';
 
 @Resolver(of => Exercise)

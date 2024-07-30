@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import CreateExerciseInput from './inputs/create-exercise.input';
-import { ExerciseRepository } from 'src/@infra/repository/exercise/exercise.repository';
+import { ExerciseRepository } from '@src/@infra/repository/exercise/exercise.repository';
 import { Exercise } from './exercise.entity';
-import ExerciseFactory from 'src/exercises/exercise.factory';
+import ExerciseFactory from '@src/exercises/exercise.factory';
 import UpdateExerciseInput from './inputs/update-exercise.input';
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { Exercise } from 'src/exercises/exercise.entity';
+import { Exercise } from '@src/exercises/exercise.entity';
 
 @InputType()
 export default class UpdateTrainingInput {

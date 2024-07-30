@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import Training from './training.entity';
 import CreateTrainingInput from './inputs/create-training.input';
-import TrainingsRepository from 'src/@infra/repository/trainings/training.repository';
+import TrainingsRepository from '@src/@infra/repository/trainings/training.repository';
 import TrainingFactory from './training.factory';
 import UpdateTrainingInput from './inputs/update-training.input';
 

@@ -1,16 +1,16 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import Training from './training.entity';
-import { Roles } from 'src/guards/roles.decorator';
+import { Roles } from '@src/guards/roles.decorator';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
-import { GqlRolesGuard } from 'src/guards/gql-roles.guard';
-import { USER_TYPE } from 'src/users/enum/user.type';
+import { GqlAuthGuard } from '@src/guards/gql-auth.guard';
+import { GqlRolesGuard } from '@src/guards/gql-roles.guard';
+import { USER_TYPE } from '@src/users/enum/user.type';
 import { TrainingsService } from './trainings.service';
 import GetTrainingsInput from './inputs/get-trainings.input';
 import CreateTrainingInput from './inputs/create-training.input';
-import StudentFilterInput from 'src/@shared/gql-inputs/student-filter.input';
+import StudentFilterInput from '@src/@shared/gql-inputs/student-filter.input';
 import UpdateTrainingInput from './inputs/update-training.input';
-import DeleteInput from 'src/@shared/gql-inputs/delete.input';
+import DeleteInput from '@src/@shared/gql-inputs/delete.input';
 
 @Resolver(of => Training)
 export class TrainingsResolver {

@@ -1,9 +1,9 @@
 import { InjectModel } from "@nestjs/mongoose";
 import { ObjectId } from "mongodb";
 import { Model } from "mongoose";
-import {Training} from "src/@infra/models/training/mongoose/training.model";
-import CreateTrainingInput from "src/trainings/inputs/create-training.input";
-import UpdateTrainingInput from "src/trainings/inputs/update-training.input";
+import {Training} from "@src/@infra/models/training/mongoose/training.model";
+import CreateTrainingInput from "@src/trainings/inputs/create-training.input";
+import UpdateTrainingInput from "@src/trainings/inputs/update-training.input";
 
 export default class TrainingsRepository {
   constructor(@InjectModel(Training.name) private model: Model<Training>) { }
@@ -36,4 +36,7 @@ export default class TrainingsRepository {
     await this.model.deleteMany({ _id: {$in: ids} })
   }
 
+  async findById(id: string): Promise<Training> {
+    return await this.model.findById(id);
+  }
 }

@@ -2,10 +2,10 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@n
 import { UsersService } from './users.service';
 import { CreatePersonalInput } from './inputs/create-personal.input';
 import { CreateStudentInput } from './inputs/create-student.input';
-import { USER_TYPE } from 'src/users/enum/user.type';
-import { Roles } from 'src/guards/roles.decorator';
-import { RolesGuard } from 'src/guards/http-roles.guard';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { USER_TYPE } from '@src/users/enum/user.type';
+import { Roles } from '@src/guards/roles.decorator';
+import { RolesGuard } from '@src/guards/http-roles.guard';
+import { AuthGuard } from '@src/guards/auth.guard';
 
 @Controller('users')
 export class UsersController {

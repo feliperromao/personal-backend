@@ -3,13 +3,13 @@ import { UsersService } from './users.service';
 import { User } from './user.entity';
 import { CreateStudentInput } from './inputs/create-student.input';
 import { CreatePersonalInput } from './inputs/create-personal.input';
-import { Roles } from 'src/guards/roles.decorator';
-import { USER_TYPE } from 'src/users/enum/user.type';
+import { Roles } from '@src/guards/roles.decorator';
+import { USER_TYPE } from '@src/users/enum/user.type';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
-import { GqlRolesGuard } from 'src/guards/gql-roles.guard';
+import { GqlAuthGuard } from '@src/guards/gql-auth.guard';
+import { GqlRolesGuard } from '@src/guards/gql-roles.guard';
 import GetUsersInput from './inputs/get-users.input';
-import DeleteInput from 'src/@shared/gql-inputs/delete.input';
+import DeleteInput from '@src/@shared/gql-inputs/delete.input';
 import { UpdateStudentInput } from './inputs/update-student.input';
 
 @Resolver(of => User)

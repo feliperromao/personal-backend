@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { Exercise } from "src/@infra/models/exercise/mongoose/exercise.model";
-import CreateExerciseInput from "src/exercises/inputs/create-exercise.input";
-import UpdateExerciseInput from "src/exercises/inputs/update-exercise.input";
+import { Exercise } from "@src/@infra/models/exercise/mongoose/exercise.model";
+import CreateExerciseInput from "@src/exercises/inputs/create-exercise.input";
+import UpdateExerciseInput from "@src/exercises/inputs/update-exercise.input";
 
 @Injectable()
 export class ExerciseRepository {

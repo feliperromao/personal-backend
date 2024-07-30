@@ -1,8 +1,9 @@
-import {Training as TrainingMongoModel} from "@src/@infra/models/training/mongoose/training.model";
-import Training from "./training.entity";
+import {TrainingProgress as TrainingProgressMongoModel} from "@src/@infra/models/training-progress/mongoose/training-progress.model";
 
-export default class TrainingFactory {
-  static create(model: TrainingMongoModel): Training {
+import TrainingProgress from "./training-progress.entity";
+
+export default class TrainingProgressFactory {
+  static create(model: TrainingProgressMongoModel): TrainingProgress {
     return {
       id: model._id.toString(),
       name: model.name,
@@ -10,6 +11,8 @@ export default class TrainingFactory {
       show_to_student: model.show_to_student,
       student_id: model.student_id,
       personal_id: model.personal_id,
+      started_at: model.started_at ?? null,
+      finished_at: model.finished_at ?? null,
       exercises: model.exercises.map(exercise => ({
         id: exercise.id,
         name: exercise.name,

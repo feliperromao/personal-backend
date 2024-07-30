@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Exercise } from "@src/exercises/exercise.entity";
 
 @ObjectType()
-export default class Training {
+export default class TrainingProgress {
   @Field(() => ID)
   id: string;
 
@@ -21,6 +21,12 @@ export default class Training {
   @Field()
   personal_id: string;
 
-  @Field(() => [Exercise], {nullable: true})
+  @Field({ nullable: true })
+  started_at: Date;
+
+  @Field({ nullable: true })
+  finished_at: Date;
+
+  @Field(() => [Exercise], { nullable: true })
   exercises?: Exercise[]
 }

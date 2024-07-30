@@ -1,5 +1,5 @@
-import { User } from "src/users/user.entity";
-import { User as UserMongoModel } from "src/@infra/models/user/mongoose/user.model";
+import { User } from "@src/users/user.entity";
+import { User as UserMongoModel } from "@src/@infra/models/user/mongoose/user.model";
 
 export default class UserFactory {
   static create(model: UserMongoModel): User {

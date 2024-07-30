@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import Bcrypt from 'src/@infra/encrypt/bcrypt';
+import Bcrypt from '@src/@infra/encrypt/bcrypt';
 import { ObjectId } from 'mongodb';
-import { UserRepository } from 'src/@infra/repository/user/user.repository';
-import { USER_TYPE } from 'src/users/enum/user.type';
-import { User } from 'src/@infra/models/user/mongoose/user.model';
+import { UserRepository } from '@src/@infra/repository/user/user.repository';
+import { USER_TYPE } from '@src/users/enum/user.type';
+import { User } from '@src/@infra/models/user/mongoose/user.model';
 
 @Injectable()
 export class SeedService {
