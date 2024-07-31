@@ -6,6 +6,7 @@ import { MongodbModule } from './mongodb.module';
 import { ExercisesModule } from './exercises/exercises.module';
 import { TrainingsModule } from './trainings/trainings.module';
 import { TrainingProgressModule } from './training-progress/training-progress.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { TrainingProgressModule } from './training-progress/training-progress.mo
     TrainingsModule,
     TrainingProgressModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}

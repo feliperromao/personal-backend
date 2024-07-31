@@ -17,7 +17,19 @@ console.log("🛢 ~ MONGODB_URI:", MONGODB_URI)
         username: user,
         password: pwd
       },
-      dbName: name
+      dbName: name,
+      connectionFactory: (connection) => {
+        connection.on('connected', () => {
+          console.log('MongoDB connected');
+        });
+        connection.on('error', (err) => {
+          console.error(`MongoDB connection error: ${err}`);
+        });
+        connection.on('disconnected', () => {
+          console.log('MongoDB disconnected');
+        });
+        return connection;
+      },
     }),
   ],
 })

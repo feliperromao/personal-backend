@@ -17,7 +17,7 @@
     "test:watch": "jest --watch --detectOpenHandles",
     "test:cov": "jest --coverage --detectOpenHandles",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --detectOpenHandles --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
@@ -35,6 +35,7 @@
     "cache-manager": "^5.7.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "dotenv": "^16.4.5",
     "graphql": "^16.9.0",
     "graphql-tools": "^9.0.1",
     "mongodb": "^5.9.2",
