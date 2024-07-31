@@ -28,7 +28,8 @@ export class TrainingsService {
     return TrainingFactory.create(await this.repository.update(data));
   }
 
-  async delete(ids: string[]): Promise<void>{
+  async delete(ids: string[]): Promise<boolean>{
     await this.repository.delete(ids);
+    return true;
   }
 }
