@@ -9,6 +9,7 @@ import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import { CreatePersonalInput } from './inputs/create-personal.input';
 import { CreateStudentInput } from './inputs/create-student.input';
 import { BadRequestException } from '@nestjs/common';
+import { USER_TYPE } from './enum/user.type';
 
 let mongod: MongoMemoryServer;
 let mongoConnection;
@@ -67,7 +68,7 @@ describe('UsersService', () => {
 
   it("should return all users", async () => {
     await service.createPersonal(personlData());
-    await service.createPersonal(studentData());
+    await service.createStudent(studentData());
     const users = await service.findAll();
     expect(users.length).toBe(2);
   });
@@ -114,11 +115,13 @@ describe('UsersService', () => {
     });
     const userFound = await service.findById(user.id);
     expect(userFound.id).toBe(user.id);
+    expect(userFound.type).toBe(USER_TYPE.PERSONAL);
   })
 
   it("should find user by email", async () => {
     const userFound = await service.findByEmail("student@example.com");
     expect(userFound.email).toBe("student@example.com");
+    expect(userFound.type).toBe(USER_TYPE.STUDENT);
   })
 
   it("should update student", async () => {
@@ -134,6 +137,7 @@ describe('UsersService', () => {
     const userUpdated = await service.updateStudents(user);
     expect(userUpdated.name).toBe("new_name");
     expect(userUpdated.email).toBe("new_email@mail.com");
+    expect(userUpdated.type).toBe(USER_TYPE.STUDENT);
   })
 
   it("should delete user", async () => {
