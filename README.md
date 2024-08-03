@@ -34,10 +34,9 @@
 - [x] listar treinos
 
 ## training progress
-- [ ] criar treino em progresso
-- [ ] editar treino em progresso
-- [ ] excluir treino em progresso
-- [ ] listar treinos em progresso
+- [x] iniciar treino
+- [x] finalizar treino
+- [x] cancelar treino
 
 # Casos de uso
 ## Ator personal
@@ -52,8 +51,9 @@
 - [ ] atualizar o perfil
   - peso, altura, objetivo (perda de peso, ganho de massa magra)
 - [x] listar os treinos disponiveis
-- [ ] iniciar um treino
-- [ ] finalizar um treino
+- [x] iniciar um treino
+- [x] cancelar treino
+- [x] finalizar um treino
   - informar feedback do treino
   - informar comentario sobre o treino (opcional)
 - [ ] consultar relatório de treinos finalizados
