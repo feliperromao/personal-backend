@@ -18,7 +18,7 @@ let model: Model<User>;
 
 describe('UsersService', () => {
   let service: UsersService;
-  let repositorry: UserRepository;
+  let repository: UserRepository;
 
   beforeAll(async () => {
     mongod = await MongoMemoryServer.create();
@@ -58,7 +58,7 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    repositorry = module.get<UserRepository>(UserRepository);
+    repository = module.get<UserRepository>(UserRepository);
     model = module.get<Model<User>>(getModelToken('User'));
   });
 

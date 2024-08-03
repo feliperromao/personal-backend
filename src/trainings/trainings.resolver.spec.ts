@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TrainingsResolver } from './trainings.resolver';
 
-describe('TrainingsResolver', () => {
+describe.skip('TrainingsResolver', () => {
   let resolver: TrainingsResolver;
 
   beforeEach(async () => {

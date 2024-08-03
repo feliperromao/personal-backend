@@ -12,7 +12,7 @@ let model: Model<Exercise>;
 
 describe('ExercisesService', () => {
   let service: ExercisesService;
-  let repositorry: ExerciseRepository;
+  let repository: ExerciseRepository;
 
   beforeAll(async () => {
     mongod = await MongoMemoryServer.create();
@@ -43,7 +43,7 @@ describe('ExercisesService', () => {
     }).compile();
 
     service = module.get<ExercisesService>(ExercisesService);
-    repositorry = module.get<ExerciseRepository>(ExerciseRepository);
+    repository = module.get<ExerciseRepository>(ExerciseRepository);
     model = module.get<Model<Exercise>>(getModelToken('Exercise'));
   });
 

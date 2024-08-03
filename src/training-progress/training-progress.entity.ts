@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Exercise } from "@src/exercises/exercise.entity";
+import { FINISH_STATUS } from "./enum/finish-status.enum";
 
 @ObjectType()
 export default class TrainingProgress {
@@ -7,13 +8,13 @@ export default class TrainingProgress {
   id: string;
 
   @Field()
+  training_id: string;
+
+  @Field()
   name: string;
 
   @Field({nullable: true})
   description?: string;
-
-  @Field()
-  show_to_student: boolean;
 
   @Field()
   student_id: string;
@@ -29,4 +30,10 @@ export default class TrainingProgress {
 
   @Field(() => [Exercise], { nullable: true })
   exercises?: Exercise[]
+
+  @Field({ nullable: true })
+  finish_feedback: string;
+
+  @Field({ nullable: true })
+  finish_status: FINISH_STATUS;
 }

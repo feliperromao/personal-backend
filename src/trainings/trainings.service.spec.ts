@@ -12,7 +12,7 @@ let mongoConnection;
 
 describe('TrainingsService', () => {
   let service: TrainingsService;
-  let repositorry: TrainingsRepository;
+  let repository: TrainingsRepository;
   let model: Model<Training>;
 
   beforeAll(async () => {
@@ -41,7 +41,7 @@ describe('TrainingsService', () => {
     }).compile();
 
     service = module.get<TrainingsService>(TrainingsService);
-    repositorry = module.get<TrainingsRepository>(TrainingsRepository);
+    repository = module.get<TrainingsRepository>(TrainingsRepository);
     model = module.get<Model<Training>>(getModelToken('Training'));
   });
 

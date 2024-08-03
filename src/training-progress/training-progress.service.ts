@@ -4,6 +4,7 @@ import TrainingsRepository from '@src/@infra/repository/trainings/training.repos
 import TrainingProgress from './training-progress.entity';
 import TrainingProgressFactory from './training-progress.factory';
 import TrainingFactory from '@src/trainings/training.factory';
+import { FINISH_STATUS } from './enum/finish-status.enum';
 
 @Injectable()
 export class TrainingProgressService {
@@ -22,12 +23,13 @@ export class TrainingProgressService {
     return TrainingProgressFactory.create(model)
   }
 
-  async finishTraining(id: string): Promise<boolean> {
+  async finishTraining(id: string, status: FINISH_STATUS, feedback: string = null): Promise<TrainingProgress> {
     const training = await this.repository.findById(id);
     if (!training) {
       throw new NotFoundException('TrainingProgress not found');
     };
-    return await this.repository.finishTraining(id);
+    const model = await this.repository.finishTraining(id, status, feedback );
+    return TrainingProgressFactory.create(model)
   }
 
   async cancelTraining(id: string): Promise<boolean> {

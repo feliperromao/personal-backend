@@ -20,12 +20,12 @@ export class TrainingProgressResolver {
     return await this.service.startTraining(id);
   }
 
-  @Mutation(() => Boolean, {name: 'finishTraining'})
+  @Mutation(() => TrainingProgress, {name: 'finishTraining'})
   @Roles(USER_TYPE.STUDENT)
   @UseGuards(GqlAuthGuard, GqlRolesGuard)
-  async finishTraining(@Args() args: TrainingProgressInput): Promise<boolean> {
-    const { id } = args;
-    return await this.service.finishTraining(id);
+  async finishTraining(@Args() args: TrainingProgressInput): Promise<TrainingProgress> {
+    const { id, status, feedback } = args;
+    return await this.service.finishTraining(id, status, feedback);
   }
 
   @Mutation(() => Boolean, {name: 'cancelTraining'})

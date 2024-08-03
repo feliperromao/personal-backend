@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from "mongoose";
 import { Exercise } from '../../exercise/mongoose/exercise.model';
+import { FINISH_STATUS } from '@src/training-progress/enum/finish-status.enum';
 
 @Schema()
 export class TrainingProgress extends Document {
@@ -8,13 +9,13 @@ export class TrainingProgress extends Document {
   _id: string;
 
   @Prop({ required: true })
+  training_id: string;
+
+  @Prop({ required: true })
   name: string;
 
   @Prop({ required: false })
   description?: string;
-
-  @Prop({ required: true })
-  show_to_student: boolean;
 
   @Prop({ required: true })
   student_id: string;
@@ -24,6 +25,12 @@ export class TrainingProgress extends Document {
 
   @Prop({ required: false })
   exercises?: Exercise[]
+  
+  @Prop({ required: false, default: null })
+  finish_feedback: string;
+
+  @Prop({ required: false, default: null })
+  finish_status: FINISH_STATUS;
 
   @Prop({ required: false })
   started_at: Date;

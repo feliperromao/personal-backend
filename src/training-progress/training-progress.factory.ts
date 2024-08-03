@@ -6,13 +6,15 @@ export default class TrainingProgressFactory {
   static create(model: TrainingProgressMongoModel): TrainingProgress {
     return {
       id: model._id.toString(),
+      training_id: model.training_id,
       name: model.name,
       description: model.description,
-      show_to_student: model.show_to_student,
       student_id: model.student_id,
       personal_id: model.personal_id,
       started_at: model.started_at ?? null,
       finished_at: model.finished_at ?? null,
+      finish_feedback: model.finish_feedback ?? null,
+      finish_status: model.finish_status ?? null,
       exercises: model.exercises.map(exercise => ({
         id: exercise.id,
         name: exercise.name,
