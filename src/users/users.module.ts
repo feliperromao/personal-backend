@@ -4,7 +4,6 @@ import { UsersResolver } from './users.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../@infra/models/user/mongoose/user.model';
 import { UserRepository } from '../@infra/repository/user/user.repository';
-import { UsersController } from './users.controller';
 import { JwtService } from '@nestjs/jwt';
 import { CacheModule } from '@nestjs/cache-manager';
 
@@ -15,6 +14,6 @@ import { CacheModule } from '@nestjs/cache-manager';
   ],
   providers: [UsersService, UsersResolver, UserRepository, JwtService],
   exports: [UsersService],
-  controllers: [UsersController]
+  controllers: []
 })
 export class UsersModule {}

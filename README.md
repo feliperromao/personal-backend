@@ -7,6 +7,10 @@
 ## ideias
 - implementar chat com personal durante a execução de um treino
 - implementar modulo de nutricionista
+- implementar agenda do personal:
+  - informar os dias e horarios que tem agendamento com os alunos
+  - implemetar confirmação do aluno se irá comparecer ao treino no dia
+
 
 # CRUD
 **Cadatros de recursos da aplicação**
