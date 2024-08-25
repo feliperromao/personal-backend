@@ -16,10 +16,10 @@ import { UpdateStudentInput } from './inputs/update-student.input';
 export class UsersResolver {
   constructor(private usersService: UsersService) {}
 
-  @Query(() => [User])
+  @Query(() => [User], {name: 'listStudents'})
   @Roles(USER_TYPE.PERSONAL)
   @UseGuards(GqlAuthGuard, GqlRolesGuard)
-  users(@Args() args: GetUsersInput) {
+  listStudents(@Args() args: GetUsersInput) {
     const { personal_id } = args
     return this.usersService.getAllByPersonal(personal_id);
   }

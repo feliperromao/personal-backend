@@ -19,7 +19,8 @@ export class UsersService {
   }
 
   async getAllByPersonal(personal_id: string) {
-    return await this.repository.getAllByPersonal(personal_id);
+    const students = await this.repository.getAllByPersonal(personal_id);
+    return students.map(student => UserFactory.create(student));
   }
 
   async findById(id: string): Promise<User> {

@@ -66,7 +66,7 @@ input TrainingExerciseInput {
 }
 
 type Query {
-  users(id: ID, personal_id: String!, name: String): [User!]!
+  listStudents(id: ID, personal_id: String!, name: String): [User!]!
   getAllExercises(id: ID, personal_id: String!, name: String): [Exercise!]!
   trainings(id: ID, personal_id: String!, name: String): [Training!]!
   studentTrainigs(student_id: String!): [Training!]!
