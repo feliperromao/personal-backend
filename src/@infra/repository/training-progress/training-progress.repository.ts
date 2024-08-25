@@ -31,8 +31,9 @@ export default class TrainingProgressRepository {
       finished_at: new Date(),
       finish_feedback: feedback,
       finish_status: status
-    }
-    return await this.model.findByIdAndUpdate(id, data);
+    };
+    await this.model.findByIdAndUpdate(id, data);
+    return this.findById(id);
   }
 
   async findById(id: string): Promise<TrainingProgress> {

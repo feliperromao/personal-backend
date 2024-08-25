@@ -37,6 +37,6 @@ export default class TrainingsRepository {
   }
 
   async findById(id: string): Promise<Training> {
-    return await this.model.findById(id);
+    return await this.model.findOne({_id: id}).exec();
   }
 }

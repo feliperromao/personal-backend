@@ -16,7 +16,7 @@ export class TrainingProgressService {
   async startTraining(id: string): Promise<TrainingProgress> {
     const training = await this.trainingRepository.findById(id);
     if (!training) {
-      throw new NotFoundException('Training not found');
+      throw new NotFoundException(`Training not found (id: ${id})`);
     };
     const trainingEntity = TrainingFactory.create(training);
     const model = await this.repository.startTraining(trainingEntity);

@@ -6,7 +6,7 @@ export default class TrainingProgressInput {
   @Field()
   id: string;
 
-  @Field()
+  @Field({nullable: true})
   status: FINISH_STATUS;
 
   @Field({nullable: true})
