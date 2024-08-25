@@ -26,7 +26,7 @@ export class TrainingProgressService {
   async finishTraining(id: string, status: FINISH_STATUS, feedback: string = null): Promise<TrainingProgress> {
     const training = await this.repository.findById(id);
     if (!training) {
-      throw new NotFoundException('TrainingProgress not found');
+      throw new NotFoundException(`TrainingProgress not found (id: ${id})`);
     };
     const model = await this.repository.finishTraining(id, status, feedback );
     return TrainingProgressFactory.create(model)
@@ -35,7 +35,7 @@ export class TrainingProgressService {
   async cancelTraining(id: string): Promise<boolean> {
     const training = await this.repository.findById(id);
     if (!training) {
-      throw new NotFoundException('TrainingProgress not found');
+      throw new NotFoundException(`TrainingProgress not found (id: ${id})`);
     };
     return await this.repository.delete(id);
   }

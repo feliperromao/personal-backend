@@ -15,6 +15,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import CreateTrainingInput from '@src/trainings/inputs/create-training.input';
 import TrainingProgressInput from './inputs/start-training.input';
 import { FINISH_STATUS } from './enum/finish-status.enum';
+import { NotFoundException } from '@nestjs/common';
 
 let mongod: MongoMemoryServer;
 let mongoConnection;
@@ -89,7 +90,15 @@ describe('TrainingProgressResolver', () => {
     expect(resolver).toBeDefined();
   });
 
-  it("soult start an exist training", async() => {
+  it("should throws if trainig not exists when try start a training", async () => {
+    await expect(async () => {
+      await resolver.startTraining({
+        id: "any_training_id"
+      } as TrainingProgressInput)
+    }).rejects.toThrow(new NotFoundException(`Training not found (id: any_training_id)`))
+  })
+
+  it("should start an exist training", async() => {
     const trainingData = {
       name: "Costas + abdominal",
       personal_id: "any_personal_id",
@@ -140,7 +149,7 @@ describe('TrainingProgressResolver', () => {
     expect(startedTraining.training_id).toBe(training._id.toString())
   });
 
-  it("soult finish a training", async() => {
+  it("should finish a training", async() => {
     const trainingData = {
       name: "Costas + abdominal",
       personal_id: "any_personal_id",
@@ -192,4 +201,73 @@ describe('TrainingProgressResolver', () => {
     expect(finished.finish_feedback).toBe("treino top")
     expect(finished.training_id).toBe(training._id.toString())
   });
+
+  it("should throws if trainig not exists when try finish a training", async () => {
+    await expect(async () => {
+      await resolver.finishTraining({
+        id: "any_training_id",
+        status: FINISH_STATUS.INTENSA,
+        feedback: "mais um treino top finalizado"
+      } as TrainingProgressInput)
+    }).rejects.toThrow(new NotFoundException(`TrainingProgress not found (id: any_training_id)`))
+  })
+
+  it("should cancel a training", async() => {
+    const trainingData = {
+      name: "Costas + abdominal",
+      personal_id: "any_personal_id",
+      show_to_student: true,
+      student_id: "any_student_id",
+      description: "Segunda - Costas",
+      exercises: [
+        {
+          id: "1",
+          name: "Puxada alta",
+          instructions: "4x12",
+          load: 0,
+          load_progress: true,
+          personal_id: "any_personal_id",
+          rest: 90,
+          series: 4,
+          video: "https://www.youtube.com/shorts/yp14vDyCUJA",
+        },
+        {
+          id: "2",
+          name: "Remada curvada",
+          instructions: "4x12",
+          load: 0,
+          load_progress: true,
+          personal_id: "any_personal_id",
+          rest: 60,
+          series: 4,
+          video: "https://www.youtube.com/shorts/7lc8Ow4vIwA",
+        },
+        {
+          id: "2",
+          name: "Remada unilateral",
+          instructions: "4x12",
+          load: 0,
+          load_progress: true,
+          personal_id: "any_personal_id",
+          rest: 45,
+          series: 4,
+          video: "https://www.youtube.com/shorts/L2FuijYFTvE",
+        },
+      ]
+    } as CreateTrainingInput
+    const training = await trainingsRepository.create(trainingData)
+    const startedTraining = await resolver.startTraining({
+      id: training._id.toString(),
+    } as TrainingProgressInput)
+    const finished = await resolver.cancelTraining({id: startedTraining.id} as TrainingProgressInput)
+    expect(finished).toBeTruthy()
+  });
+
+  it("should throws if trainig not exists when try cancel training", async () => {
+    await expect(async () => {
+      await resolver.cancelTraining({
+        id: "any_training_id"
+      } as TrainingProgressInput)
+    }).rejects.toThrow(new NotFoundException(`TrainingProgress not found (id: any_training_id)`))
+  })
 });
