@@ -16,6 +16,9 @@ COPY . .
 # Exponha a porta que a aplicação vai usar
 EXPOSE 3020
 
+# build da aplicação
+RUN npm run build
+
 # Comando para iniciar a aplicação
 CMD ["npm", "run", "start:dev"]
 
@@ -25,11 +28,10 @@ WORKDIR /usr/src/app
 
 COPY --from=develop /usr/src/app/package.json ./
 COPY --from=develop /usr/src/app/package-lock.json ./
-# COPY --from=develop /usr/src/app/dist ./dist
-# COPY --from=develop /usr/src/app/node_modules ./node_modules
+COPY --from=develop /usr/src/app/dist ./dist
+COPY --from=develop /usr/src/app/node_modules ./node_modules
 
 RUN npm ci --only=production
-RUN npm run build
 
 ENV NODE_ENV=production
 
