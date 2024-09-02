@@ -29,6 +29,7 @@ COPY --from=develop /usr/src/app/package-lock.json ./
 # COPY --from=develop /usr/src/app/node_modules ./node_modules
 
 RUN npm ci --only=production
+RUN npm run build
 
 ENV NODE_ENV=production
 
