@@ -7,7 +7,10 @@ const name = process.env.MONGODB_NAME
 const user = process.env.MONGODB_USER
 const pwd = process.env.MONGODB_PWD
 
-const MONGODB_URI = `mongodb://${host}:${port}/admin`
+let MONGODB_URI = `mongodb://${host}:${port}/admin`
+if (process.env.NODE_ENV === 'production') {
+  MONGODB_URI = `mongodb+srv://${user}:${pwd}@personal.buwng.mongodb.net/?retryWrites=true&w=majority&appName=personal`
+}
 console.log("🛢 ~ MONGODB_URI:", MONGODB_URI)
 
 @Module({
