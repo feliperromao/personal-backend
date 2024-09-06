@@ -20,7 +20,7 @@ services:
     networks: 
       - personal_network
     ports:
-      - ${APP_PORT}:3020
+      - ${PORT}:3020
   personal_mongo:
     image: mongo:3.6.10
     container_name: personal_mongo
