@@ -41,15 +41,3 @@ services:
     command: mongod --smallfiles --logpath=/dev/stdout # --quiet
     restart: unless-stopped
     tty: true
-  # personal_redis:
-  #   image: redis:5.0.9
-  #   container_name: personal_redis
-  #   networks:
-  #     personal_network:
-  #   command: redis-server --requirepass ${REDIS_PASSWORD}
-  #   environment:
-  #     - REDIS_PASSWORD=${REDIS_PASSWORD}
-  #   ports:
-  #     - 6310:6379
-  #   restart: unless-stopped
-  #   tty: true
