@@ -1,6 +1,6 @@
 import { InjectModel } from "@nestjs/mongoose";
 import { ObjectId } from "mongodb";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import {Training} from "@src/@infra/models/training/mongoose/training.model";
 import CreateTrainingInput from "@src/trainings/inputs/create-training.input";
 import UpdateTrainingInput from "@src/trainings/inputs/update-training.input";
@@ -37,6 +37,6 @@ export default class TrainingsRepository {
   }
 
   async findById(id: string): Promise<Training> {
-    return await this.model.findOne({_id: id}).exec();
+    return await this.model.findOne({_id: new mongoose.Types.ObjectId(id)}).exec();
   }
 }

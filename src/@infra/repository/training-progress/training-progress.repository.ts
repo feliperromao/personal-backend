@@ -1,6 +1,6 @@
 import { InjectModel } from "@nestjs/mongoose";
 import { ObjectId } from "mongodb";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { TrainingProgress } from "@src/@infra/models/training-progress/mongoose/training-progress.model";
 import Training from "@src/trainings/training.entity";
 import { FINISH_STATUS } from "@src/training-progress/enum/finish-status.enum";
@@ -37,7 +37,7 @@ export default class TrainingProgressRepository {
   }
 
   async findById(id: string): Promise<TrainingProgress> {
-    return await this.model.findOne({_id: id}).exec();
+    return await this.model.findOne({_id: new mongoose.Types.ObjectId(id)}).exec();
   }
 
   async delete(id: string): Promise<boolean> {

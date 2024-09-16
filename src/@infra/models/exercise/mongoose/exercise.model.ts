@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 @Schema()
-export class Exercise extends Document {  
+export class Exercise extends Document {
   @Prop()
-  _id: string;
+  _id: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
   name: string;

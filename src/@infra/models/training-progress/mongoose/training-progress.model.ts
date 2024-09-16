@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { Exercise } from '../../exercise/mongoose/exercise.model';
 import { FINISH_STATUS } from '@src/training-progress/enum/finish-status.enum';
 
 @Schema()
 export class TrainingProgress extends Document {
   @Prop()
-  _id: string;
+  _id: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
   training_id: string;

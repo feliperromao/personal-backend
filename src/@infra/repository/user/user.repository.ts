@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { User } from '../../models/user/mongoose/user.model';
 import { CreateStudentInput } from '../../../users/inputs/create-student.input';
 import { ObjectId } from 'mongodb';
@@ -47,7 +47,7 @@ export class UserRepository {
     if (value) {
       return {...JSON.parse(value.toString()) } as User
     };
-    const user = await this.model.findOne({_id: id}).exec();
+    const user = await this.model.findOne({_id: new mongoose.Types.ObjectId(id)}).exec();
     await this.cacheManager.set(CACHE_KEY, JSON.stringify(user));
     return user;
   }
