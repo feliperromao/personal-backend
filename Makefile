@@ -1,6 +1,9 @@
 start:
 	docker-compose up
 
+restart:
+	make down;make build;make logs
+
 up:
 	docker-compose up -d
 

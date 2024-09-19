@@ -89,7 +89,7 @@ type Mutation {
   createTraining(training: CreateTrainingInput!): Training!
   updateTraining(training: UpdateTrainingInput!): Training!
   deleteTraining(ids: [ID!]!): Boolean!
-  startTraining(id: String!, status: String, feedback: String): TrainingProgress!
+  startTraining(id: String!): TrainingProgress!
   finishTraining(id: String!, status: String, feedback: String): TrainingProgress!
   cancelTraining(id: String!, status: String, feedback: String): Boolean!
 }

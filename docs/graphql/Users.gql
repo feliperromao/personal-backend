@@ -1,6 +1,6 @@
 ## Listar os alunos
 {
-  users(personal_id: "66930805698bbdc15b94a8f1") {
+  listStudents(personal_id: "66e7a6f44513bc9ff14872b0") {
     id
     name
     email

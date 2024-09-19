@@ -6,9 +6,7 @@ const port = process.env.MONGODB_PORT;
 const name = process.env.MONGODB_NAME;
 const user = process.env.MONGODB_USER;
 const pwd = process.env.MONGODB_PWD;
-
-let MONGODB_URI = `mongodb://${user}:${pwd}@${host}:${port}/admin`;
-console.log("🚀 ~ MONGODB_URI:", MONGODB_URI)
+const MONGODB_URI = `mongodb://${user}:${pwd}@${host}:${port}/admin`;
 
 @Module({
   imports: [

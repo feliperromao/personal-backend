@@ -15,8 +15,7 @@ export class TrainingProgressResolver {
   @Mutation(() => TrainingProgress, {name: 'startTraining'})
   @Roles(USER_TYPE.STUDENT)
   @UseGuards(GqlAuthGuard, GqlRolesGuard)
-  async startTraining(@Args() args: TrainingProgressInput): Promise<TrainingProgress> {
-    const { id } = args;
+  async startTraining(@Args('id') id: string): Promise<TrainingProgress> {
     return await this.service.startTraining(id);
   }
 

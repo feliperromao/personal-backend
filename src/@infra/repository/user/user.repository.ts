@@ -68,10 +68,10 @@ export class UserRepository {
   }
 
   async delete(ids: string[]): Promise<void> {
-    await this.model.deleteMany({_id: {$in: ids}}).exec();
     for(let id of ids) {
       let CACHE_KEY = `user-${id}`;
       await this.cacheManager.del(CACHE_KEY);
+      await this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
     }
   }
 }

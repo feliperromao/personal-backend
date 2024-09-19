@@ -2,6 +2,12 @@
 mutation {
   login(password: "123456k",
     email: "feliperomaocad@gmail.com") {
-    token
+    token,
+    user{
+      id
+      name
+      email
+      type
+    }
   }
 }
