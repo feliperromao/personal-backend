@@ -28,12 +28,14 @@ export default class TrainingsRepository {
   async update(data: UpdateTrainingInput): Promise<Training> {
     const { id } = data;
     delete data.id;
-    await this.model.findByIdAndUpdate(id, data);
-    return await this.model.findById(id);
+    await this.model.findByIdAndUpdate(new mongoose.Types.ObjectId(id), data);
+    return await this.model.findById(new mongoose.Types.ObjectId(id));
   }
 
   async delete(ids: string[]) {
-    await this.model.deleteMany({ _id: {$in: ids} })
+    for(let id of ids) {
+      this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
+    }
   }
 
   async findById(id: string): Promise<Training> {
