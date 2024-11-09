@@ -18,6 +18,10 @@ export class UsersService {
     return await this.repository.findAll();
   }
 
+  async getAllPersonals() {
+    return await this.repository.getAllPersonals();
+  }
+
   async getAllByPersonal(personal_id: string) {
     const students = await this.repository.getAllByPersonal(personal_id);
     return students.map(student => UserFactory.create(student));
@@ -48,18 +52,17 @@ export class UsersService {
     });
   }
 
-  async updateStudents(requestData): Promise<User> {
-    const { id } = requestData;
-    delete requestData.id;
-    requestData.type = USER_TYPE.STUDENT;
-    if (requestData.password) {
-      requestData.password = await this.encrypt.encrypt(requestData.password);
-    }
-    const model = await this.repository.update(id, requestData);
-    return UserFactory.create(model);
+  async updateStudents(userData): Promise<User> {
+    userData.type = USER_TYPE.STUDENT;
+    return this.updateUser(userData)
   }
 
-  async deleteStudents(ids: string[]): Promise<void> {
+  async updatePersonal(userData): Promise<User> {
+    userData.type = USER_TYPE.PERSONAL;
+    return this.updateUser(userData)
+  }
+
+  async deleteUsers(ids: string[]): Promise<void> {
     this.repository.delete(ids);
   }
 
@@ -74,5 +77,20 @@ export class UsersService {
       password: await this.encrypt.encrypt(data.password)
     });
     return UserFactory.create(userCrated);
+  }
+
+  private async updateUser(userData): Promise<User> {
+    const checkIfUserExists = await this.findByEmail(userData.email);
+    if (checkIfUserExists && userData.id != checkIfUserExists.id) {
+      throw new BadRequestException("user already exists");
+    }
+
+    if (userData.password) {
+      userData.password = await this.encrypt.encrypt(userData.password);
+    }
+    const { id } = userData;
+    delete userData.id;
+    const model = await this.repository.update(id, userData);
+    return UserFactory.create(model);
   }
 }

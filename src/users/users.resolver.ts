@@ -7,7 +7,7 @@ import { Roles } from '@src/guards/roles.decorator';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '@src/guards/gql-auth.guard';
-import { GqlRolesGuard } from '@src/guards/gql-roles.guard';
+import { RolesGuard } from '@src/guards/roles.guard';
 import GetUsersInput from './inputs/get-users.input';
 import DeleteInput from '@src/@shared/gql-inputs/delete.input';
 import { UpdateStudentInput } from './inputs/update-student.input';
@@ -18,7 +18,7 @@ export class UsersResolver {
 
   @Query(() => [User], {name: 'listStudents'})
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   listStudents(@Args() args: GetUsersInput) {
     const { personal_id } = args
     return this.usersService.getAllByPersonal(personal_id);
@@ -26,18 +26,18 @@ export class UsersResolver {
 
   @Mutation(() => User)
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async createStudent(@Args('user') requestData: CreateStudentInput,): Promise<User> {
     return await this.usersService.createStudent(requestData);
   }
 
   @Mutation(() => Boolean, {name: 'deleteStudents'})
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async deleteStudents(@Args() args: DeleteInput,): Promise<boolean> {
     const { ids } = args
     try {
-      await this.usersService.deleteStudents(ids);
+      await this.usersService.deleteUsers(ids);
       return true
     } catch (error) {
       return false;
@@ -46,14 +46,14 @@ export class UsersResolver {
 
   @Mutation(() => User)
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async updateStudents(@Args('user') requestData: UpdateStudentInput): Promise<User> {
     return await this.usersService.updateStudents(requestData);
   }
 
   @Mutation(() => User)
   @Roles(USER_TYPE.ADMIN)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async createPersonal(@Args('user') requestData: CreatePersonalInput): Promise<User> {
     return await this.usersService.createPersonal(requestData);
   }

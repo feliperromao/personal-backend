@@ -3,7 +3,7 @@ import Training from './training.entity';
 import { Roles } from '@src/guards/roles.decorator';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '@src/guards/gql-auth.guard';
-import { GqlRolesGuard } from '@src/guards/gql-roles.guard';
+import { RolesGuard } from '@src/guards/roles.guard';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { TrainingsService } from './trainings.service';
 import GetTrainingsInput from './inputs/get-trainings.input';
@@ -18,14 +18,14 @@ export class TrainingsResolver {
 
   @Query(() => [Training])
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async trainings(@Args() args: GetTrainingsInput): Promise<Training[]> {
     const { personal_id } = args
     return await this.service.getAllByPersonal(personal_id);
   }
 
   @Query(() => [Training])
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async studentTrainigs(@Args() args: StudentFilterInput): Promise<Training[]> {
     const { student_id } = args
     return await this.service.getAllByStudent(student_id);
@@ -33,21 +33,21 @@ export class TrainingsResolver {
 
   @Mutation(() => Training, {name: 'createTraining'})
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async createTraining(@Args('training') data: CreateTrainingInput): Promise<Training> {
     return await this.service.create(data)
   }
 
   @Mutation(() => Training, {name: 'updateTraining'})
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async updateTraining(@Args('training') inputData: UpdateTrainingInput): Promise<Training> {
     return await this.service.update(inputData)
   }
 
   @Mutation(() => Boolean, {name: 'deleteTraining'})
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async deleteTraining(@Args() args: DeleteInput): Promise<boolean> {
     const { ids } = args
     try {

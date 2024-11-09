@@ -147,7 +147,7 @@ describe('UsersService', () => {
       password: "XXXXXXXX",
       personal_id: "XXXXXXXXX"
     });
-    await service.deleteStudents([user.id]);
+    await service.deleteUsers([user.id]);
     const userDeleted = await service.findByEmail(user.email);
     expect(userDeleted).toBeNull();
   })

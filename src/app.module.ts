@@ -7,6 +7,9 @@ import { ExercisesModule } from './exercises/exercises.module';
 import { TrainingsModule } from './trainings/trainings.module';
 import { TrainingProgressModule } from './training-progress/training-progress.module';
 import { AppController } from './app.controller';
+import { StudentsController } from './controllers/students/students.controller';
+import { JwtModule } from '@nestjs/jwt';
+import { PersonalsController } from './controllers/personals/personals.controller';
 
 @Module({
   imports: [
@@ -17,8 +20,9 @@ import { AppController } from './app.controller';
     ExercisesModule,
     TrainingsModule,
     TrainingProgressModule,
+    JwtModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, StudentsController, PersonalsController],
   providers: [],
 })
 export class AppModule {}

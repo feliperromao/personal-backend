@@ -35,6 +35,7 @@ export class AuthGuard implements CanActivate {
         name: user.name,
         type: user.type,
       }
+      request.headers['user_id'] = user.id
     } catch {
       throw new UnauthorizedException();
     }

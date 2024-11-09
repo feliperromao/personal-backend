@@ -4,7 +4,7 @@ import { Roles } from '@src/guards/roles.decorator';
 import { Exercise } from './exercise.entity';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '@src/guards/gql-auth.guard';
-import { GqlRolesGuard } from '@src/guards/gql-roles.guard';
+import { RolesGuard } from '@src/guards/roles.guard';
 import CreateExerciseInput from './inputs/create-exercise.input';
 import { ExercisesService } from './exercises.service';
 import GetExercisesInput from './inputs/get-exercises.input';
@@ -17,21 +17,21 @@ export class ExercisesResolver {
   
   @Mutation(() => Exercise)
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async createExercise(@Args('exercise') exerciseData: CreateExerciseInput): Promise<Exercise> {
     return await this.service.create(exerciseData);
   }
 
   @Mutation(() => Exercise)
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async updateExercise(@Args('exercise') exerciseData: UpdateExerciseInput): Promise<Exercise> {
     return await this.service.update(exerciseData);
   }
 
   @Query(() => [Exercise])
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   getAllExercises(@Args() args: GetExercisesInput){
     const { personal_id } = args
     return this.service.getAllByPersonal(personal_id);
@@ -39,7 +39,7 @@ export class ExercisesResolver {
 
   @Mutation(() => Boolean, {name: 'deleteExercise'})
   @Roles(USER_TYPE.PERSONAL)
-  @UseGuards(GqlAuthGuard, GqlRolesGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   deleteExercise(@Args() args: DeleteInput){
     const { ids } = args
     try {

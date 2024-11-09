@@ -1,4 +1,3 @@
-// roles.guard.ts
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
@@ -6,7 +5,7 @@ import { ROLES_KEY } from './roles.decorator';
 import { UsersService } from '@src/users/users.service';
 
 @Injectable()
-export class GqlRolesGuard implements CanActivate {
+export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector, private usersService: UsersService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

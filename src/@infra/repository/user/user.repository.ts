@@ -6,6 +6,7 @@ import { CreateStudentInput } from '../../../users/inputs/create-student.input';
 import { ObjectId } from 'mongodb';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { USER_TYPE } from '@src/users/enum/user.type';
 
 @Injectable()
 export class UserRepository {
@@ -37,6 +38,10 @@ export class UserRepository {
     return await this.model.find().exec();
   }
 
+  async getAllPersonals(): Promise<User[]> {
+    return await this.model.find({type: USER_TYPE.PERSONAL}).exec();
+  }
+
   async getAllByPersonal(personal_id: string): Promise<User[]> {
     return await this.model.find({ personal_id: personal_id }).exec();
   }
@@ -61,10 +66,10 @@ export class UserRepository {
   }
 
   async update(id: string, data: User): Promise<User> {
-    await this.model.findByIdAndUpdate(id, data);
+    await this.model.findByIdAndUpdate(new mongoose.Types.ObjectId(id), data);
     const CACHE_KEY = `user-${id}`;
     await this.cacheManager.del(CACHE_KEY);
-    return await this.model.findById(id);
+    return await this.model.findById(new mongoose.Types.ObjectId(id));
   }
 
   async delete(ids: string[]): Promise<void> {
