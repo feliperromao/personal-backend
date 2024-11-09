@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Exercise } from "@src/@infra/models/exercise/mongoose/exercise.model";
 import CreateExerciseInput from "@src/exercises/inputs/create-exercise.input";
@@ -21,15 +21,25 @@ export class ExerciseRepository {
   async update(data: UpdateExerciseInput): Promise<Exercise> {
     const { id } = data;
     delete data.id;
-    await this.model.findByIdAndUpdate(id, data);
-    return await this.model.findById(id);
+    await this.model.findByIdAndUpdate(new mongoose.Types.ObjectId(id), data);
+    return await this.model.findById(new mongoose.Types.ObjectId(id));
+  }
+
+  async findById(id: string): Promise<Exercise> {
+    return await this.model.findById(new mongoose.Types.ObjectId(id));
   }
 
   async getAllByPersonal(personal_id: string): Promise<Exercise[]> {
     return await this.model.find({ personal_id })
   }
 
+  async getDefaultExercises(): Promise<Exercise[]> {
+    return await this.model.find({ "personal_id": "" })
+  }
+
   async delete(ids: string[]): Promise<void> {
-    await this.model.deleteMany({ _id: {$in: ids} })
+    for(let id of ids) {
+      this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
+    }
   }
 }

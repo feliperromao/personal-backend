@@ -12,7 +12,7 @@ export default class CreateExerciseInput {
   instructions?: string;
 
   @Field({nullable: true})
-  video: string;
+  video?: string;
 
   @Field()
   rest: number;

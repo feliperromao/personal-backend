@@ -15,7 +15,7 @@ export default class UpdateExerciseInput {
   instructions?: string;
 
   @Field({nullable: true})
-  video: string;
+  video?: string;
 
   @Field()
   rest: number;
