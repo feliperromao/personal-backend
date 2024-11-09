@@ -8,6 +8,13 @@ import { FINISH_STATUS } from "@src/training-progress/enum/finish-status.enum";
 export default class TrainingProgressRepository {
   constructor(@InjectModel(TrainingProgress.name) private model: Model<TrainingProgress>) { }
   
+  async getCurrentTraining(student_id: string): Promise<TrainingProgress> {
+    return await this.model.findOne({
+      student_id: student_id,
+      finished_at: { $exists: false }
+    })
+  }
+
   async startTraining(training: Training): Promise<TrainingProgress> {
     const training_id = training.id
     delete training.id;
@@ -32,7 +39,7 @@ export default class TrainingProgressRepository {
       finish_feedback: feedback,
       finish_status: status
     };
-    await this.model.findByIdAndUpdate(id, data);
+    await this.model.findByIdAndUpdate(new mongoose.Types.ObjectId(id), data);
     return this.findById(id);
   }
 
@@ -41,7 +48,7 @@ export default class TrainingProgressRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    const result = await this.model.findByIdAndDelete(id);
+    const result = await this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id));
     return !!result;
   }
 }

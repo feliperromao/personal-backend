@@ -13,6 +13,14 @@ export class TrainingProgressService {
     protected readonly trainingRepository: TrainingsRepository,
   ) { }
 
+  async getCurrentTraining(student_id: string): Promise<TrainingProgress>  {
+    const model = await this.repository.getCurrentTraining(student_id);
+    if (model) {
+      return TrainingProgressFactory.create(model) 
+    }
+    return null
+  }
+
   async startTraining(id: string): Promise<TrainingProgress> {
     const training = await this.trainingRepository.findById(id);
     if (!training) {
