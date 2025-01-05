@@ -19,9 +19,10 @@ export class ExercisesService {
     return ExerciseFactory.create(exercise)
   }
 
-  async getAllByPersonal(personal_id: string): Promise<Exercise[]> {
-    const exercises = await this.repository.getAllByPersonal(personal_id);
-    return exercises.map(exercise => ExerciseFactory.create(exercise))
+  async getAllByPersonal(personal_id: string, search: string = '', page: number = 1, limit: number =10) {
+    const result = await this.repository.getAllByPersonal(personal_id, search, page, limit);
+    result.data = result.data.map(exercise => ExerciseFactory.create(exercise))
+    return result
   }
 
   async getDefaultExercises(): Promise<Exercise[]> {

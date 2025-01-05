@@ -4,7 +4,7 @@ import { Roles } from '@src/guards/roles.decorator';
 import { RolesGuard } from '@src/guards/roles.guard';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { UsersService } from '@src/users/users.service';
-import GetStudentsDto from './dtos/get-students.dto';
+import SearchQueryDto from '../../@shared/pagination/search-query.dto';
 import { CreateSudentDto } from './dtos/create-student.dto';
 import { UpdateSudentDto } from './dtos/update-student.dto';
 import Paginate from '@src/@shared/pagination/paginate';
@@ -18,7 +18,7 @@ export class StudentsController {
 
   @Get("/")
   @HttpCode(HttpStatus.OK)
-  async listStudents(@Headers() headers: any, @Query() query: GetStudentsDto) {
+  async listStudents(@Headers() headers: any, @Query() query: SearchQueryDto) {
     const { user_id } = headers
     const { search = '', page=1, limit=10 } = query
     const result = await this.usersService.getAllByPersonal(user_id, search, page, limit)

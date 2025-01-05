@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, Headers, HttpCode, HttpStatus, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ExercisesService } from '@src/exercises/exercises.service';
 import { AuthGuard } from '@src/guards/auth.guard';
 import { Roles } from '@src/guards/roles.decorator';
 import { RolesGuard } from '@src/guards/roles.guard';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { CreateExerciseDto } from './dtos/create-exercise.dto';
+import Paginate from '@src/@shared/pagination/paginate';
+import SearchQueryDto from '@src/@shared/pagination/search-query.dto';
 
 @Roles(USER_TYPE.PERSONAL)
 @UseGuards(AuthGuard, RolesGuard)
@@ -14,9 +16,11 @@ export class ExercisesController {
   constructor(protected readonly service: ExercisesService) { }
 
   @Get('/')
-  async listAll(@Headers() headers: any) {
+  async listAll(@Headers() headers: any, @Query() query: SearchQueryDto) {
     const { user_id } = headers
-    return await this.service.getAllByPersonal(user_id)
+    const { search = '', page=1, limit=10 } = query
+    const result = await this.service.getAllByPersonal(user_id, search, page, limit)
+    return Paginate.create('exercises', result.data, result.total, page, limit)
   }
 
   @Get('/defaults')
