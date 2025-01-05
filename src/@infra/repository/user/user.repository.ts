@@ -7,9 +7,12 @@ import { ObjectId } from 'mongodb';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { USER_TYPE } from '@src/users/enum/user.type';
+import Pagination from '@src/@shared/pagination/pagination.interface';
 
 @Injectable()
 export class UserRepository {
+  private readonly resource = 'students';
+
   constructor(
     @InjectModel(User.name) private model: Model<User>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache
@@ -42,8 +45,41 @@ export class UserRepository {
     return await this.model.find({type: USER_TYPE.PERSONAL}).exec();
   }
 
-  async getAllByPersonal(personal_id: string): Promise<User[]> {
-    return await this.model.find({ personal_id: personal_id }).exec();
+  async paginate(data: any[], total: number, page: number, limit: number): Promise<Pagination> {
+    const totalDocuments = await this.model.countDocuments();
+    const totalPages = Math.ceil(totalDocuments / limit);
+    const resource_uri = `${process.env.APP_URL}/${this.resource}`
+    const first_page_url = `${resource_uri}?page=1`
+    const last_page_url = `${resource_uri}?page=${totalPages}`
+    const next_page_url = (totalPages > 1) ? `${resource_uri}?page=${page+1}` :first_page_url
+    return {
+      current_page: page,
+      data: data,
+      first_page_url: first_page_url,
+      last_page: totalPages,
+      last_page_url: last_page_url,
+      next_page_url: next_page_url,
+      per_page: limit,
+      total_documents: totalDocuments
+    }
+  }
+
+  async getAllByPersonal(personal_id: string, search: string, page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const fieldsSelection = {id: true, name: true, email: true, blocked: true };
+    let query
+    let queryCountDocuments
+    if (search === '') {
+      query = this.model.find({ personal_id: personal_id }, fieldsSelection)
+      queryCountDocuments = this.model.find({ personal_id: personal_id })
+    } else {
+      query = this.model.find({ personal_id: personal_id, name: {$regex: search, $options: '-i'} })
+      queryCountDocuments = this.model.find({ personal_id: personal_id, name: {$regex: search, $options: '-i'} })
+    }
+
+    const total = await queryCountDocuments.countDocuments().exec();
+    const data = await query.skip(skip).limit(limit).exec();
+    return { total, data}
   }
 
   async findById(id: string): Promise<User> {

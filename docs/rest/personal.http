@@ -1,0 +1,29 @@
+### 👉👉👉 login 👈👈👈
+# @name login
+POST http://localhost:3020/auth/login
+Content-Type: application/json
+
+{
+  "email": "feliperomaocad@gmail.com",
+  "password": "123456k"
+}
+###
+
+@token = {{ login.response.body.access_token }}
+
+### 👉👉👉 list students 👈👈👈
+GET http://localhost:3020/students?search=FELIPE
+Authorization: Bearer {{ token }}
+###
+
+### 👉👉👉 create student 👈👈👈
+POST http://localhost:3020/students
+Authorization: Bearer {{ token }}
+Content-Type: application/json
+
+{
+  "name": "Cicrano",
+  "email": "cicrano@mail.com",
+  "password": "12345678"
+}
+###

@@ -14,6 +14,7 @@ export class UsersService {
   constructor(private readonly repository: UserRepository) {
     this.encrypt = new Bcrypt();
   }
+
   async findAll() {
     return await this.repository.findAll();
   }
@@ -22,9 +23,10 @@ export class UsersService {
     return await this.repository.getAllPersonals();
   }
 
-  async getAllByPersonal(personal_id: string) {
-    const students = await this.repository.getAllByPersonal(personal_id);
-    return students.map(student => UserFactory.create(student));
+  async getAllByPersonal(personal_id: string, search: string = '', page: number = 1, limit: number =10) {
+    const result = await this.repository.getAllByPersonal(personal_id, search, page, limit);
+    result.data = result.data.map(student => UserFactory.create(student))
+    return result; 
   }
 
   async findById(id: string): Promise<User> {

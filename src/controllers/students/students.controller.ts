@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Headers, HttpCode, HttpStatus, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@src/guards/auth.guard';
 import { Roles } from '@src/guards/roles.decorator';
 import { RolesGuard } from '@src/guards/roles.guard';
@@ -7,6 +7,7 @@ import { UsersService } from '@src/users/users.service';
 import GetStudentsDto from './dtos/get-students.dto';
 import { CreateSudentDto } from './dtos/create-student.dto';
 import { UpdateSudentDto } from './dtos/update-student.dto';
+import Paginate from '@src/@shared/pagination/paginate';
 
 @Controller('students')
 @Roles(USER_TYPE.PERSONAL)
@@ -17,9 +18,11 @@ export class StudentsController {
 
   @Get("/")
   @HttpCode(HttpStatus.OK)
-  async listStudents(@Headers() headers: any, @Body() body: GetStudentsDto) {
+  async listStudents(@Headers() headers: any, @Query() query: GetStudentsDto) {
     const { user_id } = headers
-    return await this.usersService.getAllByPersonal(user_id)
+    const { search = '', page=1, limit=10 } = query
+    const result = await this.usersService.getAllByPersonal(user_id, search, page, limit)
+    return Paginate.create('students', result.data, result.total, page, limit)
   }
 
   @Post("/")
