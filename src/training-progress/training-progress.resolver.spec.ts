@@ -92,10 +92,8 @@ describe('TrainingProgressResolver', () => {
 
   it("should throws if trainig not exists when try start a training", async () => {
     await expect(async () => {
-      await resolver.startTraining({
-        id: "any_training_id"
-      } as TrainingProgressInput)
-    }).rejects.toThrow(new NotFoundException(`Training not found (id: any_training_id)`))
+      await resolver.startTraining("6719412f0024cd0c7a0bb59c")
+    }).rejects.toThrow(new NotFoundException(`Training not found (id: 6719412f0024cd0c7a0bb59c)`))
   })
 
   it("should start an exist training", async() => {
@@ -142,9 +140,7 @@ describe('TrainingProgressResolver', () => {
       ]
     } as CreateTrainingInput
     const training = await trainingsRepository.create(trainingData)
-    const startedTraining = await resolver.startTraining({
-      id: training._id.toString(),
-    } as TrainingProgressInput)
+    const startedTraining = await resolver.startTraining(training._id.toString())
 
     expect(startedTraining.training_id).toBe(training._id.toString())
   });
@@ -193,9 +189,7 @@ describe('TrainingProgressResolver', () => {
       ]
     } as CreateTrainingInput
     const training = await trainingsRepository.create(trainingData)
-    const startedTraining = await resolver.startTraining({
-      id: training._id.toString(),
-    } as TrainingProgressInput)
+    const startedTraining = await resolver.startTraining(training._id.toString())
     const finished = await resolver.finishTraining({id: startedTraining.id, status: FINISH_STATUS.INTENSA, feedback: "treino top"} as TrainingProgressInput)
     expect(finished.finish_status).toBe(FINISH_STATUS.INTENSA)
     expect(finished.finish_feedback).toBe("treino top")
@@ -205,11 +199,11 @@ describe('TrainingProgressResolver', () => {
   it("should throws if trainig not exists when try finish a training", async () => {
     await expect(async () => {
       await resolver.finishTraining({
-        id: "any_training_id",
+        id: "6719412f0024cd0c7a0bb59c",
         status: FINISH_STATUS.INTENSA,
         feedback: "mais um treino top finalizado"
       } as TrainingProgressInput)
-    }).rejects.toThrow(new NotFoundException(`TrainingProgress not found (id: any_training_id)`))
+    }).rejects.toThrow(new NotFoundException(`TrainingProgress not found (id: 6719412f0024cd0c7a0bb59c)`))
   })
 
   it("should cancel a training", async() => {
@@ -256,9 +250,7 @@ describe('TrainingProgressResolver', () => {
       ]
     } as CreateTrainingInput
     const training = await trainingsRepository.create(trainingData)
-    const startedTraining = await resolver.startTraining({
-      id: training._id.toString(),
-    } as TrainingProgressInput)
+    const startedTraining = await resolver.startTraining(training._id.toString())
     const finished = await resolver.cancelTraining({id: startedTraining.id} as TrainingProgressInput)
     expect(finished).toBeTruthy()
   });
@@ -266,8 +258,8 @@ describe('TrainingProgressResolver', () => {
   it("should throws if trainig not exists when try cancel training", async () => {
     await expect(async () => {
       await resolver.cancelTraining({
-        id: "any_training_id"
+        id: "6719412f0024cd0c7a0bb59c"
       } as TrainingProgressInput)
-    }).rejects.toThrow(new NotFoundException(`TrainingProgress not found (id: any_training_id)`))
+    }).rejects.toThrow(new NotFoundException(`TrainingProgress not found (id: 6719412f0024cd0c7a0bb59c)`))
   })
 });

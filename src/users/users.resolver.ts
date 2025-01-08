@@ -35,9 +35,9 @@ export class UsersResolver {
   @Roles(USER_TYPE.PERSONAL)
   @UseGuards(GqlAuthGuard, RolesGuard)
   async deleteStudents(@Args() args: DeleteInput,): Promise<boolean> {
-    const { ids } = args
+    const { id } = args
     try {
-      await this.usersService.deleteUsers(ids);
+      await this.usersService.deleteUsers(id);
       return true
     } catch (error) {
       return false;

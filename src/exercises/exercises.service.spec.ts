@@ -124,9 +124,9 @@ describe('ExercisesService', () => {
 
     const exercises = await service.getAllByPersonal("personal_id_123456");
 
-    expect(exercises.length).toBe(2);
-    expect(exercises[0].name).toBe("any_name");
-    expect(exercises[0].personal_id).toBe("personal_id_123456");
+    expect(exercises.data.length).toBe(2);
+    expect(exercises.data[0].name).toBe("any_name");
+    expect(exercises.data[0].personal_id).toBe("personal_id_123456");
   })
 
   it("should delete all exercises in list", async () => {
@@ -152,8 +152,9 @@ describe('ExercisesService', () => {
       series: 3
     });
 
-    await service.delete([exercise1.id, exercise2.id]);
+    await service.delete(exercise1.id)
+    await service.delete(exercise2.id)
     const exercises = await service.getAllByPersonal("XXXXXXXXXXXXXXXXXX");
-    expect(exercises.length).toBe(0);
+    expect(exercises.data.length).toBe(0);
   })
 });

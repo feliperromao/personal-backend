@@ -7,7 +7,7 @@ import UpdateExerciseInput from './inputs/update-exercise.input';
 
 @Injectable()
 export class ExercisesService {
-  constructor(private readonly repository: ExerciseRepository) {}
+  constructor(private readonly repository: ExerciseRepository) { }
 
   async create(exerciseData: CreateExerciseInput): Promise<Exercise> {
     const exercise = await this.repository.create(exerciseData);
@@ -19,7 +19,7 @@ export class ExercisesService {
     return ExerciseFactory.create(exercise)
   }
 
-  async getAllByPersonal(personal_id: string, search: string = '', page: number = 1, limit: number =10) {
+  async getAllByPersonal(personal_id: string, search: string = '', page: number = 1, limit: number = 10) {
     const result = await this.repository.getAllByPersonal(personal_id, search, page, limit);
     result.data = result.data.map(exercise => ExerciseFactory.create(exercise))
     return result
@@ -30,13 +30,11 @@ export class ExercisesService {
     return exercises.map(exercise => ExerciseFactory.create(exercise))
   }
 
-  async delete(ids: string[]): Promise<void> {
-    for(let id of ids) {
-      const exercise = await this.repository.findById(id)
-      if (exercise.personal_id === "") {
-        throw new HttpException("could not delete default exercise", HttpStatus.FORBIDDEN)
-      }
+  async delete(id: string): Promise<void> {
+    const exercise = await this.repository.findById(id)
+    if (exercise.personal_id === "") {
+      throw new HttpException("could not delete default exercise", HttpStatus.FORBIDDEN)
     }
-    await this.repository.delete(ids);
+    await this.repository.delete(id);
   }
 }

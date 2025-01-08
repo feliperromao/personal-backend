@@ -32,6 +32,6 @@ export class PersonalsController {
 
   @Delete("/:id")
   async deletePersonal(@Param('id') id: string) {
-    return await this.usersService.deleteUsers([id])
+    return await this.usersService.deleteUsers(id)
   }
 }

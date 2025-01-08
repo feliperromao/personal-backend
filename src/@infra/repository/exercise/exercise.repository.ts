@@ -9,7 +9,7 @@ import UpdateExerciseInput from "@src/exercises/inputs/update-exercise.input";
 @Injectable()
 export class ExerciseRepository {
   constructor(@InjectModel(Exercise.name) private model: Model<Exercise>) { }
-  
+
   async create(exerciseData: CreateExerciseInput): Promise<Exercise> {
     const exerciseCreated = new this.model({
       _id: new ObjectId(),
@@ -38,8 +38,8 @@ export class ExerciseRepository {
       data = await this.model.find({ personal_id }).skip(skip).limit(limit).exec();
       total = await this.model.find({ personal_id }).countDocuments();
     } else {
-      data = await this.model.find({ personal_id: personal_id, name: {$regex: search, $options: '-i'} }).skip(skip).limit(limit).exec();
-      total = await this.model.find({ personal_id: personal_id, name: {$regex: search, $options: '-i'} }).countDocuments();
+      data = await this.model.find({ personal_id: personal_id, name: { $regex: search, $options: '-i' } }).skip(skip).limit(limit).exec();
+      total = await this.model.find({ personal_id: personal_id, name: { $regex: search, $options: '-i' } }).countDocuments();
     }
 
     return { total, data }
@@ -49,9 +49,7 @@ export class ExerciseRepository {
     return await this.model.find({ "personal_id": "" })
   }
 
-  async delete(ids: string[]): Promise<void> {
-    for(let id of ids) {
-      this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
-    }
+  async delete(id: string): Promise<void> {
+    this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
   }
 }

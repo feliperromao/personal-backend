@@ -94,7 +94,8 @@
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      ".module.ts"
+      ".module.ts",
+      ".dto.ts"
     ]
   }
 }

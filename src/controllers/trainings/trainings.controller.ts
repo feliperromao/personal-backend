@@ -35,6 +35,6 @@ export class TrainingsController {
 
   @Delete('/:id')
   async deleteTraining(@Param('id') id: string) {
-    return await this.service.delete([id])
+    return await this.service.delete(id)
   }
 }

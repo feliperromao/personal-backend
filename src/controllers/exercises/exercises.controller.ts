@@ -48,6 +48,6 @@ export class ExercisesController {
 
   @Delete('/:id')
   async deleteExercise(@Param('id') id: string) {
-    return await this.service.delete([id])
+    return await this.service.delete(id)
   }
 }

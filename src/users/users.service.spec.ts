@@ -74,10 +74,10 @@ describe('UsersService', () => {
   });
 
   it.skip("should throws if user already exists", async () => {
+    await service.createPersonal({...personlData(), name: "Personal 1"});
     expect(async () => {
-      await service.createPersonal(personlData());
-      return await service.createPersonal(personlData());
-    }).toThrowError(BadRequestException)
+      await service.createPersonal({...personlData(), name: "Personal 2"});
+    }).rejects.toThrowError("user already exists")
   });
 
   it("should get all users by personal", async () => {
@@ -101,10 +101,10 @@ describe('UsersService', () => {
     });
     
     const users = await service.getAllByPersonal("personal_123");
-    expect(users.length).toBe(2);
+    expect(users.data.length).toBe(2);
 
     const users_2 = await service.getAllByPersonal("personal_456");
-    expect(users_2.length).toBe(1);
+    expect(users_2.data.length).toBe(1);
   });
 
   it("should find user by id", async () => {
@@ -142,12 +142,13 @@ describe('UsersService', () => {
 
   it("should delete user", async () => {
     const user = await service.createStudent({
-      email: "felipe@mail.com",
-      name: "felipe",
+      email: "student_test@mail.com",
+      name: "student_test",
       password: "XXXXXXXX",
-      personal_id: "XXXXXXXXX"
+      personal_id: "6719412f0024cd0c7a0bb59d"
     });
-    await service.deleteUsers([user.id]);
+    await service.getAllByPersonal("6719412f0024cd0c7a0bb59d")
+    await service.deleteUsers(user.id);
     const userDeleted = await service.findByEmail(user.email);
     expect(userDeleted).toBeNull();
   })

@@ -49,9 +49,9 @@ export class TrainingsResolver {
   @Roles(USER_TYPE.PERSONAL)
   @UseGuards(GqlAuthGuard, RolesGuard)
   async deleteTraining(@Args() args: DeleteInput): Promise<boolean> {
-    const { ids } = args
+    const { id } = args
     try {
-      this.service.delete(ids);
+      this.service.delete(id);
       return true;
     } catch (error) {
       return false;

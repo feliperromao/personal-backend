@@ -45,8 +45,8 @@ export class StudentsController {
   }
 
   @Delete("/:id")
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(204)
   async deleteStudent(@Param('id') id: string) {
-    return await this.usersService.deleteUsers([id])
+    return await this.usersService.deleteUsers(id)
   }
 }

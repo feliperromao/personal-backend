@@ -57,15 +57,15 @@ describe('TrainingProgressService', () => {
   });
 
   it("should throws if training not exists when try start a training", async () => {
-    await expect(service.startTraining("123")).rejects.toThrowError("Training not found");
+    await expect(service.startTraining("6719412f0024cd0c7a0bb59c")).rejects.toThrowError("Training not found");
   });
 
   it("should throws if training not exists when try finish a training", async () => {
-    await expect(service.finishTraining("123", FINISH_STATUS.MUITO_INTENSA)).rejects.toThrowError("TrainingProgress not found");
+    await expect(service.finishTraining("6719412f0024cd0c7a0bb59c", FINISH_STATUS.MUITO_INTENSA)).rejects.toThrowError("TrainingProgress not found");
   })
 
   it("should throws if training not exists when try cancel a training", async () => {
-    await expect(service.cancelTraining("123")).rejects.toThrowError("TrainingProgress not found");
+    await expect(service.cancelTraining("6719412f0024cd0c7a0bb59c")).rejects.toThrowError("TrainingProgress not found");
   })
 
   it("should start a training", async () => {

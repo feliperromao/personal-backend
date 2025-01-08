@@ -82,7 +82,7 @@ describe('TrainingsService', () => {
 
   it("should delete a training", async () => {
     const training = await service.create(getTrainingData());
-    const deleted = await service.delete([training.id]);
+    const deleted = await service.delete(training.id);
 
     expect(deleted).toBe(true);
   })

@@ -64,13 +64,14 @@ export class UsersService {
     return this.updateUser(userData)
   }
 
-  async deleteUsers(ids: string[]): Promise<void> {
-    this.repository.delete(ids);
+  async deleteUsers(id: string): Promise<void> {
+    await this.repository.delete(id);
   }
 
   private async createUser(data): Promise<User> {
     const checkIfUserExists = await this.findByEmail(data.email);
     if (checkIfUserExists) {
+      console.log("##### user already exists #####")
       throw new BadRequestException("user already exists");
     }
     const userCrated = await this.repository.create({

@@ -106,7 +106,7 @@ describe('UsersResolver', () => {
         personal_id: 'personal_01'
       } as GetUsersInput
       const users = await resolver.listStudents(args)
-      expect(users.length).toEqual(2);
+      expect(users.data.length).toEqual(2);
     });
   });
 });
