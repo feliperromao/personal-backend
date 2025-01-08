@@ -71,7 +71,6 @@ export class UsersService {
   private async createUser(data): Promise<User> {
     const checkIfUserExists = await this.findByEmail(data.email);
     if (checkIfUserExists) {
-      console.log("##### user already exists #####")
       throw new BadRequestException("user already exists");
     }
     const userCrated = await this.repository.create({
