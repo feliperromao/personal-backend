@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GraphqlModule } from './graphql.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
@@ -10,6 +10,7 @@ import { AppController } from './app.controller';
 import { StudentsController } from './controllers/students/students.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { PersonalsController } from './controllers/personals/personals.controller';
+import { ContentTypeMiddleware } from './middlewares/content-type.middleware';
 
 @Module({
   imports: [
@@ -25,4 +26,8 @@ import { PersonalsController } from './controllers/personals/personals.controlle
   controllers: [AppController, StudentsController, PersonalsController],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ContentTypeMiddleware).forRoutes('*');
+  }
+}
