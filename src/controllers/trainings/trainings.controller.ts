@@ -5,6 +5,7 @@ import { RolesGuard } from '@src/guards/roles.guard';
 import { TrainingsService } from '@src/trainings/trainings.service';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { CreateTrainingDto } from './dtos/create-trainig.dto';
+import HttpLinks from '@src/@shared/http-controls/http-links';
 
 @Controller('trainings')
 @Roles(USER_TYPE.PERSONAL)
@@ -23,7 +24,11 @@ export class TrainingsController {
   async createTraining(@Headers() headers: any, @Body() body: CreateTrainingDto) {
     const { user_id } = headers
     const trainigData = { ...body, personal_id: user_id }
-    return await this.service.create(trainigData)
+    const data = await this.service.create(trainigData)
+    return {
+      data,
+      _links: HttpLinks.create('trainings', data.id)
+    }
   }
 
   @Put('/:id')

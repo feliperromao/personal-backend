@@ -7,6 +7,7 @@ import { USER_TYPE } from '@src/users/enum/user.type';
 import { CreateExerciseDto } from './dtos/create-exercise.dto';
 import Paginate from '@src/@shared/pagination/paginate';
 import SearchQueryDto from '@src/@shared/pagination/search-query.dto';
+import HttpLinks from '@src/@shared/http-controls/http-links';
 
 @Roles(USER_TYPE.PERSONAL)
 @UseGuards(AuthGuard, RolesGuard)
@@ -18,7 +19,7 @@ export class ExercisesController {
   @Get('/')
   async listAll(@Headers() headers: any, @Query() query: SearchQueryDto) {
     const { user_id } = headers
-    const { search = '', page=1, limit=10 } = query
+    const { search = '', page = 1, limit = 10 } = query
     const result = await this.service.getAllByPersonal(user_id, search, page, limit)
     return Paginate.create('exercises', result.data, result.total, page, limit)
   }
@@ -36,7 +37,11 @@ export class ExercisesController {
       ...body,
       personal_id: user_id
     }
-    return this.service.create(exerciseData)
+    const data = await this.service.create(exerciseData)
+    return {
+      data,
+      _links: HttpLinks.create('exercises', data.id)
+    }
   }
 
   @Put('/:id')

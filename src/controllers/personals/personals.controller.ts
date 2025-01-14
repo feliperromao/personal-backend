@@ -6,6 +6,7 @@ import { USER_TYPE } from '@src/users/enum/user.type';
 import { UsersService } from '@src/users/users.service';
 import { CreatePersonalDto } from './dtos/create-personal.dto';
 import { UpdatePersonalDto } from './dtos/update-personal.dto';
+import HttpLinks from '@src/@shared/http-controls/http-links';
 
 @Controller('personals')
 @Roles(USER_TYPE.ADMIN)
@@ -21,12 +22,16 @@ export class PersonalsController {
 
   @Post("/")
   async createPersonal(@Body() body: CreatePersonalDto) {
-    return await this.usersService.createPersonal(body)
+    const data = await this.usersService.createPersonal(body)
+    return {
+      data,
+      _links: HttpLinks.create('personals', data.id)
+    }
   }
 
   @Put("/:id")
   async updatePersonal(@Param('id') id: string, @Body() body: UpdatePersonalDto) {
-    const userData = {...body, id }
+    const userData = { ...body, id }
     return await this.usersService.updatePersonal(userData)
   }
 

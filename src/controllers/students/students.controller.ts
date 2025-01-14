@@ -8,6 +8,7 @@ import SearchQueryDto from '../../@shared/pagination/search-query.dto';
 import { CreateSudentDto } from './dtos/create-student.dto';
 import { UpdateSudentDto } from './dtos/update-student.dto';
 import Paginate from '@src/@shared/pagination/paginate';
+import HttpLinks from '@src/@shared/http-controls/http-links';
 
 @Controller('students')
 @Roles(USER_TYPE.PERSONAL)
@@ -33,7 +34,12 @@ export class StudentsController {
       ...body,
       personal_id: user_id
     }
-    return await this.usersService.createStudent(userData)
+
+    const data = await this.usersService.createStudent(userData)
+    return {
+      data,
+      _links: HttpLinks.create('students', data.id)
+    }
   }
 
   @Put("/:id")
