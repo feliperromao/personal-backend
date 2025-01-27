@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, HttpCode, HttpStatus, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, HttpStatus, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Roles } from '@src/guards/roles.decorator';
 import { RolesGuard } from '@src/guards/roles.guard';
 import { TrainingProgressService } from '@src/training-progress/training-progress.service';
@@ -22,6 +22,11 @@ export class TrainingProgressController {
   async getStudentTrainings(@Headers() headers: any) {
     const { user_id } = headers
     return await this.trainingService.getAllByStudent(user_id)
+  }
+
+  @Get('/:id')
+  async showStudentTraining(@Param('id') trainingId: string) {
+    return await this.trainingService.getById(trainingId)
   }
 
   @Get('/current')

@@ -26,8 +26,5 @@ import { ContentTypeMiddleware } from './middlewares/content-type.middleware';
   controllers: [AppController, StudentsController, PersonalsController],
   providers: [],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ContentTypeMiddleware).forRoutes('*');
-  }
-}
+
+export class AppModule{}

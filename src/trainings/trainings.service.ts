@@ -19,6 +19,11 @@ export class TrainingsService {
     return items.map(item => TrainingFactory.create(item));
   }
 
+  async getById(trainingId: string): Promise<Training> {
+    const document = await this.repository.findById(trainingId);
+    return TrainingFactory.create(document)
+  }
+
   async create(data: CreateTrainingInput): Promise<Training> {
     const created = await this.repository.create(data);
     return TrainingFactory.create(created)
