@@ -21,7 +21,7 @@ export class UsersResolver {
   @UseGuards(GqlAuthGuard, RolesGuard)
   listStudents(@Args() args: GetUsersInput) {
     const { personal_id } = args
-    return this.usersService.getAllByPersonal(personal_id);
+    return this.usersService.getByPersonal(personal_id);
   }
 
   @Mutation(() => User)

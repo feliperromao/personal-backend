@@ -43,7 +43,12 @@ export class UserRepository {
     return await this.model.find({type: USER_TYPE.PERSONAL}).exec();
   }
 
-  async getAllByPersonal(personal_id: string, search: string, page: number, limit: number) {
+  async listAllByPersonal(personal_id) {
+    const fieldsSelection = {id: true, name: true, email: true, blocked: true };
+    return this.model.find({ personal_id: personal_id }, fieldsSelection).exec();
+  }
+
+  async getByPersonal(personal_id: string, search: string, page: number, limit: number) {
     const skip = (page - 1) * limit;
     const fieldsSelection = {id: true, name: true, email: true, blocked: true };
     let query

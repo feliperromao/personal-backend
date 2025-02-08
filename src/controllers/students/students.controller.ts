@@ -22,8 +22,15 @@ export class StudentsController {
   async listStudents(@Headers() headers: any, @Query() query: SearchQueryDto) {
     const { user_id } = headers
     const { search = '', page=1, limit=10 } = query
-    const result = await this.usersService.getAllByPersonal(user_id, search, page, limit)
+    const result = await this.usersService.getByPersonal(user_id, search, page, limit)
     return Paginate.create('students', result.data, result.total, page, limit)
+  }
+
+  @Get("/list-all")
+  @HttpCode(HttpStatus.OK)
+  async listAllStudents(@Headers() headers: any, @Query() query: SearchQueryDto) {
+    const { user_id } = headers
+    return await this.usersService.listAllByPersonal(user_id)
   }
 
   @Post("/")

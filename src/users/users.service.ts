@@ -23,8 +23,13 @@ export class UsersService {
     return await this.repository.getAllPersonals();
   }
 
-  async getAllByPersonal(personal_id: string, search: string = '', page: number = 1, limit: number =10) {
-    const result = await this.repository.getAllByPersonal(personal_id, search, page, limit);
+  async listAllByPersonal(personal_id: string) {
+    const result = await this.repository.listAllByPersonal(personal_id);
+    return result.map(student => UserFactory.create(student))
+  }
+
+  async getByPersonal(personal_id: string, search: string = '', page: number = 1, limit: number =10) {
+    const result = await this.repository.getByPersonal(personal_id, search, page, limit);
     result.data = result.data.map(student => UserFactory.create(student))
     return result; 
   }
