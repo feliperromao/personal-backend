@@ -13,6 +13,7 @@ export default class TrainingFactory {
       exercises: model.exercises.map(exercise => ({
         id: exercise.id,
         name: exercise.name,
+        type: exercise.type,
         personal_id: exercise.personal_id,
         instructions: exercise.instructions,
         video: exercise.video,

@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { EXERCISE_TYPE } from '@src/exercises/enum/exercise.type';
 import mongoose, { Document } from "mongoose";
 
 @Schema()
@@ -8,6 +9,9 @@ export class Exercise extends Document {
 
   @Prop({ required: true })
   name: string;
+
+  @Prop({ required: true })
+  type: EXERCISE_TYPE;
 
   @Prop({ required: true })
   personal_id: string;

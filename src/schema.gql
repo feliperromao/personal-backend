@@ -20,6 +20,7 @@ type Auth {
 type Exercise {
   id: ID!
   name: String!
+  type: String!
   personal_id: String!
   instructions: String!
   video: String!
@@ -61,6 +62,7 @@ scalar DateTime
 input TrainingExerciseInput {
   id: ID!
   name: String!
+  type: String!
   personal_id: String!
   instructions: String!
   video: String!
@@ -117,6 +119,7 @@ input CreatePersonalInput {
 
 input CreateExerciseInput {
   name: String!
+  type: String!
   personal_id: String!
   instructions: String
   video: String

@@ -6,6 +6,7 @@ export default class ExerciseFactory {
     return {
       id: model._id.toString(),
       name: model.name,
+      type: model.type,
       personal_id: model.personal_id,
       instructions: model.instructions,
       video: model.video,

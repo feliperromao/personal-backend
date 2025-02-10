@@ -1,4 +1,5 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { EXERCISE_TYPE } from './enum/exercise.type';
 
 @ObjectType()
 @InputType('TrainingExerciseInput')
@@ -8,6 +9,9 @@ export class Exercise {
 
   @Field()
   name: string;
+
+  @Field()
+  type: EXERCISE_TYPE;
 
   @Field()
   personal_id: string;
