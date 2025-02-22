@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Headers, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Post, Put, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@src/guards/auth.guard';
 import { Roles } from '@src/guards/roles.decorator';
 import { RolesGuard } from '@src/guards/roles.guard';
@@ -6,6 +6,7 @@ import { TrainingsService } from '@src/trainings/trainings.service';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { CreateTrainingDto } from './dtos/create-trainig.dto';
 import HttpLinks from '@src/@shared/http-controls/http-links';
+import SearchQueryDto from '@src/@shared/pagination/search-query.dto';
 
 @Controller('trainings')
 @Roles(USER_TYPE.PERSONAL)
@@ -15,9 +16,10 @@ export class TrainingsController {
   constructor(protected readonly service: TrainingsService) { }
 
   @Get('/')
-  async listAll(@Headers() headers: any) {
+  async listAll(@Headers() headers: any, @Query() query: SearchQueryDto) {
     const { user_id } = headers
-    return await this.service.getAllByPersonal(user_id)
+    const { search = '', student_id, page = 1, limit = 10 } = query
+    return await this.service.searchTraining(user_id, search, student_id, page, limit)
   }
 
   @Post('/')

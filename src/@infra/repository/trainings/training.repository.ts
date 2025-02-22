@@ -8,6 +8,29 @@ import UpdateTrainingInput from "@src/trainings/inputs/update-training.input";
 export default class TrainingsRepository {
   constructor(@InjectModel(Training.name) private model: Model<Training>) { }
 
+  async searchTraining(personal_id: string, search: string, student_id: string, page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    let data;
+    let total: number;
+
+    let query = {
+      personal_id: personal_id
+    }
+
+    if (search) {
+      query['name'] = { $regex: search, $options: '-i' }
+    }
+
+    if (student_id ) {
+      query['student_id'] = student_id
+    }
+    
+    data = await this.model.find(query).skip(skip).limit(limit).exec();
+    total = await this.model.find(query).countDocuments();
+
+    return { total, data }
+  }
+
   async getAllByPersonal(personal_id: string): Promise<Training[]> {
     return await this.model.find({ personal_id });
   }

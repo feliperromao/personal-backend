@@ -9,6 +9,12 @@ import UpdateTrainingInput from './inputs/update-training.input';
 export class TrainingsService {
   constructor(protected readonly repository: TrainingsRepository) {  }
 
+  async searchTraining(personal_id: string, search: string, student_id: string, page: number, limit: number) {
+    const result = await this.repository.searchTraining(personal_id, search, student_id, page, limit);
+    result.data = result.data.map(item => TrainingFactory.create(item));
+    return result
+  }
+
   async getAllByPersonal(personal_id: string): Promise<Training[]> {
     const items = await this.repository.getAllByPersonal(personal_id);
     return items.map(item => TrainingFactory.create(item));
