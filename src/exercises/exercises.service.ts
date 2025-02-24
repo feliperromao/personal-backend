@@ -19,8 +19,8 @@ export class ExercisesService {
     return ExerciseFactory.create(exercise)
   }
 
-  async getAllByPersonal(personal_id: string, search: string = '', page: number = 1, limit: number = 10) {
-    const result = await this.repository.getAllByPersonal(personal_id, search, page, limit);
+  async getAllByPersonal(personal_id: string, search: string = '', exercise_type: string = '', page: number = 1, limit: number = 10) {
+    const result = await this.repository.getAllByPersonal(personal_id, search, exercise_type, page, limit);
     result.data = result.data.map(exercise => ExerciseFactory.create(exercise))
     return result
   }

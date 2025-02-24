@@ -19,8 +19,8 @@ export class ExercisesController {
   @Get('/')
   async listAll(@Headers() headers: any, @Query() query: SearchQueryDto) {
     const { user_id } = headers
-    const { search = '', page = 1, limit = 10 } = query
-    const result = await this.service.getAllByPersonal(user_id, search, page, limit)
+    const { search = '', exercise_type = '' , page = 1, limit = 10 } = query
+    const result = await this.service.getAllByPersonal(user_id, search, exercise_type, page, limit)
     return Paginate.create('exercises', result.data, result.total, page, limit)
   }
 

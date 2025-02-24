@@ -29,18 +29,25 @@ export class ExerciseRepository {
     return await this.model.findById(new mongoose.Types.ObjectId(id));
   }
 
-  async getAllByPersonal(personal_id: string, search: string, page: number, limit: number) {
+  async getAllByPersonal(personal_id: string, search: string, exercise_type: string = '', page: number, limit: number) {
     const skip = (page - 1) * limit;
     let data;
     let total;
 
-    if (search === '') {
-      data = await this.model.find({ personal_id }).skip(skip).limit(limit).exec();
-      total = await this.model.find({ personal_id }).countDocuments();
-    } else {
-      data = await this.model.find({ personal_id: personal_id, name: { $regex: search, $options: '-i' } }).skip(skip).limit(limit).exec();
-      total = await this.model.find({ personal_id: personal_id, name: { $regex: search, $options: '-i' } }).countDocuments();
+    let query = {
+      personal_id: personal_id
     }
+
+    if (search) {
+      query['name'] = { $regex: search, $options: '-i' }
+    }
+
+    if (exercise_type) {
+      query['type'] = exercise_type
+    }
+
+    data = await this.model.find(query).skip(skip).limit(limit).exec();
+    total = await this.model.find(query).countDocuments();
 
     return { total, data }
   }
