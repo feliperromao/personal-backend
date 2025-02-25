@@ -57,8 +57,8 @@ export class UserRepository {
       query = this.model.find({ personal_id: personal_id }, fieldsSelection)
       queryCountDocuments = this.model.find({ personal_id: personal_id })
     } else {
-      query = this.model.find({ personal_id: personal_id, name: {$regex: search, $options: '-i'} })
-      queryCountDocuments = this.model.find({ personal_id: personal_id, name: {$regex: search, $options: '-i'} })
+      query = this.model.find({ personal_id: personal_id, name: {$regex: search, $options: 'i'} })
+      queryCountDocuments = this.model.find({ personal_id: personal_id, name: {$regex: search, $options: 'i'} })
     }
 
     const total = await queryCountDocuments.countDocuments().exec();

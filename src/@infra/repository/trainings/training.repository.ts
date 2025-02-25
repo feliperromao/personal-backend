@@ -18,7 +18,7 @@ export default class TrainingsRepository {
     }
 
     if (search) {
-      query['name'] = { $regex: search, $options: '-i' }
+      query['name'] = { $regex: search, $options: 'i' }
     }
 
     if (student_id ) {

@@ -40,7 +40,7 @@ export class ExerciseRepository {
     }
 
     if (search) {
-      query['name'] = { $regex: search, $options: '-i' }
+      query['name'] = { $regex: search, $options: 'i' }
     }
 
     if (exercise_type) {
