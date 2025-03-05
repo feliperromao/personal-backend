@@ -36,7 +36,7 @@ export default class TrainingsRepository {
   }
 
   async getAllByStudent(student_id: string): Promise<Training[]> {
-    return await this.model.find({ student_id });
+    return await this.model.find({ student_id, show_to_student: true });
   }
 
   async create(data: CreateTrainingInput): Promise<Training> {
