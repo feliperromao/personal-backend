@@ -48,6 +48,10 @@ export class UserRepository {
     return this.model.find({ personal_id: personal_id }, fieldsSelection).exec();
   }
 
+  async countStudents(personal_id: string): Promise<number> {
+    return await this.model.countDocuments({ personal_id: personal_id }).exec();
+  }
+
   async getByPersonal(personal_id: string, search: string, page: number, limit: number) {
     const skip = (page - 1) * limit;
     const fieldsSelection = {id: true, name: true, email: true, blocked: true };
