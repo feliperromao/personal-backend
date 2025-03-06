@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+const protocol = process.env.MONGODB_PROTOCOL || 'mongodb';
 const host = process.env.MONGODB_HOST;
 const port = process.env.MONGODB_PORT;
 const name = process.env.MONGODB_NAME;
 const user = process.env.MONGODB_USER;
 const pwd = process.env.MONGODB_PWD;
-const env = process.env.CLOUD_PROVIDER || 'development';
-const DEVELOP_URI = `mongodb://${user}:${pwd}@${host}:${port}/admin`
-const PRODUCTION_URI = `mongodb+srv://${user}:${pwd}@${host}`
-const MONGODB_URI = env === 'development' ? DEVELOP_URI : PRODUCTION_URI;
+const MONGODB_URI = `${protocol}://${user}:${pwd}@${host}:${port}`
 
 @Module({
   imports: [
