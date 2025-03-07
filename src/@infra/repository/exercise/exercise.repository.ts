@@ -11,7 +11,6 @@ export class ExerciseRepository {
   constructor(@InjectModel(Exercise.name) private model: Model<Exercise>) { }
 
   async create(exerciseData: CreateExerciseInput): Promise<Exercise> {
-    console.log("🚀 ~ ExerciseRepository ~ create ~ exerciseData:", JSON.stringify(exerciseData))
     const exerciseCreated = new this.model({
       _id: new ObjectId(),
       ...exerciseData,

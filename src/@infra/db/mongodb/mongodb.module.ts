@@ -8,6 +8,7 @@ const name = process.env.MONGODB_NAME;
 const user = process.env.MONGODB_USER;
 const pwd = process.env.MONGODB_PWD;
 const MONGODB_URI = `${protocol}://${user}:${pwd}@${host}:${port}`
+console.log(`🚀 ~ connection to database ${host} using protocol ${protocol}`)
 
 @Module({
   imports: [
