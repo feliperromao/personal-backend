@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { GraphqlModule } from './graphql.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MongodbModule } from './@infra/db/mongodb/mongodb.module';
@@ -15,7 +14,6 @@ import { ContentTypeMiddleware } from './middlewares/content-type.middleware';
 @Module({
   imports: [
     MongodbModule,
-    GraphqlModule,
     UsersModule,
     AuthModule,
     ExercisesModule,

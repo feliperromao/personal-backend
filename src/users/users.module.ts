@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UsersResolver } from './users.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../@infra/models/user/mongoose/user.model';
 import { UserRepository } from '../@infra/repository/user/user.repository';
@@ -12,7 +11,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     CacheModule.register()
   ],
-  providers: [UsersService, UsersResolver, UserRepository, JwtService],
+  providers: [UsersService, UserRepository, JwtService],
   exports: [UsersService],
   controllers: []
 })

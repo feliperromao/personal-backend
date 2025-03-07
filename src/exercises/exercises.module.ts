@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ExercisesResolver } from './exercises.resolver';
 import { ExercisesService } from './exercises.service';
 import { UsersModule} from '@src/users/users.module';
 import { ExerciseRepository } from '@src/@infra/repository/exercise/exercise.repository';
@@ -13,7 +12,7 @@ import { JwtService } from '@nestjs/jwt';
     UsersModule,
     MongooseModule.forFeature([{ name: Exercise.name, schema: ExerciseSchema }]),
   ],
-  providers: [ExercisesResolver, ExercisesService, ExerciseRepository, JwtService],
+  providers: [ExercisesService, ExerciseRepository, JwtService],
   controllers: [ExercisesController]
 })
 export class ExercisesModule {}
