@@ -1,6 +1,6 @@
 import { Exercise } from '@src/exercises/exercise.entity';
 
-export default class CreateTrainingInput {
+export default class CreateTrainingDto {
   name: string;
 
   description?: string;

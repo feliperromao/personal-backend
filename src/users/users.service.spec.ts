@@ -6,8 +6,8 @@ import { Model, connect } from 'mongoose';
 import { UserRepository } from '@src/@infra/repository/user/user.repository';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
-import { CreatePersonalInput } from './inputs/create-personal.input';
-import { CreateStudentInput } from './inputs/create-student.input';
+import { CreatePersonalDto } from './dtos/create-personal.dto';
+import { CreateStudentDto } from './dtos/create-student.dto';
 import { BadRequestException } from '@nestjs/common';
 import { USER_TYPE } from './enum/user.type';
 
@@ -100,11 +100,11 @@ describe('UsersService', () => {
       personal_id: "personal_456"
     });
     
-    const users = await service.getAllByPersonal("personal_123");
-    expect(users.data.length).toBe(2);
+    const users = await service.listAllByPersonal("personal_123");
+    expect(users.length).toBe(2);
 
-    const users_2 = await service.getAllByPersonal("personal_456");
-    expect(users_2.data.length).toBe(1);
+    const users_2 = await service.listAllByPersonal("personal_456");
+    expect(users_2.length).toBe(1);
   });
 
   it("should find user by id", async () => {
@@ -147,7 +147,7 @@ describe('UsersService', () => {
       password: "XXXXXXXX",
       personal_id: "6719412f0024cd0c7a0bb59d"
     });
-    await service.getAllByPersonal("6719412f0024cd0c7a0bb59d")
+    await service.listAllByPersonal("6719412f0024cd0c7a0bb59d")
     await service.deleteUsers(user.id);
     const userDeleted = await service.findByEmail(user.email);
     expect(userDeleted).toBeNull();
@@ -155,7 +155,7 @@ describe('UsersService', () => {
 });
 
 
-const personlData = (): CreatePersonalInput => {
+const personlData = (): CreatePersonalDto => {
   return {
     name: 'personal',
     email: 'personal@example.com',
@@ -163,7 +163,7 @@ const personlData = (): CreatePersonalInput => {
   };
 }
 
-const studentData = (): CreateStudentInput => {
+const studentData = (): CreateStudentDto => {
   return {
     name: 'student',
     email: 'student@example.com',

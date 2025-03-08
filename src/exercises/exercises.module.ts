@@ -4,7 +4,7 @@ import { UsersModule} from '@src/users/users.module';
 import { ExerciseRepository } from '@src/@infra/repository/exercise/exercise.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Exercise , ExerciseSchema} from '@src/@infra/models/exercise/mongoose/exercise.model';
-import { ExercisesController } from '@src/controllers/exercises/exercises.controller';
+import { ExercisesController } from './exercises.controller';
 import { JwtService } from '@nestjs/jwt';
 
 @Module({

@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserRepository } from '../@infra/repository/user/user.repository';
-import { CreateStudentInput } from './inputs/create-student.input';
+import { CreateStudentDto } from './dtos/create-student.dto';
 import EncryptPassword from '@src/@infra/encrypt/encrypt.interface';
 import Bcrypt from '@src/@infra/encrypt/bcrypt';
-import { CreatePersonalInput } from './inputs/create-personal.input';
+import { CreatePersonalDto } from './dtos/create-personal.dto';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import UserFactory from './user.factory';
 import { User } from './user.entity';
@@ -45,7 +45,7 @@ export class UsersService {
     return UserFactory.create(model)
   }
 
-  async createStudent(data: CreateStudentInput): Promise<User> {
+  async createStudent(data: CreateStudentDto): Promise<User> {
     const totalStudents = await this.repository.countStudents(data.personal_id);
     const maxStudents: number | 5 = process.env.MAX_STUDENTS ? Number(process.env.MAX_STUDENTS) : 5;
 
@@ -59,7 +59,7 @@ export class UsersService {
     });
   }
 
-  async createPersonal(data: CreatePersonalInput): Promise<User> {
+  async createPersonal(data: CreatePersonalDto): Promise<User> {
     return await this.createUser({
       ...data,
       type: USER_TYPE.PERSONAL

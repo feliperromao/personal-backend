@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import Training from './training.entity';
-import CreateTrainingInput from './inputs/create-training.input';
+import CreateTrainingInput from './dtos/create-training.dto';
 import TrainingsRepository from '@src/@infra/repository/trainings/training.repository';
 import TrainingFactory from './training.factory';
-import UpdateTrainingInput from './inputs/update-training.input';
+import UpdateTrainingInput from './dtos/update-training.dto';
 
 @Injectable()
 export class TrainingsService {

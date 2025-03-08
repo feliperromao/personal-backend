@@ -1,21 +1,31 @@
-import { EXERCISE_TYPE } from '../enum/exercise.type';
+import { EXERCISE_TYPE } from '@src/exercises/enum/exercise.type';
+import { IsString, IsOptional, IsNumber, IsBoolean } from 'class-validator';
 
-export default class CreateExerciseInput {
+export class CreateExerciseInput {
+
+  @IsString()
   name: string;
 
+  @IsString()
   type: EXERCISE_TYPE;
 
-  personal_id: string;
-
+  @IsString()
+  @IsOptional()
   instructions?: string;
 
+  @IsString()
+  @IsOptional()
   video?: string;
 
+  @IsNumber()
   rest: number;
 
+  @IsNumber()
   load: number;
 
-  load_progress: boolean;
-
+  @IsNumber()
   series: number;
+
+  @IsBoolean()
+  load_progress: boolean
 }

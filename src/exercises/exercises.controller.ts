@@ -4,10 +4,10 @@ import { AuthGuard } from '@src/guards/auth.guard';
 import { Roles } from '@src/guards/roles.decorator';
 import { RolesGuard } from '@src/guards/roles.guard';
 import { USER_TYPE } from '@src/users/enum/user.type';
-import { CreateExerciseDto } from './dtos/create-exercise.dto';
 import Paginate from '@src/@shared/pagination/paginate';
 import SearchQueryDto from '@src/@shared/pagination/search-query.dto';
 import HttpLinks from '@src/@shared/http-controls/http-links';
+import { CreateExerciseDto } from '@src/exercises/dtos/create-exercise.dto';
 
 @Roles(USER_TYPE.PERSONAL)
 @UseGuards(AuthGuard, RolesGuard)

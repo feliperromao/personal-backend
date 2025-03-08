@@ -5,7 +5,7 @@ import { Model, connect } from 'mongoose';
 import { Training, TrainingSchema } from '@src/@infra/models/training/mongoose/training.model';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import TrainingsRepository from '@src/@infra/repository/trainings/training.repository';
-import CreateTrainingInput from './inputs/create-training.input';
+import CreateTrainingInput from './dtos/create-training.dto';
 
 let mongod: MongoMemoryServer;
 let mongoConnection;

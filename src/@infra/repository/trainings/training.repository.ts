@@ -2,8 +2,8 @@ import { InjectModel } from "@nestjs/mongoose";
 import { ObjectId } from "mongodb";
 import mongoose, { Model } from "mongoose";
 import {Training} from "@src/@infra/models/training/mongoose/training.model";
-import CreateTrainingInput from "@src/trainings/inputs/create-training.input";
-import UpdateTrainingInput from "@src/trainings/inputs/update-training.input";
+import CreateTrainingInput from "@src/trainings/dtos/create-training.dto";
+import UpdateTrainingInput from "@src/trainings/dtos/update-training.dto";
 
 export default class TrainingsRepository {
   constructor(@InjectModel(Training.name) private model: Model<Training>) { }

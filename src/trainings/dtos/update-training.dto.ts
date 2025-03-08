@@ -1,6 +1,6 @@
 import { Exercise } from '@src/exercises/exercise.entity';
 
-export default class UpdateTrainingInput {
+export default class UpdateTrainingDto {
   id: string;
   
   name: string;

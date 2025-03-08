@@ -8,6 +8,7 @@ import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import TrainingsRepository from '@src/@infra/repository/trainings/training.repository';
 import { Training, TrainingSchema } from '@src/@infra/models/training/mongoose/training.model';
 import { FINISH_STATUS } from './enum/finish-status.enum';
+import { EXERCISE_TYPE } from '@src/exercises/enum/exercise.type';
 
 let mongod: MongoMemoryServer;
 let mongoConnection;
@@ -81,6 +82,7 @@ describe('TrainingProgressService', () => {
           name: "Exercise 1",
           personal_id: "XXX",
           instructions: "Instructions 1",
+          type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
           load: 80,
@@ -91,6 +93,7 @@ describe('TrainingProgressService', () => {
           name: "Exercise 2",
           personal_id: "XXX",
           instructions: "Instructions 2",
+          type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
           load: 10,
@@ -126,6 +129,7 @@ describe('TrainingProgressService', () => {
           name: "Exercise 1",
           personal_id: "XXX",
           instructions: "Instructions 1",
+          type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
           load: 80,
@@ -136,6 +140,7 @@ describe('TrainingProgressService', () => {
           name: "Exercise 2",
           personal_id: "XXX",
           instructions: "Instructions 2",
+          type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
           load: 10,
@@ -170,6 +175,7 @@ describe('TrainingProgressService', () => {
           name: "Exercise 1",
           personal_id: "XXX",
           instructions: "Instructions 1",
+          type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
           load: 80,
@@ -180,6 +186,7 @@ describe('TrainingProgressService', () => {
           name: "Exercise 2",
           personal_id: "XXX",
           instructions: "Instructions 2",
+          type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
           load: 10,

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthCredentialsDto } from './inputs/auth-credentials.input';
+import { AuthCredentialsDto } from './dtos/auth-credentials.dto';
 import { AuthGuard } from '@src/guards/auth.guard';
 import { UsersService } from '@src/users/users.service';
 
