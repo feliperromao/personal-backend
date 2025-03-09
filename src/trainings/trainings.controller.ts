@@ -4,9 +4,9 @@ import { Roles } from '@src/guards/roles.decorator';
 import { RolesGuard } from '@src/guards/roles.guard';
 import { TrainingsService } from '@src/trainings/trainings.service';
 import { USER_TYPE } from '@src/users/enum/user.type';
-import { CreateTrainingDto } from './dtos/create-trainig.dto';
 import HttpLinks from '@src/@shared/http-controls/http-links';
 import SearchQueryDto from '@src/@shared/pagination/search-query.dto';
+import { CreateTrainingDto } from './dtos/create-trainig.dto';
 
 @Controller('trainings')
 @Roles(USER_TYPE.PERSONAL)

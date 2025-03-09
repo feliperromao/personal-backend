@@ -1,17 +1,12 @@
-import { Field, InputType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
 
-@InputType()
-export class CreatePersonalInput {
-  @Field()
+export class CreatePersonalDto {
   @IsString()
   name: string;
 
   @IsString()
-  @Field()
   email: string;
 
   @IsString()
-  @Field()
   password: string;
 }

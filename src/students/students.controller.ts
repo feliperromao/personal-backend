@@ -4,11 +4,11 @@ import { Roles } from '@src/guards/roles.decorator';
 import { RolesGuard } from '@src/guards/roles.guard';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { UsersService } from '@src/users/users.service';
-import SearchQueryDto from '../../@shared/pagination/search-query.dto';
 import { CreateSudentDto } from './dtos/create-student.dto';
 import { UpdateSudentDto } from './dtos/update-student.dto';
 import Paginate from '@src/@shared/pagination/paginate';
 import HttpLinks from '@src/@shared/http-controls/http-links';
+import SearchQueryDto from '@src/@shared/pagination/search-query.dto';
 
 @Controller('students')
 @Roles(USER_TYPE.PERSONAL)

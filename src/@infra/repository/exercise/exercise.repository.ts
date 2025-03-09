@@ -3,14 +3,14 @@ import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Exercise } from "@src/@infra/models/exercise/mongoose/exercise.model";
-import CreateExerciseInput from "@src/exercises/inputs/create-exercise.input";
-import UpdateExerciseInput from "@src/exercises/inputs/update-exercise.input";
+import { CreateExerciseDto } from "@src/exercises/dtos/create-exercise.dto";
+import { UpdateExerciseDto } from "@src/exercises/dtos/update-exercise.dto";
 
 @Injectable()
 export class ExerciseRepository {
   constructor(@InjectModel(Exercise.name) private model: Model<Exercise>) { }
 
-  async create(exerciseData: CreateExerciseInput): Promise<Exercise> {
+  async create(exerciseData: CreateExerciseDto): Promise<Exercise> {
     const exerciseCreated = new this.model({
       _id: new ObjectId(),
       ...exerciseData,
@@ -18,7 +18,7 @@ export class ExerciseRepository {
     return await exerciseCreated.save();
   }
 
-  async update(data: UpdateExerciseInput): Promise<Exercise> {
+  async update(data: UpdateExerciseDto): Promise<Exercise> {
     const { id } = data;
     delete data.id;
     await this.model.findByIdAndUpdate(new mongoose.Types.ObjectId(id), data);

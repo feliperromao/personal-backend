@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../@infra/models/user/mongoose/user.model';
 import { UserRepository } from '../@infra/repository/user/user.repository';
 import { JwtService } from '@nestjs/jwt';
 import { CacheModule } from '@nestjs/cache-manager';
+import { UsersService } from '@src/users/users.service';
+import { StudentsController } from './students.controller';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { CacheModule } from '@nestjs/cache-manager';
   ],
   providers: [UsersService, UserRepository, JwtService],
   exports: [UsersService],
-  controllers: []
+  controllers: [StudentsController]
 })
-export class UsersModule {}
+export class StudentsModule {}

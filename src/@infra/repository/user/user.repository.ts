@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { User } from '../../models/user/mongoose/user.model';
-import { CreateStudentInput } from '../../../users/inputs/create-student.input';
+import { CreateStudentDto } from '../../../users/dtos/create-student.dto';
 import { ObjectId } from 'mongodb';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
@@ -16,7 +16,7 @@ export class UserRepository {
     @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
   
-    async create(dto: CreateStudentInput): Promise<User> {
+    async create(dto: CreateStudentDto): Promise<User> {
     const userCreated = new this.model({
       _id: new ObjectId(),
       ...dto,

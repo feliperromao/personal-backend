@@ -1,32 +1,31 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { EXERCISE_TYPE } from '../enum/exercise.type';
+import { EXERCISE_TYPE } from '@src/exercises/enum/exercise.type';
+import { IsString, IsOptional, IsNumber, IsBoolean } from 'class-validator';
 
-@InputType()
-export default class CreateExerciseInput {
-  @Field()
+export class CreateExerciseInput {
+
+  @IsString()
   name: string;
 
-  @Field()
+  @IsString()
   type: EXERCISE_TYPE;
 
-  @Field()
-  personal_id: string;
-
-  @Field({nullable: true})
+  @IsString()
+  @IsOptional()
   instructions?: string;
 
-  @Field({nullable: true})
+  @IsString()
+  @IsOptional()
   video?: string;
 
-  @Field()
+  @IsNumber()
   rest: number;
 
-  @Field()
+  @IsNumber()
   load: number;
 
-  @Field()
-  load_progress: boolean;
-
-  @Field()
+  @IsNumber()
   series: number;
+
+  @IsBoolean()
+  load_progress: boolean
 }

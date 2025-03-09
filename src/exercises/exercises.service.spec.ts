@@ -5,6 +5,7 @@ import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Model, connect } from 'mongoose';
 import { Exercise, ExerciseSchema } from '@src/@infra/models/exercise/mongoose/exercise.model';
+import { EXERCISE_TYPE } from './enum/exercise.type';
 
 let mongod: MongoMemoryServer;
 let mongoConnection;
@@ -55,6 +56,7 @@ describe('ExercisesService', () => {
       name: "any_name",
       personal_id: "any_personal_id",
       instructions: "any_instructions",
+      type: EXERCISE_TYPE.BICEPS,
       video: "any_video",
       rest: 60,
       load: 45,
@@ -78,6 +80,7 @@ describe('ExercisesService', () => {
       name: "any_name",
       personal_id: "any_personal_id",
       instructions: "any_instructions",
+      type: EXERCISE_TYPE.BICEPS,
       video: "any_video",
       rest: 60,
       load: 45,
@@ -89,6 +92,7 @@ describe('ExercisesService', () => {
       name: "any_name_updated",
       personal_id: "any_personal_id",
       instructions: "any_instructions",
+      type: EXERCISE_TYPE.BICEPS,
       video: "any_video",
       rest: 60,
       load: 45,
@@ -104,6 +108,7 @@ describe('ExercisesService', () => {
       name: "any_name",
       personal_id: "personal_id_123456",
       instructions: "any_instructions",
+      type: EXERCISE_TYPE.BICEPS,
       video: "any_video",
       rest: 60,
       load: 45,
@@ -115,6 +120,7 @@ describe('ExercisesService', () => {
       name: "any_name_2",
       personal_id: "personal_id_123456",
       instructions: "any_instructions_2",
+      type: EXERCISE_TYPE.BICEPS,
       video: "any_video_2",
       rest: 60,
       load: 45,
@@ -134,6 +140,7 @@ describe('ExercisesService', () => {
       name: "any_name",
       personal_id: "XXXXXXXXXXXXXXXXXX",
       instructions: "any_instructions",
+      type: EXERCISE_TYPE.BICEPS,
       video: "any_video",
       rest: 60,
       load: 45,
@@ -145,6 +152,7 @@ describe('ExercisesService', () => {
       name: "any_name_2",
       personal_id: "XXXXXXXXXXXXXXXXXX",
       instructions: "any_instructions_2",
+      type: EXERCISE_TYPE.BICEPS,
       video: "any_video_2",
       rest: 60,
       load: 45,
@@ -155,6 +163,7 @@ describe('ExercisesService', () => {
     await service.delete(exercise1.id)
     await service.delete(exercise2.id)
     const exercises = await service.getAllByPersonal("XXXXXXXXXXXXXXXXXX");
+    console.log("🚀 ~ it ~ exercises:", exercises)
     expect(exercises.data.length).toBe(0);
   })
 });

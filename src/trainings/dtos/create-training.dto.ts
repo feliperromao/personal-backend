@@ -1,8 +1,6 @@
-import { Exercise } from "@src/exercises/exercise.entity";
+import { Exercise } from '@src/exercises/exercise.entity';
 
-export default class Training {
-  id: string;
-
+export default class CreateTrainingDto {
   name: string;
 
   description?: string;
@@ -10,7 +8,7 @@ export default class Training {
   show_to_student: boolean;
 
   student_id: string;
-
+  
   personal_id: string;
 
   exercises?: Exercise[]
