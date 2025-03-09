@@ -7,7 +7,7 @@ import { USER_TYPE } from '@src/users/enum/user.type';
 import Paginate from '@src/@shared/pagination/paginate';
 import SearchQueryDto from '@src/@shared/pagination/search-query.dto';
 import HttpLinks from '@src/@shared/http-controls/http-links';
-import { CreateExerciseDto } from '@src/exercises/dtos/create-exercise.dto';
+import { CreateExerciseInput } from './inputs/create-exercise.input';
 
 @Roles(USER_TYPE.PERSONAL)
 @UseGuards(AuthGuard, RolesGuard)
@@ -31,7 +31,7 @@ export class ExercisesController {
 
   @Post('/')
   @HttpCode(HttpStatus.CREATED)
-  async createExercise(@Headers() headers: any, @Body() body: CreateExerciseDto) {
+  async createExercise(@Headers() headers: any, @Body() body: CreateExerciseInput) {
     const { user_id } = headers
     const exerciseData = {
       ...body,
@@ -45,7 +45,7 @@ export class ExercisesController {
   }
 
   @Put('/:id')
-  async updateExercise(@Param('id') id: string, @Headers() headers: any, @Body() body: CreateExerciseDto) {
+  async updateExercise(@Param('id') id: string, @Headers() headers: any, @Body() body: CreateExerciseInput) {
     const { user_id } = headers
     const exerciseData = { ...body, personal_id: user_id, id: id }
     return await this.service.update(exerciseData)

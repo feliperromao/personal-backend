@@ -1,6 +1,6 @@
 import { EXERCISE_TYPE } from "../enum/exercise.type";
 
-export class UpdateExerciseDto {
+export interface UpdateExerciseDto {
   id: string;
   name: string;
   personal_id: string;
