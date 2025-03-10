@@ -1,7 +1,6 @@
-import { EXERCISE_TYPE } from "../enum/exercise.type";
+import { EXERCISE_TYPE } from '@src/exercises/enum/exercise.type';
 
-export interface UpdateExerciseDto {
-  id: string;
+export interface ExerciseDto {
   name: string;
   personal_id: string;
   instructions?: string;
@@ -9,6 +8,6 @@ export interface UpdateExerciseDto {
   video?: string;
   rest: number;
   load: number;
-  load_progress: boolean;
   series: number;
+  load_progress: boolean
 }

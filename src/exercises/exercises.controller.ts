@@ -47,8 +47,8 @@ export class ExercisesController {
   @Put('/:id')
   async updateExercise(@Param('id') id: string, @Headers() headers: any, @Body() body: CreateExerciseInput) {
     const { user_id } = headers
-    const exerciseData = { ...body, personal_id: user_id, id: id }
-    return await this.service.update(exerciseData)
+    const exerciseData = { ...body, personal_id: user_id }
+    return await this.service.update(id, exerciseData)
   }
 
   @Delete('/:id')

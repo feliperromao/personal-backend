@@ -1,21 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateExerciseDto } from '@src/exercises/dtos/create-exercise.dto';
+import { ExerciseDto } from '@src/exercises/dtos/exercise.dto';
 import { ExerciseRepository } from '@src/@infra/repository/exercise/exercise.repository';
 import { Exercise } from './exercise.entity';
 import ExerciseFactory from '@src/exercises/exercise.factory';
-import { UpdateExerciseDto } from './dtos/update-exercise.dto';
 
 @Injectable()
 export class ExercisesService {
   constructor(private readonly repository: ExerciseRepository) { }
 
-  async create(exerciseData: CreateExerciseDto): Promise<Exercise> {
+  async create(exerciseData: ExerciseDto): Promise<Exercise> {
     const exercise = await this.repository.create(exerciseData);
     return ExerciseFactory.create(exercise)
   }
 
-  async update(exerciseData: UpdateExerciseDto): Promise<Exercise> {
-    const exercise = await this.repository.update(exerciseData);
+  async update(id: string, exerciseData: ExerciseDto): Promise<Exercise> {
+    const exercise = await this.repository.update(id, exerciseData);
     return ExerciseFactory.create(exercise)
   }
 
