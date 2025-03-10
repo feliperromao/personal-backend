@@ -6,8 +6,8 @@ import { Model, connect } from 'mongoose';
 import { UserRepository } from '@src/@infra/repository/user/user.repository';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
-import { CreatePersonalDto } from './dtos/create-personal.dto';
-import { CreateStudentDto } from './dtos/create-student.dto';
+import { CreatePersonalDto } from './dtos/personal.dto';
+import { CreateStudentDto } from './dtos/student.dto';
 import { BadRequestException } from '@nestjs/common';
 import { USER_TYPE } from './enum/user.type';
 

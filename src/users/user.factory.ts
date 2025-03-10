@@ -1,8 +1,8 @@
-import { User } from "@src/users/user.entity";
+import { Student } from "@src/users/user.entity";
 import { User as UserMongoModel } from "@src/@infra/models/user/mongoose/user.model";
 
-export default class UserFactory {
-  static create(model: UserMongoModel): User {
+export class StudentFactory {
+  static create(model: UserMongoModel): Student {
     return {
       id: model._id.toString(),
       name: model.name,
@@ -11,6 +11,11 @@ export default class UserFactory {
       blocked: model.blocked,
       type: model.type,
       personal_id: model.personal_id ?? null,
-    } as User
+      birthdate: model.birthdate,
+      height: model.height,
+      phone: model.phone,
+      weight: model.weight,
+      monthly_value_brl: model.monthly_value_brl
+    }
   }
 }

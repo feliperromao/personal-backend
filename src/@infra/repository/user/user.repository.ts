@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { User } from '../../models/user/mongoose/user.model';
-import { CreateStudentDto } from '../../../users/dtos/create-student.dto';
+import { StudentDto } from '../../../users/dtos/student.dto';
 import { ObjectId } from 'mongodb';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
@@ -16,7 +16,7 @@ export class UserRepository {
     @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
   
-    async create(dto: CreateStudentDto): Promise<User> {
+    async create(dto: StudentDto): Promise<User> {
     const userCreated = new this.model({
       _id: new ObjectId(),
       ...dto,
@@ -54,7 +54,7 @@ export class UserRepository {
 
   async getByPersonal(personal_id: string, search: string, page: number, limit: number) {
     const skip = (page - 1) * limit;
-    const fieldsSelection = {id: true, name: true, email: true, blocked: true };
+    const fieldsSelection = {password: false };
     let query
     let queryCountDocuments
     if (search === '') {

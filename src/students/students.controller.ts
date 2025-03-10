@@ -4,11 +4,11 @@ import { Roles } from '@src/guards/roles.decorator';
 import { RolesGuard } from '@src/guards/roles.guard';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { UsersService } from '@src/users/users.service';
-import { CreateSudentDto } from './dtos/create-student.dto';
-import { UpdateSudentDto } from './dtos/update-student.dto';
 import Paginate from '@src/@shared/pagination/paginate';
 import HttpLinks from '@src/@shared/http-controls/http-links';
 import SearchQueryDto from '@src/@shared/pagination/search-query.dto';
+import { CreateSudentInput } from './input/create-student.input';
+import { UpdateSudentInput } from './input/update-student.input';
 
 @Controller('students')
 @Roles(USER_TYPE.PERSONAL)
@@ -28,14 +28,14 @@ export class StudentsController {
 
   @Get("/list-all")
   @HttpCode(HttpStatus.OK)
-  async listAllStudents(@Headers() headers: any, @Query() query: SearchQueryDto) {
+  async listAllStudents(@Headers() headers: any) {
     const { user_id } = headers
     return await this.usersService.listAllByPersonal(user_id)
   }
 
   @Post("/")
   @HttpCode(HttpStatus.CREATED)
-  async createStudent(@Headers() headers: any, @Body() body: CreateSudentDto) {
+  async createStudent(@Headers() headers: any, @Body() body: CreateSudentInput) {
     const { user_id } = headers
     const userData = {
       ...body,
@@ -51,7 +51,7 @@ export class StudentsController {
 
   @Put("/:id")
   @HttpCode(HttpStatus.OK)
-  async updateStudent(@Headers() headers: any, @Param('id') id: string, @Body() body: UpdateSudentDto) {
+  async updateStudent(@Headers() headers: any, @Param('id') id: string, @Body() body: UpdateSudentInput) {
     const { user_id } = headers
     const userData = {...body, id, personal_id: user_id }
     return await this.usersService.updateStudents(userData)

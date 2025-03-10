@@ -163,7 +163,6 @@ describe('ExercisesService', () => {
     await service.delete(exercise1.id)
     await service.delete(exercise2.id)
     const exercises = await service.getAllByPersonal("XXXXXXXXXXXXXXXXXX");
-    console.log("🚀 ~ it ~ exercises:", exercises)
     expect(exercises.data.length).toBe(0);
   })
 });

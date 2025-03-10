@@ -24,6 +24,21 @@ export class User extends Document {
 
   @Prop({ required: true })
   blocked: boolean;
+
+  @Prop({ required: true })
+  phone: string;
+
+  @Prop({ required: false })
+  birthdate: string;
+
+  @Prop({ required: false })
+  weight: number;
+
+  @Prop({ required: false })
+  height: number;
+
+  @Prop({ required: false })
+  monthly_value_brl: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

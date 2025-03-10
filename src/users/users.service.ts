@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserRepository } from '../@infra/repository/user/user.repository';
-import { CreateStudentDto } from './dtos/create-student.dto';
+import { StudentDto } from './dtos/student.dto';
 import EncryptPassword from '@src/@infra/encrypt/encrypt.interface';
 import Bcrypt from '@src/@infra/encrypt/bcrypt';
-import { CreatePersonalDto } from './dtos/create-personal.dto';
+import { PersonalDto } from './dtos/personal.dto';
 import { USER_TYPE } from '@src/users/enum/user.type';
-import UserFactory from './user.factory';
 import { User } from './user.entity';
+import { StudentFactory } from './user.factory';
 
 @Injectable()
 export class UsersService {
@@ -25,29 +25,29 @@ export class UsersService {
 
   async listAllByPersonal(personal_id: string) {
     const result = await this.repository.listAllByPersonal(personal_id);
-    return result.map(student => UserFactory.create(student))
+    return result.map(student => StudentFactory.create(student))
   }
 
   async getByPersonal(personal_id: string, search: string = '', page: number = 1, limit: number =10) {
     const result = await this.repository.getByPersonal(personal_id, search, page, limit);
-    result.data = result.data.map(student => UserFactory.create(student))
+    result.data = result.data.map(student => StudentFactory.create(student))
     return result; 
   }
 
   async findById(id: string): Promise<User> {
     const model = await this.repository.findById(id);
-    return UserFactory.create(model);
+    return StudentFactory.create(model);
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
     const model = await this.repository.findByEmail(email);
     if (!model) return null;
-    return UserFactory.create(model)
+    return StudentFactory.create(model)
   }
 
-  async createStudent(data: CreateStudentDto): Promise<User> {
+  async createStudent(data: StudentDto): Promise<User> {
     const totalStudents = await this.repository.countStudents(data.personal_id);
-    const maxStudents: number | 5 = process.env.MAX_STUDENTS ? Number(process.env.MAX_STUDENTS) : 5;
+    const maxStudents: number = 10;
 
     if (totalStudents >= maxStudents) {
       throw new BadRequestException("Maximo de alunos cadastrados");
@@ -59,7 +59,7 @@ export class UsersService {
     });
   }
 
-  async createPersonal(data: CreatePersonalDto): Promise<User> {
+  async createPersonal(data: PersonalDto): Promise<User> {
     return await this.createUser({
       ...data,
       type: USER_TYPE.PERSONAL
@@ -90,7 +90,7 @@ export class UsersService {
       blocked: false,
       password: await this.encrypt.encrypt(data.password)
     });
-    return UserFactory.create(userCrated);
+    return StudentFactory.create(userCrated);
   }
 
   private async updateUser(userData): Promise<User> {
@@ -105,6 +105,6 @@ export class UsersService {
     const { id } = userData;
     delete userData.id;
     const model = await this.repository.update(id, userData);
-    return UserFactory.create(model);
+    return StudentFactory.create(model);
   }
 }
