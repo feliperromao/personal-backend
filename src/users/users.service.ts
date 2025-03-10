@@ -47,7 +47,7 @@ export class UsersService {
 
   async createStudent(data: StudentDto): Promise<User> {
     const totalStudents = await this.repository.countStudents(data.personal_id);
-    const maxStudents: number = 10;
+    const maxStudents: number | 5 = process.env.MAX_STUDENTS ? Number(process.env.MAX_STUDENTS) : 5;
 
     if (totalStudents >= maxStudents) {
       throw new BadRequestException("Maximo de alunos cadastrados");
