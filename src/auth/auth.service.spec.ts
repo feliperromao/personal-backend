@@ -87,7 +87,14 @@ describe('AuthService', () => {
       email: "student_1@mail.com",
       name: "student_1",
       password: "XXXXXXXXX",
-      personal_id: "personal_123"
+      personal_id: "personal_123",
+      birthdate: "2024-01-01",
+      blocked: false,
+      confirm_password: "XXXXXXXXX",
+      height: 190,
+      weight: 60,
+      phone: "55859999999",
+      monthly_value_brl: 85
     });
 
     const validated = await service.login("student_1@mail.com", "XXXXXXXXX")

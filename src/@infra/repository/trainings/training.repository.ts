@@ -56,7 +56,7 @@ export default class TrainingsRepository {
   }
 
   async delete(id: string) {
-    this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
+    await this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
   }
 
   async findById(id: string): Promise<Training> {

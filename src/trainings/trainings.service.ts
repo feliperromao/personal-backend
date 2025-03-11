@@ -9,7 +9,7 @@ import UpdateTrainingInput from './dtos/update-training.dto';
 export class TrainingsService {
   constructor(protected readonly repository: TrainingsRepository) {  }
 
-  async searchTraining(personal_id: string, search: string, student_id: string, page: number, limit: number) {
+  async searchTraining(personal_id: string, search: string, student_id: string, page: number, limit: number): Promise<{total: number, data: Training[]}> {
     const result = await this.repository.searchTraining(personal_id, search, student_id, page, limit);
     result.data = result.data.map(item => TrainingFactory.create(item));
     return result

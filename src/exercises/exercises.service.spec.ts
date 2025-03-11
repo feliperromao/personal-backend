@@ -87,8 +87,7 @@ describe('ExercisesService', () => {
       load_progress: false,
       series: 3
     });
-    const updatedExercise = await service.update({
-      id: exercise.id,
+    const updatedExercise = await service.update(exercise.id, {
       name: "any_name_updated",
       personal_id: "any_personal_id",
       instructions: "any_instructions",
@@ -137,10 +136,10 @@ describe('ExercisesService', () => {
 
   it("should delete all exercises in list", async () => {
     const exercise1 = await service.create({
-      name: "any_name",
+      name: "supino",
       personal_id: "XXXXXXXXXXXXXXXXXX",
-      instructions: "any_instructions",
-      type: EXERCISE_TYPE.BICEPS,
+      instructions: "fazer 3x15",
+      type: EXERCISE_TYPE.CHEST,
       video: "any_video",
       rest: 60,
       load: 45,
@@ -149,14 +148,14 @@ describe('ExercisesService', () => {
     });
 
     const exercise2 = await service.create({
-      name: "any_name_2",
+      name: "crossover",
       personal_id: "XXXXXXXXXXXXXXXXXX",
-      instructions: "any_instructions_2",
-      type: EXERCISE_TYPE.BICEPS,
+      instructions: "4x10 progressão de carga",
+      type: EXERCISE_TYPE.CHEST,
       video: "any_video_2",
-      rest: 60,
-      load: 45,
-      load_progress: false,
+      rest: 120,
+      load: 60,
+      load_progress: true,
       series: 3
     });
 

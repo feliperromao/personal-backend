@@ -6,9 +6,8 @@ import { Model, connect } from 'mongoose';
 import { UserRepository } from '@src/@infra/repository/user/user.repository';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
-import { CreatePersonalDto } from './dtos/personal.dto';
-import { CreateStudentDto } from './dtos/student.dto';
-import { BadRequestException } from '@nestjs/common';
+import { PersonalDto } from './dtos/personal.dto';
+import { StudentDto } from './dtos/student.dto';
 import { USER_TYPE } from './enum/user.type';
 
 let mongod: MongoMemoryServer;
@@ -85,19 +84,40 @@ describe('UsersService', () => {
       email: "student_1@mail.com",
       name: "student_1",
       password: "XXXXXXXXX",
-      personal_id: "personal_123"
+      personal_id: "personal_123",
+      birthdate: "2024-01-01",
+      blocked: false,
+      confirm_password: "XXXXXXXXX",
+      height: 190,
+      weight: 60,
+      phone: "55859999999",
+      monthly_value_brl: 85
     });
     await service.createStudent({
       email: "student_2@mail.com",
       name: "student_2",
       password: "XXXXXXXXX",
-      personal_id: "personal_123"
+      personal_id: "personal_123",
+      birthdate: "2024-01-01",
+      blocked: false,
+      confirm_password: "XXXXXXXXX",
+      height: 190,
+      weight: 60,
+      phone: "55859999999",
+      monthly_value_brl: 85
     });
     await service.createStudent({
       email: "student_3@mail.com",
       name: "student_3",
       password: "XXXXXXXXX",
-      personal_id: "personal_456"
+      personal_id: "personal_456",
+      birthdate: "2024-01-01",
+      blocked: false,
+      confirm_password: "XXXXXXXXX",
+      height: 190,
+      weight: 60,
+      phone: "55859999999",
+      monthly_value_brl: 85
     });
     
     const users = await service.listAllByPersonal("personal_123");
@@ -112,6 +132,7 @@ describe('UsersService', () => {
       name: 'any_personal',
       email: 'personal_example@example.com',
       password: 'XXXXXXXX',
+      phone: "55859999999",
     });
     const userFound = await service.findById(user.id);
     expect(userFound.id).toBe(user.id);
@@ -129,7 +150,14 @@ describe('UsersService', () => {
       name: 'student_new',
       email: 'student_new@example.com',
       password: 'XXXXXXXX',
-      personal_id: 'XXXXXXXXX'
+      personal_id: 'XXXXXXXXX',
+      birthdate: "2024-01-01",
+      blocked: false,
+      confirm_password: "XXXXXXXXX",
+      height: 190,
+      weight: 60,
+      phone: "55859999999",
+      monthly_value_brl: 85
     }
     const user = await service.createStudent(data);
     user.name = "new_name";
@@ -145,7 +173,14 @@ describe('UsersService', () => {
       email: "student_test@mail.com",
       name: "student_test",
       password: "XXXXXXXX",
-      personal_id: "6719412f0024cd0c7a0bb59d"
+      personal_id: "6719412f0024cd0c7a0bb59d",
+      birthdate: "2024-01-01",
+      blocked: false,
+      confirm_password: "XXXXXXXXX",
+      height: 190,
+      weight: 60,
+      phone: "55859999999",
+      monthly_value_brl: 85
     });
     await service.listAllByPersonal("6719412f0024cd0c7a0bb59d")
     await service.deleteUsers(user.id);
@@ -155,19 +190,27 @@ describe('UsersService', () => {
 });
 
 
-const personlData = (): CreatePersonalDto => {
+const personlData = (): PersonalDto => {
   return {
     name: 'personal',
     email: 'personal@example.com',
     password: 'XXXXXXXX',
+    phone: "55859999999",
   };
 }
 
-const studentData = (): CreateStudentDto => {
+const studentData = (): StudentDto => {
   return {
     name: 'student',
     email: 'student@example.com',
     password: 'XXXXXXXX',
-    personal_id: 'XXXXXXXXX'
+    personal_id: 'XXXXXXXXX',
+    birthdate: "2024-01-01",
+    blocked: false,
+    confirm_password: "XXXXXXXXX",
+    height: 190,
+    weight: 60,
+    phone: "55859999999",
+    monthly_value_brl: 85
   };
 }

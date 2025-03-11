@@ -54,6 +54,6 @@ export class ExerciseRepository {
   }
 
   async delete(id: string): Promise<void> {
-    this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
+    await this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
   }
 }

@@ -28,7 +28,7 @@ export class UsersService {
     return result.map(student => StudentFactory.create(student))
   }
 
-  async getByPersonal(personal_id: string, search: string = '', page: number = 1, limit: number =10) {
+  async getByPersonal(personal_id: string, search: string = '', page: number = 1, limit: number =10): Promise<{total: number, data: User[]}> {
     const result = await this.repository.getByPersonal(personal_id, search, page, limit);
     result.data = result.data.map(student => StudentFactory.create(student))
     return result; 
