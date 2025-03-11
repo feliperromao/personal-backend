@@ -11,4 +11,7 @@ export class UpdatePersonalDto {
   @IsString()
   @MinLength(8)
   password: string;
+
+  @IsString()
+  phone: string;
 }

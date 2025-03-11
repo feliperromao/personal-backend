@@ -1,4 +1,5 @@
-export interface SubscriptionDto {
+export class Subscription {
+  id: string;
   name: string;
   max_students: number;
   max_exercises: number;
