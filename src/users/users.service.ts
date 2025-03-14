@@ -46,6 +46,10 @@ export class UsersService {
   }
 
   async createStudent(data: StudentDto): Promise<User> {
+    if (data.password !== data.confirm_password) {
+      throw new BadRequestException("Senhas invalidas");
+    }
+
     const totalStudents = await this.repository.countStudents(data.personal_id);
     const maxStudents: number | 5 = process.env.MAX_STUDENTS ? Number(process.env.MAX_STUDENTS) : 5;
 
