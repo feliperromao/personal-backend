@@ -44,4 +44,9 @@ export class TrainingsController {
   async deleteTraining(@Param('id') id: string) {
     return await this.service.delete(id)
   }
+
+  @Get('/student/:student_id')
+  async listByStudent(@Param('student_id') student_id: string) {
+    return await this.service.getAllByStudent(student_id)
+  }
 }

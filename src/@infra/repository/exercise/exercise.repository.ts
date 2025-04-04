@@ -29,7 +29,7 @@ export class ExerciseRepository {
   async getAllByPersonal(personal_id: string, search: string, exercise_type: string = '', page: number, limit: number) {
     const skip = (page - 1) * limit;
     let data;
-    let total;
+    let total: number;
 
     let query = {
       personal_id: personal_id
