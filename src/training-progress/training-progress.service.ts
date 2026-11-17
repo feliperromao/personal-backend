@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import TrainingProgressRepository from '@src/@infra/repository/training-progress/training-progress.repository';
 import TrainingsRepository from '@src/@infra/repository/trainings/training.repository';
 import TrainingProgress from './training-progress.entity';
@@ -38,6 +38,29 @@ export class TrainingProgressService {
     };
     const model = await this.repository.finishTraining(id, status, feedback );
     return TrainingProgressFactory.create(model)
+  }
+
+  async completeSeries(id: string, student_id: string, exercise_id: string, series: number, load: number): Promise<TrainingProgress> {
+    const progress = await this.repository.findActiveByIdForStudent(id, student_id);
+    if (!progress) {
+      throw new NotFoundException(`Active TrainingProgress not found (id: ${id})`);
+    }
+
+    const exercise = progress.exercises?.find(item => item.id === exercise_id);
+    if (!exercise) {
+      throw new BadRequestException('Exercise does not belong to this training progress');
+    }
+    if (series > exercise.series) {
+      throw new BadRequestException(`Series must be between 1 and ${exercise.series}`);
+    }
+
+    const model = await this.repository.recordCompletedSeries(id, student_id, {
+      exercise_id,
+      series,
+      load,
+      completed_at: new Date()
+    });
+    return TrainingProgressFactory.create(model);
   }
 
   async cancelTraining(id: string): Promise<boolean> {

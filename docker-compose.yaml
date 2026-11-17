@@ -37,7 +37,7 @@ services:
     volumes:
       - ./.files/dbdata:/data/db
     ports:
-      - '27017:27017'
+      - '27020:27017'
     command: mongod --logpath=/dev/stdout # --quiet
     restart: unless-stopped
     tty: true

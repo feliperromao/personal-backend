@@ -15,6 +15,12 @@ export default class TrainingProgressFactory {
       finished_at: model.finished_at ?? null,
       finish_feedback: model.finish_feedback ?? null,
       finish_status: model.finish_status ?? null,
+      completed_series: model.completed_series?.map(item => ({
+        exercise_id: item.exercise_id,
+        series: item.series,
+        load: item.load,
+        completed_at: item.completed_at
+      })) || [],
       exercises: model.exercises.map(exercise => ({
         id: exercise.id,
         name: exercise.name,

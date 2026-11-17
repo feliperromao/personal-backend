@@ -1,23 +1,23 @@
 start:
-	docker-compose up
+	docker compose up
 
 restart:
 	make down;make build;make logs
 
 up:
-	docker-compose up -d
+	docker compose up -d
 
 up-prod:
-	docker-compose -f docker-compose-prod.yaml up -d
+	docker compose -f docker compose-prod.yaml up -d
 
 build:
-	docker-compose up -d --build
+	docker compose up -d --build
 
 down:
-	docker-compose down
+	docker compose down
 
 logs:
-	docker-compose logs -f personal_app
+	docker compose logs -f personal_app
 
 bash:
 	docker exec -ti personal_app bash

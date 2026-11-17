@@ -3,6 +3,23 @@ import mongoose, { Document } from "mongoose";
 import { Exercise } from '../../exercise/mongoose/exercise.model';
 import { FINISH_STATUS } from '@src/training-progress/enum/finish-status.enum';
 
+@Schema({ _id: false })
+export class CompletedSeries {
+  @Prop({ required: true })
+  exercise_id: string;
+
+  @Prop({ required: true })
+  series: number;
+
+  @Prop({ required: true })
+  load: number;
+
+  @Prop({ required: true })
+  completed_at: Date;
+}
+
+export const CompletedSeriesSchema = SchemaFactory.createForClass(CompletedSeries);
+
 @Schema()
 export class TrainingProgress extends Document {
   @Prop()
@@ -25,6 +42,9 @@ export class TrainingProgress extends Document {
 
   @Prop({ required: false })
   exercises?: Exercise[]
+
+  @Prop({ type: [CompletedSeriesSchema], required: false, default: [] })
+  completed_series?: CompletedSeries[];
   
   @Prop({ required: false, default: null })
   finish_feedback: string;

@@ -114,6 +114,75 @@ describe('TrainingProgressService', () => {
     expect(trainingProgress.finish_status).toBeNull();
     expect(trainingProgress.started_at).toBeDefined();
     expect(trainingProgress.finished_at).toBeNull();
+    expect(trainingProgress.completed_series).toEqual([]);
+  });
+
+  it("should persist the load used in each completed series without duplicates", async () => {
+    const training = await trainingRepository.create({
+      name: "Load progression",
+      description: "Track each series",
+      show_to_student: true,
+      student_id: "student-123",
+      personal_id: "personal-123",
+      exercises: [{
+        id: "exercise-1",
+        name: "Bench press",
+        personal_id: "personal-123",
+        instructions: "Control the movement",
+        type: EXERCISE_TYPE.CHEST,
+        video: "",
+        rest: 60,
+        load: 80,
+        load_progress: true,
+        series: 3
+      }]
+    });
+    const progress = await service.startTraining(training.id);
+
+    const firstRecord = await service.completeSeries(progress.id, "student-123", "exercise-1", 1, 82.5);
+    expect(firstRecord.completed_series).toHaveLength(1);
+    expect(firstRecord.completed_series[0]).toMatchObject({
+      exercise_id: "exercise-1",
+      series: 1,
+      load: 82.5
+    });
+    expect(firstRecord.completed_series[0].completed_at).toBeDefined();
+
+    const correctedRecord = await service.completeSeries(progress.id, "student-123", "exercise-1", 1, 85);
+    expect(correctedRecord.completed_series).toHaveLength(1);
+    expect(correctedRecord.completed_series[0].load).toBe(85);
+
+    const secondRecord = await service.completeSeries(progress.id, "student-123", "exercise-1", 2, 87.5);
+    expect(secondRecord.completed_series).toHaveLength(2);
+    expect(secondRecord.completed_series[1]).toMatchObject({ series: 2, load: 87.5 });
+  });
+
+  it("should reject series outside the exercise range or belonging to another student", async () => {
+    const training = await trainingRepository.create({
+      name: "Protected progress",
+      description: "Validation",
+      show_to_student: true,
+      student_id: "student-owner",
+      personal_id: "personal-123",
+      exercises: [{
+        id: "exercise-1",
+        name: "Squat",
+        personal_id: "personal-123",
+        instructions: "Keep control",
+        type: EXERCISE_TYPE.LEGS,
+        video: "",
+        rest: 60,
+        load: 40,
+        load_progress: true,
+        series: 3
+      }]
+    });
+    const progress = await service.startTraining(training.id);
+
+    await expect(service.completeSeries(progress.id, "another-student", "exercise-1", 1, 40))
+      .rejects.toThrowError("Active TrainingProgress not found");
+    await expect(service.completeSeries(progress.id, "student-owner", "exercise-1", 4, 40))
+      .rejects.toThrowError("Series must be between 1 and 3");
   });
 
   it("should finish training", async () => {

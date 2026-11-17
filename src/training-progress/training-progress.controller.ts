@@ -7,6 +7,7 @@ import { StartTrainingDto } from './dtos/start-training.dto';
 import { FinishTrainingDto } from './dtos/finish-training.dto';
 import { AuthGuard } from '@src/guards/auth.guard';
 import { TrainingsService } from '@src/trainings/trainings.service';
+import { CompleteSeriesDto } from './dtos/complete-series.dto';
 
 @Controller('training-progress')
 @Roles(USER_TYPE.STUDENT)
@@ -46,6 +47,14 @@ export class TrainingProgressController {
   async finishTraining(@Body() Body: FinishTrainingDto) {
     const { id, status, feedback } = Body
     return await this.trainingProgressService.finishTraining(id, status, feedback)
+  }
+
+  @Post('/series')
+  @HttpCode(HttpStatus.OK)
+  async completeSeries(@Headers() headers: any, @Body() body: CompleteSeriesDto) {
+    const { user_id } = headers;
+    const { id, exercise_id, series, load } = body;
+    return await this.trainingProgressService.completeSeries(id, user_id, exercise_id, series, load);
   }
 
   @Post('/calcel')
