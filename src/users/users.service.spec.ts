@@ -187,6 +187,32 @@ describe('UsersService', () => {
     const userDeleted = await service.findByEmail(user.email);
     expect(userDeleted).toBeNull();
   })
+
+  it('should save branding for a personal and expose it to their students', async () => {
+    const personal = await service.createPersonal({
+      ...personlData(),
+      email: 'branded-personal@example.com',
+    });
+    const student = await service.createStudent({
+      ...studentData(),
+      email: 'branded-student@example.com',
+      personal_id: personal.id,
+    });
+    const branding = {
+      appName: 'Equipe Movimento',
+      primaryColor: '#0E7490',
+      footerColor: '#082F49',
+      logoUrl: 'https://example.com/logo.svg',
+    };
+
+    await service.updateBranding(personal.id, branding);
+
+    const personalBranding = await service.getBrandingForUser(personal.id);
+    const studentBranding = await service.getBrandingForUser(student.id);
+
+    expect(personalBranding).toEqual(branding);
+    expect(studentBranding).toEqual(branding);
+  });
 });
 
 
@@ -207,7 +233,7 @@ const studentData = (): StudentDto => {
     personal_id: 'XXXXXXXXX',
     birthdate: "2024-01-01",
     blocked: false,
-    confirm_password: "XXXXXXXXX",
+    confirm_password: "XXXXXXXX",
     height: 190,
     weight: 60,
     phone: "55859999999",

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { UserRepository } from '../@infra/repository/user/user.repository';
 import { StudentDto } from './dtos/student.dto';
 import EncryptPassword from '@src/@infra/encrypt/encrypt.interface';
@@ -7,6 +7,11 @@ import { PersonalDto } from './dtos/personal.dto';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { User } from './user.entity';
 import { StudentFactory } from './user.factory';
+import {
+  BrandingConfig,
+  DEFAULT_BRANDING,
+  withBrandingDefaults,
+} from '@src/branding/branding.config';
 
 @Injectable()
 export class UsersService {
@@ -78,6 +83,37 @@ export class UsersService {
   async updatePersonal(userData): Promise<User> {
     userData.type = USER_TYPE.PERSONAL;
     return this.updateUser(userData)
+  }
+
+  async getBrandingForUser(userId: string): Promise<BrandingConfig> {
+    const user = await this.findById(userId);
+    const brandingOwnerId =
+      user.type === USER_TYPE.STUDENT ? user.personal_id : user.id;
+
+    if (!brandingOwnerId) return DEFAULT_BRANDING;
+
+    try {
+      const owner =
+        brandingOwnerId === user.id
+          ? user
+          : await this.findById(brandingOwnerId);
+      return withBrandingDefaults(owner?.branding);
+    } catch {
+      return DEFAULT_BRANDING;
+    }
+  }
+
+  async updateBranding(
+    personalId: string,
+    branding: BrandingConfig,
+  ): Promise<BrandingConfig> {
+    const personal = await this.findById(personalId);
+    if (personal.type !== USER_TYPE.PERSONAL) {
+      throw new ForbiddenException('only personal users can update branding');
+    }
+
+    await this.repository.update(personalId, { branding });
+    return withBrandingDefaults(branding);
   }
 
   async deleteUsers(id: string): Promise<void> {

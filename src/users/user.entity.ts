@@ -1,3 +1,5 @@
+import { BrandingConfig } from '@src/branding/branding.config';
+
 export class User {
   id: string;
   name: string;
@@ -6,6 +8,8 @@ export class User {
   blocked: boolean;
   type: string;
   phone: string;
+  personal_id?: string;
+  branding?: BrandingConfig;
 }
 
 export class Student extends User {

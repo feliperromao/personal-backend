@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { USER_TYPE } from '@src/users/enum/user.type';
+import { BrandingConfig } from '@src/branding/branding.config';
 
 @Schema()
 export class User extends Document {
@@ -39,6 +40,18 @@ export class User extends Document {
 
   @Prop({ required: false })
   monthly_value_brl: number;
+
+  @Prop({
+    required: false,
+    type: {
+      appName: String,
+      primaryColor: String,
+      footerColor: String,
+      logoUrl: String,
+    },
+    _id: false,
+  })
+  branding?: BrandingConfig;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

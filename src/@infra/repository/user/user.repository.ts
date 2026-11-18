@@ -89,7 +89,7 @@ export class UserRepository {
     await this.model.insertMany(user)
   }
 
-  async update(id: string, data: User): Promise<User> {
+  async update(id: string, data: Partial<User>): Promise<User> {
     await this.model.findByIdAndUpdate(new mongoose.Types.ObjectId(id), data);
     const CACHE_KEY = `user-${id}`;
     await this.cacheManager.del(CACHE_KEY);

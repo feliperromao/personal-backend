@@ -15,7 +15,8 @@ export class StudentFactory {
       height: model.height,
       phone: model.phone,
       weight: model.weight,
-      monthly_value_brl: model.monthly_value_brl
+      monthly_value_brl: model.monthly_value_brl,
+      branding: model.branding,
     }
   }
 }
