@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-const APP_PORT = process.env.PORT || 3020
+
+const APP_PORT = process.env.PORT || 3020;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,7 +12,7 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Authorization',
     credentials: true,
   });
-  await app.listen(APP_PORT);
-  console.log("🚀 Application is running on:", APP_PORT)
+  await app.listen(APP_PORT, '0.0.0.0');
+  console.log('🚀 Application is running on:', APP_PORT);
 }
 bootstrap();

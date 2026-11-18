@@ -1,3 +1,24 @@
+## Deploy no Render com MongoDB Atlas
+
+O arquivo `render.yaml` configura a API como um Web Service no plano gratuito,
+com build, comando de inicialização e health check na rota `/`.
+
+1. Crie um cluster no MongoDB Atlas e um usuário de banco.
+2. Em **Connect > Drivers**, copie a connection string no formato
+   `mongodb+srv://...`.
+3. No Render, crie um **Blueprint** apontando para este repositório.
+4. Informe `MONGODB_URI` e `FRONTEND_APP_URL` quando solicitado.
+5. No Atlas, autorize as faixas de IP de saída mostradas em
+   **Render > Service > Connect > Outbound**.
+
+Para destravar somente o primeiro deploy, o Atlas pode ser configurado
+temporariamente com `0.0.0.0/0`. Depois, substitua essa regra pelas faixas de
+saída do Render. A variável `APP_KEY` é gerada automaticamente pelo Blueprint.
+
+Em desenvolvimento local, as variáveis antigas `MONGODB_HOST`,
+`MONGODB_PORT`, `MONGODB_USER` e `MONGODB_PWD` continuam compatíveis com o
+Docker Compose.
+
 ## TODO
 - [x] Login
 - [x] Proteger rotas de criar usuarios aluno

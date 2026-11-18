@@ -4,7 +4,11 @@ export default class Paginate {
   static create(resource: string, data: any[], total: number, page: number, limit: number): Pagination {
     const totalPages = Math.ceil(total / limit);
     const current_page = +page;
-    const resource_uri = `${process.env.APP_URL}/${resource}`
+    const appUrl =
+      process.env.APP_URL ||
+      process.env.RENDER_EXTERNAL_URL ||
+      'http://localhost:3020';
+    const resource_uri = `${appUrl.replace(/\/$/, '')}/${resource}`;
     const first_page_url = `${resource_uri}?page=1`
     const last_page_url =  `${resource_uri}?page=${totalPages}`
     const next_page_url = (totalPages > 1) ? `${resource_uri}?page=${(current_page + 1)}` : ''
