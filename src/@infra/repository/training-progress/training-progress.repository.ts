@@ -4,20 +4,23 @@ import mongoose, { Model } from "mongoose";
 import { CompletedSeries, TrainingProgress } from "@src/@infra/models/training-progress/mongoose/training-progress.model";
 import Training from "@src/trainings/training.entity";
 import { FINISH_STATUS } from "@src/training-progress/enum/finish-status.enum";
+import { USER_TYPE } from "@src/users/enum/user.type";
 
 export default class TrainingProgressRepository {
   constructor(@InjectModel(TrainingProgress.name) private model: Model<TrainingProgress>) { }
   
-  async getCurrentTraining(student_id: string): Promise<TrainingProgress> {
+  async getCurrentTraining(executor_id: string): Promise<TrainingProgress> {
     return await this.model.findOne({
-      student_id: student_id,
+      $or: [
+        { executor_id },
+        { executor_id: { $exists: false }, student_id: executor_id },
+      ],
       finished_at: { $exists: false }
     })
   }
 
-  async startTraining(training: Training): Promise<TrainingProgress> {
+  async startTraining(training: Training, executor_id: string, executor_type: USER_TYPE): Promise<TrainingProgress> {
     const training_id = training.id
-    delete training.id;
     const currentTraining = {
       _id: new ObjectId(),
       training_id: training_id,
@@ -25,6 +28,8 @@ export default class TrainingProgressRepository {
       description: training.description ?? null,
       student_id: training.student_id,
       personal_id: training.personal_id,
+      executor_id,
+      executor_type,
       exercises: training.exercises,
       completed_series: [],
       finish_feedback: null,
@@ -48,16 +53,29 @@ export default class TrainingProgressRepository {
     return await this.model.findOne({_id: new mongoose.Types.ObjectId(id)}).exec();
   }
 
-  async findActiveByIdForStudent(id: string, student_id: string): Promise<TrainingProgress> {
+  async findByIdForExecutor(id: string, executor_id: string): Promise<TrainingProgress> {
     return await this.model.findOne({
       _id: new mongoose.Types.ObjectId(id),
-      student_id,
+      $or: [
+        { executor_id },
+        { executor_id: { $exists: false }, student_id: executor_id },
+      ],
+    }).exec();
+  }
+
+  async findActiveByIdForExecutor(id: string, executor_id: string): Promise<TrainingProgress> {
+    return await this.model.findOne({
+      _id: new mongoose.Types.ObjectId(id),
+      $or: [
+        { executor_id },
+        { executor_id: { $exists: false }, student_id: executor_id },
+      ],
       finished_at: { $exists: false }
     }).exec();
   }
 
-  async recordCompletedSeries(id: string, student_id: string, completedSeries: CompletedSeries): Promise<TrainingProgress> {
-    const progress = await this.findActiveByIdForStudent(id, student_id);
+  async recordCompletedSeries(id: string, executor_id: string, completedSeries: CompletedSeries): Promise<TrainingProgress> {
+    const progress = await this.findActiveByIdForExecutor(id, executor_id);
     if (!progress) return null;
 
     const history = progress.completed_series || [];

@@ -9,6 +9,7 @@ import TrainingsRepository from '@src/@infra/repository/trainings/training.repos
 import { Training, TrainingSchema } from '@src/@infra/models/training/mongoose/training.model';
 import { FINISH_STATUS } from './enum/finish-status.enum';
 import { EXERCISE_TYPE } from '@src/exercises/enum/exercise.type';
+import { USER_TYPE } from '@src/users/enum/user.type';
 
 let mongod: MongoMemoryServer;
 let mongoConnection;
@@ -46,6 +47,8 @@ describe('TrainingProgressService', () => {
     trainingRepository = module.get<TrainingsRepository>(TrainingsRepository);
     model = module.get<Model<TrainingProgress>>(getModelToken('TrainingProgress'));
     trainingModel = module.get<Model<Training>>(getModelToken('Training'));
+    await model.deleteMany({});
+    await trainingModel.deleteMany({});
   });
 
   afterAll(async () => {
@@ -58,15 +61,15 @@ describe('TrainingProgressService', () => {
   });
 
   it("should throws if training not exists when try start a training", async () => {
-    await expect(service.startTraining("6719412f0024cd0c7a0bb59c")).rejects.toThrowError("Training not found");
+    await expect(service.startTraining("6719412f0024cd0c7a0bb59c", "student-123", USER_TYPE.STUDENT)).rejects.toThrowError("Training not found");
   });
 
   it("should throws if training not exists when try finish a training", async () => {
-    await expect(service.finishTraining("6719412f0024cd0c7a0bb59c", FINISH_STATUS.MUITO_INTENSA)).rejects.toThrowError("TrainingProgress not found");
+    await expect(service.finishTraining("6719412f0024cd0c7a0bb59c", FINISH_STATUS.MUITO_INTENSA, "student-123")).rejects.toThrowError("TrainingProgress not found");
   })
 
   it("should throws if training not exists when try cancel a training", async () => {
-    await expect(service.cancelTraining("6719412f0024cd0c7a0bb59c")).rejects.toThrowError("TrainingProgress not found");
+    await expect(service.cancelTraining("6719412f0024cd0c7a0bb59c", "student-123")).rejects.toThrowError("TrainingProgress not found");
   })
 
   it("should start a training", async () => {
@@ -102,7 +105,7 @@ describe('TrainingProgressService', () => {
         }]
     }
     const training = await trainingRepository.create(trainingData);
-    const trainingProgress = await service.startTraining(training.id);
+    const trainingProgress = await service.startTraining(training.id, "123", USER_TYPE.STUDENT);
     expect(trainingProgress).toBeDefined();
     expect(trainingProgress.training_id).toEqual(training.id);
     expect(trainingProgress.exercises.length).toEqual(training.exercises.length);
@@ -115,6 +118,66 @@ describe('TrainingProgressService', () => {
     expect(trainingProgress.started_at).toBeDefined();
     expect(trainingProgress.finished_at).toBeNull();
     expect(trainingProgress.completed_series).toEqual([]);
+  });
+
+  it("should allow the personal to execute a training without a student", async () => {
+    const training = await trainingRepository.create({
+      name: "Personal workout",
+      description: "Trainer execution",
+      show_to_student: false,
+      personal_id: "personal-123",
+      exercises: [{
+        id: "exercise-1",
+        name: "Squat",
+        personal_id: "personal-123",
+        instructions: "Keep control",
+        type: EXERCISE_TYPE.LEGS,
+        video: "",
+        rest: 60,
+        load: 40,
+        load_progress: true,
+        series: 3
+      }]
+    });
+
+    const progress = await service.startTraining(training.id, "personal-123", USER_TYPE.PERSONAL);
+
+    expect(progress.student_id).toBeUndefined();
+    expect(progress.executor_id).toBe("personal-123");
+    expect(progress.executor_type).toBe(USER_TYPE.PERSONAL);
+
+    const updated = await service.completeSeries(progress.id, "personal-123", "exercise-1", 1, 42.5);
+    expect(updated.completed_series[0].load).toBe(42.5);
+  });
+
+  it("should reject a personal trying to execute another personal's training", async () => {
+    const training = await trainingRepository.create({
+      name: "Private workout",
+      description: "Owner only",
+      show_to_student: false,
+      personal_id: "owner-personal",
+      exercises: []
+    });
+
+    await expect(service.startTraining(training.id, "another-personal", USER_TYPE.PERSONAL))
+      .rejects.toThrowError("Training is not available for this user");
+  });
+
+  it("should reject finishing or canceling another user's execution", async () => {
+    const training = await trainingRepository.create({
+      name: "Protected execution",
+      description: "Owner only",
+      show_to_student: true,
+      student_id: "student-owner",
+      personal_id: "personal-123",
+      exercises: []
+    });
+    const progress = await service.startTraining(training.id, "student-owner", USER_TYPE.STUDENT);
+
+    await expect(service.finishTraining(progress.id, FINISH_STATUS.MODERADA, "another-student"))
+      .rejects.toThrowError("TrainingProgress not found");
+    await expect(service.cancelTraining(progress.id, "another-student"))
+      .rejects.toThrowError("TrainingProgress not found");
   });
 
   it("should persist the load used in each completed series without duplicates", async () => {
@@ -137,7 +200,7 @@ describe('TrainingProgressService', () => {
         series: 3
       }]
     });
-    const progress = await service.startTraining(training.id);
+    const progress = await service.startTraining(training.id, "student-123", USER_TYPE.STUDENT);
 
     const firstRecord = await service.completeSeries(progress.id, "student-123", "exercise-1", 1, 82.5);
     expect(firstRecord.completed_series).toHaveLength(1);
@@ -177,7 +240,7 @@ describe('TrainingProgressService', () => {
         series: 3
       }]
     });
-    const progress = await service.startTraining(training.id);
+    const progress = await service.startTraining(training.id, "student-owner", USER_TYPE.STUDENT);
 
     await expect(service.completeSeries(progress.id, "another-student", "exercise-1", 1, 40))
       .rejects.toThrowError("Active TrainingProgress not found");
@@ -218,10 +281,10 @@ describe('TrainingProgressService', () => {
         }]
     }
     const training = await trainingRepository.create(trainingData);
-    const trainingProgress = await service.startTraining(training.id);
+    const trainingProgress = await service.startTraining(training.id, "123", USER_TYPE.STUDENT);
     const status = FINISH_STATUS.MODERADA;
     const feedback = "Great job!";
-    const finished = await service.finishTraining(trainingProgress.id, status, feedback);
+    const finished = await service.finishTraining(trainingProgress.id, status, "123", feedback);
     expect(finished).toBeTruthy();
 
     const trainingFinished = await repository.findById(trainingProgress.id);
@@ -265,8 +328,8 @@ describe('TrainingProgressService', () => {
       ]
     }
     const training = await trainingRepository.create(trainingData);
-    const trainingProgress = await service.startTraining(training.id);
-    const canceled = await service.cancelTraining(trainingProgress.id);
+    const trainingProgress = await service.startTraining(training.id, "123", USER_TYPE.STUDENT);
+    const canceled = await service.cancelTraining(trainingProgress.id, "123");
     expect(canceled).toBeTruthy();
   })
 });

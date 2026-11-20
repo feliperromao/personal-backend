@@ -8,9 +8,9 @@ export default class TrainingFactory {
       name: model.name,
       description: model.description,
       show_to_student: model.show_to_student,
-      student_id: model.student_id,
+      student_id: model.student_id ?? undefined,
       personal_id: model.personal_id,
-      exercises: model.exercises.map(exercise => ({
+      exercises: model.exercises?.map(exercise => ({
         id: exercise.id,
         name: exercise.name,
         type: exercise.type,

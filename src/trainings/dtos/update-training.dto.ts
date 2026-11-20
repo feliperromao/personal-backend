@@ -9,7 +9,7 @@ export default class UpdateTrainingDto {
 
   show_to_student: boolean;
 
-  student_id: string;
+  student_id?: string;
   
   personal_id: string;
 

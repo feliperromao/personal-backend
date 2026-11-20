@@ -43,6 +43,7 @@ describe('TrainingsService', () => {
     service = module.get<TrainingsService>(TrainingsService);
     repository = module.get<TrainingsRepository>(TrainingsRepository);
     model = module.get<Model<Training>>(getModelToken('Training'));
+    await model.deleteMany({});
   });
 
   it('should be defined', () => {
@@ -60,6 +61,17 @@ describe('TrainingsService', () => {
     expect(training.student_id).toBe("123");
     expect(training.personal_id).toBe("XXX");
     expect(training.exercises).toHaveLength(2);
+  });
+
+  it("should create a personal training without a student and keep it private", async () => {
+    const data = getTrainingData();
+    delete data.student_id;
+    data.show_to_student = true;
+
+    const training = await service.create(data);
+
+    expect(training.student_id).toBeUndefined();
+    expect(training.show_to_student).toBe(false);
   });
 
   it("should update a training", async () => {

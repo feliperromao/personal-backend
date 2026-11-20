@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from "mongoose";
 import { Exercise } from '../../exercise/mongoose/exercise.model';
 import { FINISH_STATUS } from '@src/training-progress/enum/finish-status.enum';
+import { USER_TYPE } from '@src/users/enum/user.type';
 
 @Schema({ _id: false })
 export class CompletedSeries {
@@ -34,11 +35,17 @@ export class TrainingProgress extends Document {
   @Prop({ required: false })
   description?: string;
 
-  @Prop({ required: true })
-  student_id: string;
+  @Prop({ required: false, default: null })
+  student_id?: string;
 
   @Prop({ required: true })
   personal_id: string;
+
+  @Prop({ required: false })
+  executor_id?: string;
+
+  @Prop({ required: false, enum: USER_TYPE })
+  executor_type?: USER_TYPE;
 
   @Prop({ required: false })
   exercises?: Exercise[]

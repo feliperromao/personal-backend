@@ -16,8 +16,8 @@ export class Training extends Document {
   @Prop({ required: true })
   show_to_student: boolean;
 
-  @Prop({ required: true })
-  student_id: string;
+  @Prop({ required: false, default: null })
+  student_id?: string;
 
   @Prop({ required: true })
   personal_id: string;

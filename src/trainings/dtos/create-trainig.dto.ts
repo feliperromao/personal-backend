@@ -13,7 +13,8 @@ export class CreateTrainingDto {
   show_to_student: boolean;
 
   @IsString()
-  student_id: string;
+  @IsOptional()
+  student_id?: string;
 
   @IsArray()
   exercises?: Exercise[];

@@ -41,8 +41,8 @@ export class TrainingsController {
   }
 
   @Delete('/:id')
-  async deleteTraining(@Param('id') id: string) {
-    return await this.service.delete(id)
+  async deleteTraining(@Headers() headers: any, @Param('id') id: string) {
+    return await this.service.delete(id, headers.user_id)
   }
 
   @Get('/student/:student_id')
