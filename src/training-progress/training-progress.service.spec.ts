@@ -218,6 +218,18 @@ describe('TrainingProgressService', () => {
     const secondRecord = await service.completeSeries(progress.id, "student-123", "exercise-1", 2, 87.5);
     expect(secondRecord.completed_series).toHaveLength(2);
     expect(secondRecord.completed_series[1]).toMatchObject({ series: 2, load: 87.5 });
+
+    const finished = await service.finishTraining(progress.id, FINISH_STATUS.INTENSA, "student-123");
+    expect(finished.finished_at).toBeDefined();
+    expect(finished.completed_series).toEqual(expect.arrayContaining([
+      expect.objectContaining({ exercise_id: "exercise-1", series: 1, load: 85 }),
+      expect.objectContaining({ exercise_id: "exercise-1", series: 2, load: 87.5 })
+    ]));
+    expect(finished.exercises[0].load).toBe(80);
+
+    const persistedExecution = await repository.findById(progress.id);
+    expect(persistedExecution.completed_series.map(item => item.load)).toEqual([85, 87.5]);
+    expect(persistedExecution.finished_at).toBeDefined();
   });
 
   it("should reject series outside the exercise range or belonging to another student", async () => {

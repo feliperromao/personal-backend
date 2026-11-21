@@ -39,14 +39,20 @@ export default class TrainingProgressRepository {
     return await this.model.create(currentTraining);
   }
 
-  async finishTraining(id: string, status: FINISH_STATUS, feedback: string = null): Promise<TrainingProgress> {
+  async finishTraining(id: string, executor_id: string, status: FINISH_STATUS, feedback: string = null): Promise<TrainingProgress> {
     const data = {
       finished_at: new Date(),
       finish_feedback: feedback,
       finish_status: status
     };
-    await this.model.findByIdAndUpdate(new mongoose.Types.ObjectId(id), data);
-    return this.findById(id);
+    return await this.model.findOneAndUpdate({
+      _id: new mongoose.Types.ObjectId(id),
+      $or: [
+        { executor_id },
+        { executor_id: { $exists: false }, student_id: executor_id },
+      ],
+      finished_at: { $exists: false }
+    }, data, { new: true }).exec();
   }
 
   async findById(id: string): Promise<TrainingProgress> {
@@ -72,6 +78,17 @@ export default class TrainingProgressRepository {
       ],
       finished_at: { $exists: false }
     }).exec();
+  }
+
+  async findFinishedByStudent(student_id: string): Promise<TrainingProgress[]> {
+    return await this.model.find({
+      finished_at: { $ne: null },
+      $or: [
+        { executor_id: student_id, executor_type: USER_TYPE.STUDENT },
+        { executor_id: student_id, executor_type: { $exists: false } },
+        { executor_id: { $exists: false }, student_id },
+      ],
+    }).sort({ finished_at: 1, started_at: 1 }).exec();
   }
 
   async recordCompletedSeries(id: string, executor_id: string, completedSeries: CompletedSeries): Promise<TrainingProgress> {

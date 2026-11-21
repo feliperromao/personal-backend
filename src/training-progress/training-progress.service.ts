@@ -39,11 +39,10 @@ export class TrainingProgressService {
   }
 
   async finishTraining(id: string, status: FINISH_STATUS, executorId: string, feedback: string = null): Promise<TrainingProgress> {
-    const training = await this.repository.findByIdForExecutor(id, executorId);
-    if (!training) {
+    const model = await this.repository.finishTraining(id, executorId, status, feedback);
+    if (!model) {
       throw new NotFoundException(`TrainingProgress not found (id: ${id})`);
     };
-    const model = await this.repository.finishTraining(id, status, feedback );
     return TrainingProgressFactory.create(model)
   }
 

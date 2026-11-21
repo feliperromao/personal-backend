@@ -6,6 +6,7 @@ export class User {
   blocked: boolean;
   type: string;
   phone: string;
+  personal_id?: string;
 }
 
 export class Student extends User {

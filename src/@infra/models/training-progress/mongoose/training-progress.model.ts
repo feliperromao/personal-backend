@@ -67,3 +67,6 @@ export class TrainingProgress extends Document {
 }
 
 export const TrainingProgressSchema = SchemaFactory.createForClass(TrainingProgress);
+
+TrainingProgressSchema.index({ executor_id: 1, finished_at: -1 });
+TrainingProgressSchema.index({ student_id: 1, finished_at: -1 });
