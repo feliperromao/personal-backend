@@ -84,6 +84,12 @@ export class UsersService {
     await this.repository.delete(id);
   }
 
+  async changePassword(userId: string, password: string): Promise<boolean> {
+    const encryptedPassword = await this.encrypt.encrypt(password);
+    const user = await this.repository.updatePassword(userId, encryptedPassword);
+    return Boolean(user);
+  }
+
   private async createUser(data): Promise<User> {
     const checkIfUserExists = await this.findByEmail(data.email);
     if (checkIfUserExists) {

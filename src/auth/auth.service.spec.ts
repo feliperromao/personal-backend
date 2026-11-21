@@ -8,9 +8,13 @@ import { User, UserSchema } from '@src/@infra/models/user/mongoose/user.model';
 import { JwtService } from '@nestjs/jwt';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
-import { UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import Bcrypt from '@src/@infra/encrypt/bcrypt';
+
+jest.mock('@nestjs/jwt', () => ({
+  JwtService: class JwtService {},
+}));
 dotenv.config();
 
 let mongod: MongoMemoryServer;
@@ -106,4 +110,56 @@ describe('AuthService', () => {
       new UnauthorizedException("invalid credentials")
     );
   })
+
+  it('permite ao usuário autenticado redefinir a própria senha', async () => {
+    const user = await usersService.createStudent({
+      email: 'reset.student@mail.com',
+      name: 'Reset Student',
+      password: 'old-password',
+      personal_id: 'personal_123',
+      birthdate: '2024-01-01',
+      blocked: false,
+      confirm_password: 'old-password',
+      height: 190,
+      weight: 60,
+      phone: '55859999999',
+      monthly_value_brl: 85,
+    });
+
+    await expect(service.changePassword(user.id, 'old-password', 'new-password', 'new-password'))
+      .resolves.toEqual({ message: 'Senha redefinida com sucesso.' });
+    await expect(service.login('reset.student@mail.com', 'old-password'))
+      .rejects.toThrow(UnauthorizedException);
+    await expect(service.login('reset.student@mail.com', 'new-password'))
+      .resolves.toBeDefined();
+  });
+
+  it('rejeita senhas curtas', async () => {
+    await expect(service.changePassword('user-id', 'current-password', 'curta', 'curta'))
+      .rejects.toThrow(new BadRequestException('A nova senha deve ter pelo menos 8 caracteres.'));
+  });
+
+  it('rejeita confirmação de senha diferente', async () => {
+    await expect(service.changePassword('user-id', 'current-password', 'new-password', 'outra-senha'))
+      .rejects.toThrow(new BadRequestException('As senhas não coincidem.'));
+  });
+
+  it('rejeita a troca quando a senha atual está incorreta', async () => {
+    const user = await usersService.createStudent({
+      email: 'wrong-current-password@mail.com',
+      name: 'Wrong Password Student',
+      password: 'current-password',
+      personal_id: 'personal_123',
+      birthdate: '2024-01-01',
+      blocked: false,
+      confirm_password: 'current-password',
+      height: 190,
+      weight: 60,
+      phone: '55859999999',
+      monthly_value_brl: 85,
+    });
+
+    await expect(service.changePassword(user.id, 'wrong-password', 'new-password', 'new-password'))
+      .rejects.toThrow(new BadRequestException('A senha atual está incorreta.'));
+  });
 });

@@ -43,8 +43,8 @@ Docker Compose.
 - [ ] editar personal
 - [x] excluir aluno
 - [ ] excluir personal
-- [ ] redefinir senha aluno
-- [ ] redefinir senha personal
+- [x] redefinir senha aluno
+- [x] redefinir senha personal
 
 ## exercises
 - [x] criar exercicio

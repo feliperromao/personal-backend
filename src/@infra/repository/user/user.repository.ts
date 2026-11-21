@@ -96,6 +96,23 @@ export class UserRepository {
     return await this.model.findById(new mongoose.Types.ObjectId(id));
   }
 
+  async updatePassword(id: string, encryptedPassword: string): Promise<User | null> {
+    const user = await this.model.findByIdAndUpdate(
+      new mongoose.Types.ObjectId(id),
+      { password: encryptedPassword },
+      { new: true },
+    ).exec();
+
+    if (user) {
+      await Promise.all([
+        this.cacheManager.del(`user-${user.id}`),
+        this.cacheManager.del(`user-${user.email}`),
+      ]);
+    }
+
+    return user;
+  }
+
   async delete(id: string): Promise<void> {
     let CACHE_KEY = `user-${id}`;
     await this.cacheManager.del(CACHE_KEY);
