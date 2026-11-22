@@ -34,7 +34,9 @@ export class TrainingProgressService {
     if (current) {
       throw new BadRequestException('There is already a training in progress');
     }
-    const model = await this.repository.startTraining(trainingEntity, executorId, executorType);
+    const exerciseIds = (trainingEntity.exercises || []).map((exercise) => exercise.id);
+    const lastLoads = await this.repository.findLastLoadsByExecutor(executorId, executorType, exerciseIds);
+    const model = await this.repository.startTraining(trainingEntity, executorId, executorType, lastLoads);
     return TrainingProgressFactory.create(model)
   }
 

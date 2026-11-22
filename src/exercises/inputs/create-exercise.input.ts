@@ -1,5 +1,5 @@
 import { EXERCISE_TYPE } from '@src/exercises/enum/exercise.type';
-import { IsString, IsOptional, IsNumber, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 
 export class CreateExerciseInput {
 
@@ -21,11 +21,6 @@ export class CreateExerciseInput {
   rest: number;
 
   @IsNumber()
-  load: number;
-
-  @IsNumber()
   series: number;
 
-  @IsBoolean()
-  load_progress: boolean
 }

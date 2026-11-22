@@ -19,7 +19,12 @@ export default class TrainingProgressRepository {
     })
   }
 
-  async startTraining(training: Training, executor_id: string, executor_type: USER_TYPE): Promise<TrainingProgress> {
+  async startTraining(
+    training: Training,
+    executor_id: string,
+    executor_type: USER_TYPE,
+    last_loads: Record<string, number> = {},
+  ): Promise<TrainingProgress> {
     const training_id = training.id
     const currentTraining = {
       _id: new ObjectId(),
@@ -32,11 +37,50 @@ export default class TrainingProgressRepository {
       executor_type,
       exercises: training.exercises,
       completed_series: [],
+      last_loads,
       finish_feedback: null,
       finish_status: null,
       started_at: new Date()
     }
     return await this.model.create(currentTraining);
+  }
+
+  async findLastLoadsByExecutor(
+    executor_id: string,
+    executor_type: USER_TYPE,
+    exercise_ids: string[],
+  ): Promise<Record<string, number>> {
+    if (!exercise_ids.length) return {};
+
+    const executorFilters: Record<string, unknown>[] = [
+      { executor_id, executor_type },
+      { executor_id, executor_type: { $exists: false } },
+    ];
+    if (executor_type === USER_TYPE.STUDENT) {
+      executorFilters.push({ executor_id: { $exists: false }, student_id: executor_id });
+    }
+
+    const histories = await this.model.find({
+      $or: executorFilters,
+      'completed_series.exercise_id': { $in: exercise_ids },
+    }).select({ completed_series: 1, started_at: 1, finished_at: 1 }).exec();
+
+    const latest = new Map<string, { load: number; completedAt: number }>();
+    histories.forEach((history) => {
+      (history.completed_series || []).forEach((item) => {
+        if (!exercise_ids.includes(item.exercise_id) || !Number.isFinite(item.load)) return;
+        const completedAt = item.completed_at?.getTime()
+          ?? history.finished_at?.getTime()
+          ?? history.started_at?.getTime()
+          ?? 0;
+        const current = latest.get(item.exercise_id);
+        if (!current || completedAt >= current.completedAt) {
+          latest.set(item.exercise_id, { load: item.load, completedAt });
+        }
+      });
+    });
+
+    return Object.fromEntries(Array.from(latest, ([exerciseId, value]) => [exerciseId, value.load]));
   }
 
   async finishTraining(id: string, executor_id: string, status: FINISH_STATUS, feedback: string = null): Promise<TrainingProgress> {

@@ -17,6 +17,9 @@ export default class TrainingProgressFactory {
       finished_at: model.finished_at ?? null,
       finish_feedback: model.finish_feedback ?? null,
       finish_status: model.finish_status ?? null,
+      last_loads: model.last_loads instanceof Map
+        ? Object.fromEntries(model.last_loads)
+        : (model.last_loads || {}),
       completed_series: model.completed_series?.map(item => ({
         exercise_id: item.exercise_id,
         series: item.series,
@@ -31,8 +34,6 @@ export default class TrainingProgressFactory {
         instructions: exercise.instructions,
         video: exercise.video,
         rest: exercise.rest,
-        load: exercise.load,
-        load_progress: exercise.load_progress,
         series: exercise.series
       })) || []
     }

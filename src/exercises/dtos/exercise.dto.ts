@@ -7,7 +7,5 @@ export interface ExerciseDto {
   type: EXERCISE_TYPE;
   video?: string;
   rest: number;
-  load: number;
   series: number;
-  load_progress: boolean
 }

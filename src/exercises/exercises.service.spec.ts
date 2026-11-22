@@ -59,8 +59,6 @@ describe('ExercisesService', () => {
       type: EXERCISE_TYPE.BICEPS,
       video: "any_video",
       rest: 60,
-      load: 45,
-      load_progress: false,
       series: 3
     });
 
@@ -70,8 +68,7 @@ describe('ExercisesService', () => {
     expect(exercise.instructions).toBe("any_instructions");
     expect(exercise.video).toBe("any_video");
     expect(exercise.rest).toBe(60);
-    expect(exercise.load).toBe(45);
-    expect(exercise.load_progress).toBe(false);
+    expect(exercise).not.toHaveProperty("load");
     expect(exercise.series).toBe(3);
   });
 
@@ -83,8 +80,6 @@ describe('ExercisesService', () => {
       type: EXERCISE_TYPE.BICEPS,
       video: "any_video",
       rest: 60,
-      load: 45,
-      load_progress: false,
       series: 3
     });
     const updatedExercise = await service.update(exercise.id, {
@@ -94,8 +89,6 @@ describe('ExercisesService', () => {
       type: EXERCISE_TYPE.BICEPS,
       video: "any_video",
       rest: 60,
-      load: 45,
-      load_progress: false,
       series: 3
     });
 
@@ -110,8 +103,6 @@ describe('ExercisesService', () => {
       type: EXERCISE_TYPE.BICEPS,
       video: "any_video",
       rest: 60,
-      load: 45,
-      load_progress: false,
       series: 3
     });
 
@@ -122,8 +113,6 @@ describe('ExercisesService', () => {
       type: EXERCISE_TYPE.BICEPS,
       video: "any_video_2",
       rest: 60,
-      load: 45,
-      load_progress: false,
       series: 3
     });
 
@@ -142,8 +131,6 @@ describe('ExercisesService', () => {
       type: EXERCISE_TYPE.CHEST,
       video: "any_video",
       rest: 60,
-      load: 45,
-      load_progress: false,
       series: 3
     });
 
@@ -154,8 +141,6 @@ describe('ExercisesService', () => {
       type: EXERCISE_TYPE.CHEST,
       video: "any_video_2",
       rest: 120,
-      load: 60,
-      load_progress: true,
       series: 3
     });
 
@@ -164,4 +149,16 @@ describe('ExercisesService', () => {
     const exercises = await service.getAllByPersonal("XXXXXXXXXXXXXXXXXX");
     expect(exercises.data.length).toBe(0);
   })
+
+  it("should allow creating an exercise without instructions", async () => {
+    const exercise = await service.create({
+      name: "exercise without instructions",
+      personal_id: "any_personal_id",
+      type: EXERCISE_TYPE.CHEST,
+      rest: 60,
+      series: 3
+    });
+
+    expect(exercise.instructions).toBeUndefined();
+  });
 });

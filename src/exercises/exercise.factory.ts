@@ -11,8 +11,6 @@ export default class ExerciseFactory {
       instructions: model.instructions,
       video: model.video,
       rest: model.rest,
-      load: model.load,
-      load_progress: model.load_progress,
       series: model.series
     } as Exercise
   }

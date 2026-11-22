@@ -52,6 +52,9 @@ export class TrainingProgress extends Document {
 
   @Prop({ type: [CompletedSeriesSchema], required: false, default: [] })
   completed_series?: CompletedSeries[];
+
+  @Prop({ type: Map, of: Number, required: false, default: {} })
+  last_loads?: Map<string, number>;
   
   @Prop({ required: false, default: null })
   finish_feedback: string;

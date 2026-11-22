@@ -18,8 +18,6 @@ export default class TrainingFactory {
         instructions: exercise.instructions,
         video: exercise.video,
         rest: exercise.rest,
-        load: exercise.load,
-        load_progress: exercise.load_progress,
         series: exercise.series
       })) || []
     }

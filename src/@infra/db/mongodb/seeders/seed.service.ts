@@ -54,8 +54,6 @@ export class SeedService {
         "instructions": "Supino reto com alteres 4x12",
         "video": "https://www.youtube.com/shorts/hlV6f0kHmeo",
         "rest": 60,
-        "load": 25,
-        "load_progress": true,
         "series": 4,
       },
       {
@@ -65,8 +63,6 @@ export class SeedService {
         "instructions": "Supino reto com barra 4x12",
         "video": "https://www.youtube.com/shorts/UHa9U-O09_U",
         "rest": 60,
-        "load": 25,
-        "load_progress": true,
         "series": 4,
       },
     ]

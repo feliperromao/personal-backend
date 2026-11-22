@@ -25,12 +25,6 @@ export class Exercise extends Document {
   @Prop({ required: false })
   rest: number;
 
-  @Prop({ required: false })
-  load: number;
-
-  @Prop({ required: true })
-  load_progress: boolean;
-
   @Prop({ required: true })
   series: number;
 }

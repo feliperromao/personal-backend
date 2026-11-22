@@ -6,6 +6,7 @@ import { Training, TrainingSchema } from '@src/@infra/models/training/mongoose/t
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import TrainingsRepository from '@src/@infra/repository/trainings/training.repository';
 import CreateTrainingInput from './dtos/create-training.dto';
+import { EXERCISE_TYPE } from '@src/exercises/enum/exercise.type';
 
 let mongod: MongoMemoryServer;
 let mongoConnection;
@@ -137,10 +138,9 @@ const getTrainingData = (): CreateTrainingInput => {
     name: "Exercise 1",
     personal_id: "XXX",
     instructions: "Instructions 1",
+    type: EXERCISE_TYPE.BACK,
     video: "video_url",
     rest: 60,
-    load: 80,
-    load_progress: true,
     series: 3
   };
   const exercise_2 = {
@@ -148,10 +148,9 @@ const getTrainingData = (): CreateTrainingInput => {
     name: "Exercise 2",
     personal_id: "XXX",
     instructions: "Instructions 2",
+    type: EXERCISE_TYPE.BACK,
     video: "video_url",
     rest: 60,
-    load: 10,
-    load_progress: false,
     series: 4
   };
 

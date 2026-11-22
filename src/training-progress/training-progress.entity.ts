@@ -34,6 +34,8 @@ export default class TrainingProgress {
 
   completed_series?: CompletedSeries[];
 
+  last_loads?: Record<string, number>;
+
   finish_feedback: string;
 
   finish_status: FINISH_STATUS;

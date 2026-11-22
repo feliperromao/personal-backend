@@ -88,8 +88,6 @@ describe('TrainingProgressService', () => {
           type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
-          load: 80,
-          load_progress: true,
           series: 3
         }, {
           id: "2",
@@ -99,8 +97,6 @@ describe('TrainingProgressService', () => {
           type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
-          load: 10,
-          load_progress: false,
           series: 4
         }]
     }
@@ -134,8 +130,6 @@ describe('TrainingProgressService', () => {
         type: EXERCISE_TYPE.LEGS,
         video: "",
         rest: 60,
-        load: 40,
-        load_progress: true,
         series: 3
       }]
     });
@@ -201,8 +195,6 @@ describe('TrainingProgressService', () => {
         type: EXERCISE_TYPE.CHEST,
         video: "",
         rest: 60,
-        load: 80,
-        load_progress: true,
         series: 3
       }]
     });
@@ -231,11 +223,39 @@ describe('TrainingProgressService', () => {
       expect.objectContaining({ exercise_id: "exercise-1", series: 1, load: 85 }),
       expect.objectContaining({ exercise_id: "exercise-1", series: 2, load: 87.5 })
     ]));
-    expect(finished.exercises[0].load).toBe(80);
+    expect(finished.exercises[0]).not.toHaveProperty("load");
 
     const persistedExecution = await repository.findById(progress.id);
     expect(persistedExecution.completed_series.map(item => item.load)).toEqual([85, 87.5]);
     expect(persistedExecution.finished_at).toBeDefined();
+  });
+
+  it("should preload the executor's latest load for the same exercise", async () => {
+    const training = await trainingRepository.create({
+      name: "Reusable load",
+      show_to_student: true,
+      student_id: "student-123",
+      personal_id: "personal-123",
+      exercises: [{
+        id: "exercise-1",
+        name: "Bench press",
+        personal_id: "personal-123",
+        type: EXERCISE_TYPE.CHEST,
+        rest: 60,
+        series: 3
+      }]
+    });
+
+    const firstProgress = await service.startTraining(training.id, "student-123", USER_TYPE.STUDENT);
+    await service.completeSeries(firstProgress.id, "student-123", "exercise-1", 1, 42.5);
+    await service.finishTraining(firstProgress.id, FINISH_STATUS.MODERADA, "student-123");
+
+    const nextProgress = await service.startTraining(training.id, "student-123", USER_TYPE.STUDENT);
+
+    expect(nextProgress.last_loads).toEqual({ "exercise-1": 42.5 });
+    expect(nextProgress.exercises[0]).not.toHaveProperty("load");
+    expect(await repository.findLastLoadsByExecutor("another-student", USER_TYPE.STUDENT, ["exercise-1"]))
+      .toEqual({});
   });
 
   it("should reject series outside the exercise range or belonging to another student", async () => {
@@ -253,8 +273,6 @@ describe('TrainingProgressService', () => {
         type: EXERCISE_TYPE.LEGS,
         video: "",
         rest: 60,
-        load: 40,
-        load_progress: true,
         series: 3
       }]
     });
@@ -282,8 +300,6 @@ describe('TrainingProgressService', () => {
           type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
-          load: 80,
-          load_progress: true,
           series: 3
         }, {
           id: "2",
@@ -293,8 +309,6 @@ describe('TrainingProgressService', () => {
           type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
-          load: 10,
-          load_progress: false,
           series: 4
         }]
     }
@@ -328,8 +342,6 @@ describe('TrainingProgressService', () => {
           type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
-          load: 80,
-          load_progress: true,
           series: 3
         }, {
           id: "2",
@@ -339,8 +351,6 @@ describe('TrainingProgressService', () => {
           type: EXERCISE_TYPE.BACK,
           video: "video_url",
           rest: 60,
-          load: 10,
-          load_progress: false,
           series: 4
         }
       ]
