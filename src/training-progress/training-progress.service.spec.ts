@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TrainingProgressService } from './training-progress.service';
 import { TrainingProgress, TrainingProgressSchema } from '@src/@infra/models/training-progress/mongoose/training-progress.model';
-import { Model, connect } from 'mongoose';
+import { Model, Types, connect } from 'mongoose';
 import TrainingProgressRepository from '@src/@infra/repository/training-progress/training-progress.repository';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
@@ -148,6 +148,62 @@ describe('TrainingProgressService', () => {
     expect(personalHistory).toHaveLength(1);
     expect(personalHistory[0].completed_series[0].load).toBe(42.5);
     expect(await repository.findFinishedByExecutor("personal-123", USER_TYPE.STUDENT)).toHaveLength(0);
+  });
+
+  it("should return only the executor's finished workouts inside the requested week", async () => {
+    await model.create([
+      {
+        _id: new Types.ObjectId(),
+        training_id: 'training-1', name: 'Monday workout', personal_id: 'personal-123',
+        student_id: 'student-123', executor_id: 'student-123', executor_type: USER_TYPE.STUDENT,
+        started_at: new Date('2026-11-16T09:00:00.000Z'), finished_at: new Date('2026-11-16T10:00:00.000Z'),
+      },
+      {
+        _id: new Types.ObjectId(),
+        training_id: 'training-2', name: 'Wednesday workout', personal_id: 'personal-123',
+        student_id: 'student-123', executor_id: 'student-123', executor_type: USER_TYPE.STUDENT,
+        started_at: new Date('2026-11-18T09:00:00.000Z'), finished_at: new Date('2026-11-18T10:00:00.000Z'),
+      },
+      {
+        _id: new Types.ObjectId(),
+        training_id: 'training-3', name: 'Other student', personal_id: 'personal-123',
+        student_id: 'other-student', executor_id: 'other-student', executor_type: USER_TYPE.STUDENT,
+        started_at: new Date('2026-11-18T09:00:00.000Z'), finished_at: new Date('2026-11-18T10:00:00.000Z'),
+      },
+      {
+        _id: new Types.ObjectId(),
+        training_id: 'training-4', name: 'Previous week', personal_id: 'personal-123',
+        student_id: 'student-123', executor_id: 'student-123', executor_type: USER_TYPE.STUDENT,
+        started_at: new Date('2026-11-15T09:00:00.000Z'), finished_at: new Date('2026-11-15T10:00:00.000Z'),
+      },
+      {
+        _id: new Types.ObjectId(),
+        training_id: 'training-5', name: 'Active workout', personal_id: 'personal-123',
+        student_id: 'student-123', executor_id: 'student-123', executor_type: USER_TYPE.STUDENT,
+        started_at: new Date('2026-11-19T09:00:00.000Z'),
+      },
+    ]);
+
+    const activity = await service.getWeeklyActivity(
+      'student-123',
+      USER_TYPE.STUDENT,
+      '2026-11-16T00:00:00.000Z',
+      '2026-11-23T00:00:00.000Z',
+    );
+
+    expect(activity.completed_at.map((date) => date.toISOString())).toEqual([
+      '2026-11-16T10:00:00.000Z',
+      '2026-11-18T10:00:00.000Z',
+    ]);
+  });
+
+  it('should reject an invalid weekly activity range', async () => {
+    await expect(service.getWeeklyActivity(
+      'student-123',
+      USER_TYPE.STUDENT,
+      '2026-11-23T00:00:00.000Z',
+      '2026-11-16T00:00:00.000Z',
+    )).rejects.toThrowError('Weekly activity range must be between 1 and 8 days');
   });
 
   it("should reject a personal trying to execute another personal's training", async () => {

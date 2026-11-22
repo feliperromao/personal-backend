@@ -23,6 +23,19 @@ export class TrainingProgressService {
     return null
   }
 
+  async getWeeklyActivity(executorId: string, executorType: USER_TYPE, startValue: string, endValue: string) {
+    const start = new Date(startValue);
+    const end = new Date(endValue);
+    const maximumRange = 8 * 24 * 60 * 60 * 1000;
+
+    if (end <= start || end.getTime() - start.getTime() > maximumRange) {
+      throw new BadRequestException('Weekly activity range must be between 1 and 8 days');
+    }
+
+    const completedAt = await this.repository.findFinishedAtByExecutorBetween(executorId, executorType, start, end);
+    return { completed_at: completedAt };
+  }
+
   async startTraining(id: string, executorId: string, executorType: USER_TYPE): Promise<TrainingProgress> {
     const training = await this.trainingRepository.findById(id);
     if (!training) {

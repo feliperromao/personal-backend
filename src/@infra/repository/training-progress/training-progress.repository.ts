@@ -139,6 +139,28 @@ export default class TrainingProgressRepository {
     }).sort({ finished_at: 1, started_at: 1 }).exec();
   }
 
+  async findFinishedAtByExecutorBetween(
+    executor_id: string,
+    executor_type: USER_TYPE,
+    start: Date,
+    end: Date,
+  ): Promise<Date[]> {
+    const executorFilters: Record<string, unknown>[] = [
+      { executor_id, executor_type },
+      { executor_id, executor_type: { $exists: false } },
+    ];
+    if (executor_type === USER_TYPE.STUDENT) {
+      executorFilters.push({ executor_id: { $exists: false }, student_id: executor_id });
+    }
+
+    const executions = await this.model.find({
+      finished_at: { $gte: start, $lt: end },
+      $or: executorFilters,
+    }).select({ finished_at: 1 }).sort({ finished_at: 1 }).exec();
+
+    return executions.map((execution) => execution.finished_at);
+  }
+
   async recordCompletedSeries(id: string, executor_id: string, completedSeries: CompletedSeries): Promise<TrainingProgress> {
     const progress = await this.findActiveByIdForExecutor(id, executor_id);
     if (!progress) return null;

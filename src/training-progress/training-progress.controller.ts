@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Roles } from '@src/guards/roles.decorator';
 import { RolesGuard } from '@src/guards/roles.guard';
 import { TrainingProgressService } from '@src/training-progress/training-progress.service';
@@ -9,6 +9,7 @@ import { AuthGuard } from '@src/guards/auth.guard';
 import { TrainingsService } from '@src/trainings/trainings.service';
 import { CompleteSeriesDto } from './dtos/complete-series.dto';
 import { Request } from 'express';
+import { WeeklyActivityDto } from './dtos/weekly-activity.dto';
 
 @Controller('training-progress')
 @Roles(USER_TYPE.STUDENT, USER_TYPE.PERSONAL)
@@ -31,6 +32,12 @@ export class TrainingProgressController {
   @Get('/current')
   async getCurrentTraining(@Req() request: Request) {
     return await this.trainingProgressService.getCurrentTraining(request['user'].id)
+  }
+
+  @Get('/weekly-activity')
+  async getWeeklyActivity(@Req() request: Request, @Query() query: WeeklyActivityDto) {
+    const user = request['user'];
+    return await this.trainingProgressService.getWeeklyActivity(user.id, user.type, query.start, query.end);
   }
 
   @Get('/:id')
