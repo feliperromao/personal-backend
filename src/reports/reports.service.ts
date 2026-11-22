@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import TrainingProgressRepository from '@src/@infra/repository/training-progress/training-progress.repository';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { UsersService } from '@src/users/users.service';
@@ -35,8 +35,8 @@ export class ReportsService {
     requestedStudentId?: string,
     requestedExerciseId?: string,
   ) {
-    const student = await this.resolveStudent(requesterId, requesterType, requestedStudentId);
-    const executions = await this.repository.findFinishedByStudent(student.id);
+    const subject = await this.resolveSubject(requesterId, requesterType, requestedStudentId);
+    const executions = await this.repository.findFinishedByExecutor(subject.id, subject.type as USER_TYPE);
     const exerciseMap = new Map<string, EvolutionExercise>();
 
     executions.forEach((execution) => {
@@ -76,7 +76,7 @@ export class ReportsService {
       : null;
 
     return {
-      student: { id: student.id, name: student.name },
+      subject: { id: subject.id, name: subject.name, type: subject.type },
       exercises,
       selected_exercise_id: selectedExerciseId ?? null,
       summary: {
@@ -92,31 +92,33 @@ export class ReportsService {
     };
   }
 
-  private async resolveStudent(requesterId: string, requesterType: USER_TYPE, requestedStudentId?: string) {
+  private async resolveSubject(requesterId: string, requesterType: USER_TYPE, requestedStudentId?: string) {
     if (requesterType === USER_TYPE.STUDENT) {
-      const student = await this.findStudent(requesterId);
-      if (student.type !== USER_TYPE.STUDENT) throw new NotFoundException('Aluno não encontrado');
-      return student;
+      const subject = await this.findUser(requesterId);
+      if (subject.type !== USER_TYPE.STUDENT) throw new NotFoundException('Usuário não encontrado');
+      return subject;
     }
 
     if (!requestedStudentId) {
-      throw new BadRequestException('Selecione um aluno para consultar a evolução');
+      const subject = await this.findUser(requesterId);
+      if (subject.type !== USER_TYPE.PERSONAL) throw new NotFoundException('Usuário não encontrado');
+      return subject;
     }
 
-    const student = await this.findStudent(requestedStudentId);
+    const student = await this.findUser(requestedStudentId);
     if (student.type !== USER_TYPE.STUDENT || student.personal_id !== requesterId) {
       throw new NotFoundException('Aluno não encontrado');
     }
     return student;
   }
 
-  private async findStudent(id: string) {
+  private async findUser(id: string) {
     try {
-      const student = await this.usersService.findById(id);
-      if (!student) throw new Error('not-found');
-      return student;
+      const user = await this.usersService.findById(id);
+      if (!user) throw new Error('not-found');
+      return user;
     } catch {
-      throw new NotFoundException('Aluno não encontrado');
+      throw new NotFoundException('Usuário não encontrado');
     }
   }
 

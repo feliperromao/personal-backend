@@ -148,6 +148,12 @@ describe('TrainingProgressService', () => {
 
     const updated = await service.completeSeries(progress.id, "personal-123", "exercise-1", 1, 42.5);
     expect(updated.completed_series[0].load).toBe(42.5);
+
+    await service.finishTraining(progress.id, FINISH_STATUS.INTENSA, "personal-123");
+    const personalHistory = await repository.findFinishedByExecutor("personal-123", USER_TYPE.PERSONAL);
+    expect(personalHistory).toHaveLength(1);
+    expect(personalHistory[0].completed_series[0].load).toBe(42.5);
+    expect(await repository.findFinishedByExecutor("personal-123", USER_TYPE.STUDENT)).toHaveLength(0);
   });
 
   it("should reject a personal trying to execute another personal's training", async () => {

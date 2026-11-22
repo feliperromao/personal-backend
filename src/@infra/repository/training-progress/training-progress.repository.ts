@@ -80,14 +80,18 @@ export default class TrainingProgressRepository {
     }).exec();
   }
 
-  async findFinishedByStudent(student_id: string): Promise<TrainingProgress[]> {
+  async findFinishedByExecutor(executor_id: string, executor_type: USER_TYPE): Promise<TrainingProgress[]> {
+    const executorFilters: Record<string, unknown>[] = [
+      { executor_id, executor_type },
+      { executor_id, executor_type: { $exists: false } },
+    ];
+    if (executor_type === USER_TYPE.STUDENT) {
+      executorFilters.push({ executor_id: { $exists: false }, student_id: executor_id });
+    }
+
     return await this.model.find({
       finished_at: { $ne: null },
-      $or: [
-        { executor_id: student_id, executor_type: USER_TYPE.STUDENT },
-        { executor_id: student_id, executor_type: { $exists: false } },
-        { executor_id: { $exists: false }, student_id },
-      ],
+      $or: executorFilters,
     }).sort({ finished_at: 1, started_at: 1 }).exec();
   }
 
