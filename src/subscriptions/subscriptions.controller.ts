@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Roles } from '@src/guards/roles.decorator';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { AuthGuard } from '@src/guards/auth.guard';
@@ -22,5 +22,16 @@ export class SubscriptionsController {
   @Post('/')
   async create(@Body() body: CreateSubscriptionInput) {
     return this.service.create(body);
+  }
+
+  @Put('/:id')
+  async update(@Param('id') id: string, @Body() body: CreateSubscriptionInput) {
+    return this.service.update(id, body);
+  }
+
+  @Delete('/:id')
+  async delete(@Param('id') id: string) {
+    await this.service.delete(id);
+    return { message: 'Plano excluído com sucesso.' };
   }
 }

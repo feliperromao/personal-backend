@@ -1,4 +1,4 @@
-import { IsString, MinLength, IsEmail } from 'class-validator';
+import { IsBoolean, IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreatePersonalDto {
   @IsString()
@@ -14,4 +14,8 @@ export class CreatePersonalDto {
 
   @IsString()
   phone: string;
+
+  @IsBoolean()
+  @IsOptional()
+  blocked?: boolean;
 }

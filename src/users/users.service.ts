@@ -20,7 +20,8 @@ export class UsersService {
   }
 
   async getAllPersonals() {
-    return await this.repository.getAllPersonals();
+    const result = await this.repository.getAllPersonals();
+    return result.map(personal => StudentFactory.create(personal));
   }
 
   async listAllByPersonal(personal_id: string) {
@@ -97,7 +98,7 @@ export class UsersService {
     }
     const userCrated = await this.repository.create({
       ...data,
-      blocked: false,
+      blocked: data.blocked ?? false,
       password: await this.encrypt.encrypt(data.password)
     });
     return StudentFactory.create(userCrated);

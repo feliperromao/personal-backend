@@ -15,16 +15,22 @@ import HttpLinks from '@src/@shared/http-controls/http-links';
 export class PersonalsController {
   constructor(private usersService: UsersService) { }
 
+  private withoutPassword<T extends { password?: string }>(user: T): Omit<T, 'password'> {
+    const { password: _password, ...safeUser } = user;
+    return safeUser;
+  }
+
   @Get("/")
   async listAllPersonals() {
-    return await this.usersService.getAllPersonals()
+    const personals = await this.usersService.getAllPersonals();
+    return personals.map((personal) => this.withoutPassword(personal));
   }
 
   @Post("/")
   async createPersonal(@Body() body: CreatePersonalDto) {
     const data = await this.usersService.createPersonal(body)
     return {
-      data,
+      data: this.withoutPassword(data),
       _links: HttpLinks.create('personals', data.id)
     }
   }
@@ -32,7 +38,8 @@ export class PersonalsController {
   @Put("/:id")
   async updatePersonal(@Param('id') id: string, @Body() body: UpdatePersonalDto) {
     const userData = { ...body, id }
-    return await this.usersService.updatePersonal(userData)
+    const data = await this.usersService.updatePersonal(userData);
+    return this.withoutPassword(data);
   }
 
   @Delete("/:id")

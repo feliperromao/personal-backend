@@ -19,6 +19,9 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException("invalid credentials");
     }
+    if (user.blocked) {
+      throw new UnauthorizedException("invalid credentials");
+    }
     const compared = await this.encrypt.compare(password, user.password);
     if (!compared){
       throw new UnauthorizedException("invalid credentials");

@@ -16,22 +16,25 @@ export class UserRepository {
     @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
   
-    async create(dto: StudentDto): Promise<User> {
+  async create(dto: StudentDto): Promise<User> {
     const userCreated = new this.model({
       _id: new ObjectId(),
       ...dto,
     });
-    return await userCreated.save();
+    const savedUser = await userCreated.save();
+    await this.cacheManager.del(`user-${savedUser.email}`);
+    return savedUser;
   }
 
   async findByEmail(email: string): Promise<User> {
     const CACHE_KEY = `user-${email}`;
     const value = await this.cacheManager.get(CACHE_KEY);
     if (value) {
-      return {...JSON.parse(value.toString()) } as User
+      const cachedUser = JSON.parse(value.toString());
+      if (cachedUser) return { ...cachedUser } as User;
     };
     const user = await this.model.findOne({ email: email }).exec();
-    await this.cacheManager.set(CACHE_KEY, JSON.stringify(user));
+    if (user) await this.cacheManager.set(CACHE_KEY, JSON.stringify(user));
     return user;
   }
 
@@ -90,10 +93,15 @@ export class UserRepository {
   }
 
   async update(id: string, data: User): Promise<User> {
-    await this.model.findByIdAndUpdate(new mongoose.Types.ObjectId(id), data);
-    const CACHE_KEY = `user-${id}`;
-    await this.cacheManager.del(CACHE_KEY);
-    return await this.model.findById(new mongoose.Types.ObjectId(id));
+    const objectId = new mongoose.Types.ObjectId(id);
+    const currentUser = await this.model.findById(objectId).exec();
+    await this.model.findByIdAndUpdate(objectId, data);
+    await Promise.all([
+      this.cacheManager.del(`user-${id}`),
+      currentUser?.email ? this.cacheManager.del(`user-${currentUser.email}`) : Promise.resolve(),
+      data.email ? this.cacheManager.del(`user-${data.email}`) : Promise.resolve(),
+    ]);
+    return await this.model.findById(objectId);
   }
 
   async updatePassword(id: string, encryptedPassword: string): Promise<User | null> {
@@ -114,8 +122,12 @@ export class UserRepository {
   }
 
   async delete(id: string): Promise<void> {
-    let CACHE_KEY = `user-${id}`;
-    await this.cacheManager.del(CACHE_KEY);
-    await this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
+    const objectId = new mongoose.Types.ObjectId(id);
+    const user = await this.model.findById(objectId).exec();
+    await Promise.all([
+      this.cacheManager.del(`user-${id}`),
+      user?.email ? this.cacheManager.del(`user-${user.email}`) : Promise.resolve(),
+    ]);
+    await this.model.findByIdAndDelete(objectId).exec();
   }
 }

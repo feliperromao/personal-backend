@@ -8,7 +8,7 @@ async function bootstrap() {
   // Habilitar CORS com opções específicas
   app.enableCors({
     origin: process.env.FRONTEND_APP_URL || 'http://localhost:3003',
-    methods: 'GET,POST,PUT,DELETE,FETCH',
+    methods: 'GET,POST,PUT,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization',
     credentials: true,
   });

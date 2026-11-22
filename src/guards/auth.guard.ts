@@ -30,6 +30,10 @@ export class AuthGuard implements CanActivate {
 
       const user = await this.usersService.findById(payload.sub);
 
+      if (!user || user.blocked) {
+        throw new UnauthorizedException();
+      }
+
       request['user'] = {
         id: user.id,
         name: user.name,
