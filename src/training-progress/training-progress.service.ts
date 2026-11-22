@@ -84,6 +84,49 @@ export class TrainingProgressService {
     return TrainingProgressFactory.create(model);
   }
 
+  async completeGroupSeries(
+    id: string,
+    executorId: string,
+    groupId: string,
+    series: number,
+    exerciseLoads: Array<{ exercise_id: string; load: number }>,
+  ): Promise<TrainingProgress> {
+    const progress = await this.repository.findActiveByIdForExecutor(id, executorId);
+    if (!progress) {
+      throw new NotFoundException(`Active TrainingProgress not found (id: ${id})`);
+    }
+
+    const group = progress.exercise_groups?.find(item => item.id === groupId);
+    if (!group) throw new BadRequestException('Exercise group does not belong to this training progress');
+    if (series > group.series) {
+      throw new BadRequestException(`Series must be between 1 and ${group.series}`);
+    }
+
+    const expectedIds = [...new Set(group.exercise_ids)];
+    const receivedIds = exerciseLoads.map(item => item.exercise_id);
+    const hasExactExercises = expectedIds.length >= 2
+      && receivedIds.length === expectedIds.length
+      && new Set(receivedIds).size === receivedIds.length
+      && expectedIds.every(exerciseId => receivedIds.includes(exerciseId))
+      && expectedIds.every(exerciseId => progress.exercises?.some(exercise => exercise.id === exerciseId));
+    if (!hasExactExercises) {
+      throw new BadRequestException('All exercises in the group must be completed together');
+    }
+
+    const completedAt = new Date();
+    const model = await this.repository.recordCompletedSeriesBatch(
+      id,
+      executorId,
+      exerciseLoads.map(item => ({
+        exercise_id: item.exercise_id,
+        series,
+        load: item.load,
+        completed_at: completedAt,
+      })),
+    );
+    return TrainingProgressFactory.create(model);
+  }
+
   async cancelTraining(id: string, executorId: string): Promise<boolean> {
     const training = await this.repository.findByIdForExecutor(id, executorId);
     if (!training) {

@@ -75,6 +75,24 @@ describe('TrainingsService', () => {
     expect(training.show_to_student).toBe(false);
   });
 
+  it("should preserve a valid exercise group", async () => {
+    const data = getTrainingData();
+    data.exercise_groups = [{ id: 'group-1', exercise_ids: ['1', '2'], series: 3, rest: 75 }];
+
+    const training = await service.create(data);
+
+    expect(training.exercise_groups).toEqual([
+      { id: 'group-1', exercise_ids: ['1', '2'], series: 3, rest: 75 },
+    ]);
+  });
+
+  it("should reject groups that repeat or reference missing exercises", async () => {
+    const data = getTrainingData();
+    data.exercise_groups = [{ id: 'group-1', exercise_ids: ['1', 'missing'], series: 3, rest: 75 }];
+
+    await expect(service.create(data)).rejects.toThrowError('Exercise groups must contain unique exercises');
+  });
+
   it("should update a training", async () => {
     const training = await service.create(getTrainingData());
     const updated = await service.update({

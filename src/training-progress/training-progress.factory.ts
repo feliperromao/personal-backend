@@ -35,6 +35,12 @@ export default class TrainingProgressFactory {
         video: exercise.video,
         rest: exercise.rest,
         series: exercise.series
+      })) || [],
+      exercise_groups: model.exercise_groups?.map(group => ({
+        id: group.id,
+        exercise_ids: [...group.exercise_ids],
+        series: group.series,
+        rest: group.rest,
       })) || []
     }
   }

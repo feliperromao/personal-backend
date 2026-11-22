@@ -314,6 +314,38 @@ describe('TrainingProgressService', () => {
       .toEqual({});
   });
 
+  it("should complete every exercise in a combined series atomically", async () => {
+    const training = await trainingRepository.create({
+      name: "Combined arms",
+      show_to_student: true,
+      student_id: "student-123",
+      personal_id: "personal-123",
+      exercises: [
+        { id: "exercise-1", name: "Curl", personal_id: "personal-123", type: EXERCISE_TYPE.BICEPS, rest: 45, series: 3 },
+        { id: "exercise-2", name: "Hammer curl", personal_id: "personal-123", type: EXERCISE_TYPE.BICEPS, rest: 45, series: 3 },
+      ],
+      exercise_groups: [{ id: 'group-1', exercise_ids: ['exercise-1', 'exercise-2'], series: 3, rest: 75 }],
+    });
+    const progress = await service.startTraining(training.id, "student-123", USER_TYPE.STUDENT);
+
+    const updated = await service.completeGroupSeries(progress.id, "student-123", 'group-1', 1, [
+      { exercise_id: 'exercise-1', load: 12 },
+      { exercise_id: 'exercise-2', load: 10 },
+    ]);
+
+    expect(updated.exercise_groups).toEqual([
+      { id: 'group-1', exercise_ids: ['exercise-1', 'exercise-2'], series: 3, rest: 75 },
+    ]);
+    expect(updated.completed_series).toEqual(expect.arrayContaining([
+      expect.objectContaining({ exercise_id: 'exercise-1', series: 1, load: 12 }),
+      expect.objectContaining({ exercise_id: 'exercise-2', series: 1, load: 10 }),
+    ]));
+
+    await expect(service.completeGroupSeries(progress.id, "student-123", 'group-1', 2, [
+      { exercise_id: 'exercise-1', load: 12 },
+    ])).rejects.toThrowError('All exercises in the group must be completed together');
+  });
+
   it("should reject series outside the exercise range or belonging to another student", async () => {
     const training = await trainingRepository.create({
       name: "Protected progress",

@@ -10,6 +10,7 @@ import { TrainingsService } from '@src/trainings/trainings.service';
 import { CompleteSeriesDto } from './dtos/complete-series.dto';
 import { Request } from 'express';
 import { WeeklyActivityDto } from './dtos/weekly-activity.dto';
+import { CompleteGroupSeriesDto } from './dtos/complete-group-series.dto';
 
 @Controller('training-progress')
 @Roles(USER_TYPE.STUDENT, USER_TYPE.PERSONAL)
@@ -65,6 +66,18 @@ export class TrainingProgressController {
   async completeSeries(@Req() request: Request, @Body() body: CompleteSeriesDto) {
     const { id, exercise_id, series, load } = body;
     return await this.trainingProgressService.completeSeries(id, request['user'].id, exercise_id, series, load);
+  }
+
+  @Post('/series-group')
+  @HttpCode(HttpStatus.OK)
+  async completeGroupSeries(@Req() request: Request, @Body() body: CompleteGroupSeriesDto) {
+    return await this.trainingProgressService.completeGroupSeries(
+      body.id,
+      request['user'].id,
+      body.group_id,
+      body.series,
+      body.exercises,
+    );
   }
 
   @Post(['/cancel', '/calcel'])

@@ -36,6 +36,7 @@ export default class TrainingProgressRepository {
       executor_id,
       executor_type,
       exercises: training.exercises,
+      exercise_groups: training.exercise_groups,
       completed_series: [],
       last_loads,
       finish_feedback: null,
@@ -172,6 +173,24 @@ export default class TrainingProgressRepository {
 
     if (existingIndex >= 0) history[existingIndex] = completedSeries;
     else history.push(completedSeries);
+
+    progress.completed_series = history;
+    await progress.save();
+    return progress;
+  }
+
+  async recordCompletedSeriesBatch(id: string, executor_id: string, items: CompletedSeries[]): Promise<TrainingProgress> {
+    const progress = await this.findActiveByIdForExecutor(id, executor_id);
+    if (!progress) return null;
+
+    const history = progress.completed_series || [];
+    items.forEach((completedSeries) => {
+      const existingIndex = history.findIndex(item =>
+        item.exercise_id === completedSeries.exercise_id && item.series === completedSeries.series
+      );
+      if (existingIndex >= 0) history[existingIndex] = completedSeries;
+      else history.push(completedSeries);
+    });
 
     progress.completed_series = history;
     await progress.save();

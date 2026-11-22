@@ -1,4 +1,5 @@
 import { Exercise } from '@src/exercises/exercise.entity';
+import { ExerciseGroup } from '../training.entity';
 
 export default class UpdateTrainingDto {
   id: string;
@@ -14,4 +15,6 @@ export default class UpdateTrainingDto {
   personal_id: string;
 
   exercises?: Exercise[]
+
+  exercise_groups?: ExerciseGroup[]
 }

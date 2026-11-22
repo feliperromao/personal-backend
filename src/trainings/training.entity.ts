@@ -1,5 +1,15 @@
 import { Exercise } from "@src/exercises/exercise.entity";
 
+export class ExerciseGroup {
+  id: string;
+
+  exercise_ids: string[];
+
+  series: number;
+
+  rest: number;
+}
+
 export default class Training {
   id: string;
 
@@ -14,4 +24,6 @@ export default class Training {
   personal_id: string;
 
   exercises?: Exercise[]
+
+  exercise_groups?: ExerciseGroup[]
 }

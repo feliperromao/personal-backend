@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import Training from './training.entity';
 import CreateTrainingInput from './dtos/create-training.dto';
 import TrainingsRepository from '@src/@infra/repository/trainings/training.repository';
@@ -76,10 +76,30 @@ export class TrainingsService {
 
   private normalizeStudent<T extends CreateTrainingInput | UpdateTrainingInput>(data: T): T {
     const studentId = data.student_id?.trim() || undefined;
+    const exerciseIds = new Set((data.exercises || []).map(exercise => exercise.id));
+    const groupedExerciseIds = new Set<string>();
+    const groupIds = new Set<string>();
+    const exerciseGroups = (data.exercise_groups || []).map(group => {
+      const id = group.id?.trim();
+      const memberIds = [...new Set(group.exercise_ids || [])];
+      const isValid = id
+        && !groupIds.has(id)
+        && memberIds.length >= 2
+        && memberIds.every(exerciseId => exerciseIds.has(exerciseId) && !groupedExerciseIds.has(exerciseId))
+        && Number.isInteger(group.series)
+        && group.series >= 1
+        && Number.isInteger(group.rest)
+        && group.rest >= 0;
+      if (!isValid) throw new BadRequestException('Exercise groups must contain unique exercises, series and rest');
+      groupIds.add(id);
+      memberIds.forEach(exerciseId => groupedExerciseIds.add(exerciseId));
+      return { id, exercise_ids: memberIds, series: group.series, rest: group.rest };
+    });
     return {
       ...data,
       student_id: studentId,
       show_to_student: Boolean(studentId && data.show_to_student),
+      exercise_groups: exerciseGroups,
     } as T;
   }
 }

@@ -3,6 +3,7 @@ import mongoose, { Document } from "mongoose";
 import { Exercise } from '../../exercise/mongoose/exercise.model';
 import { FINISH_STATUS } from '@src/training-progress/enum/finish-status.enum';
 import { USER_TYPE } from '@src/users/enum/user.type';
+import { ExerciseGroupSchema, ExerciseGroup } from '../../training/mongoose/training.model';
 
 @Schema({ _id: false })
 export class CompletedSeries {
@@ -49,6 +50,9 @@ export class TrainingProgress extends Document {
 
   @Prop({ required: false })
   exercises?: Exercise[]
+
+  @Prop({ type: [ExerciseGroupSchema], required: false, default: [] })
+  exercise_groups?: ExerciseGroup[]
 
   @Prop({ type: [CompletedSeriesSchema], required: false, default: [] })
   completed_series?: CompletedSeries[];

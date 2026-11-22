@@ -1,6 +1,7 @@
 import { Exercise } from "@src/exercises/exercise.entity";
 import { FINISH_STATUS } from "./enum/finish-status.enum";
 import { USER_TYPE } from "@src/users/enum/user.type";
+import { ExerciseGroup } from "@src/trainings/training.entity";
 
 export class CompletedSeries {
   exercise_id: string;
@@ -31,6 +32,8 @@ export default class TrainingProgress {
   finished_at: Date;
 
   exercises?: Exercise[]
+
+  exercise_groups?: ExerciseGroup[]
 
   completed_series?: CompletedSeries[];
 
