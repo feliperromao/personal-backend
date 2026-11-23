@@ -11,6 +11,7 @@ import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import Bcrypt from '@src/@infra/encrypt/bcrypt';
+import { SubscriptionRepository } from '@src/@infra/repository/subscriptions/subscription.repository';
 
 jest.mock('@nestjs/jwt', () => ({
   JwtService: class JwtService {},
@@ -54,6 +55,16 @@ describe('AuthService', () => {
         UsersService,
         UserRepository,
         {
+          provide: SubscriptionRepository,
+          useValue: {
+            findById: jest.fn().mockResolvedValue({
+              _id: { toString: () => '507f1f77bcf86cd799439011' },
+              name: 'Teste', max_students: 100, max_exercises: 100,
+              max_training: 100, price_brl: 49.9,
+            }),
+          },
+        },
+        {
           provide: JwtService,
           useValue: {
             sign: () => "ANY_BEARER_TOKEN",
@@ -72,6 +83,11 @@ describe('AuthService', () => {
 
     service = module.get<AuthService>(AuthService);
     usersService = module.get<UsersService>(UsersService);
+    jest.spyOn(usersService, 'getSubscriptionLimits').mockResolvedValue({
+      id: '507f1f77bcf86cd799439011',
+      name: 'Teste', max_students: 100, max_exercises: 100,
+      max_training: 100, price_brl: 49.9,
+    });
     repository = module.get<UserRepository>(UserRepository);
     model = module.get<Model<User>>(getModelToken('User'));
   });

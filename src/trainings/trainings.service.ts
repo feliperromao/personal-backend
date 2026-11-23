@@ -5,10 +5,14 @@ import TrainingsRepository from '@src/@infra/repository/trainings/training.repos
 import TrainingFactory from './training.factory';
 import UpdateTrainingInput from './dtos/update-training.dto';
 import { USER_TYPE } from '@src/users/enum/user.type';
+import { UsersService } from '@src/users/users.service';
 
 @Injectable()
 export class TrainingsService {
-  constructor(protected readonly repository: TrainingsRepository) {  }
+  constructor(
+    protected readonly repository: TrainingsRepository,
+    private readonly usersService: UsersService,
+  ) {  }
 
   async searchTraining(personal_id: string, search: string, student_id: string, page: number, limit: number): Promise<{total: number, data: Training[]}> {
     const result = await this.repository.searchTraining(personal_id, search, student_id, page, limit);
@@ -47,6 +51,14 @@ export class TrainingsService {
   }
 
   async create(data: CreateTrainingInput): Promise<Training> {
+    const [totalTrainings, subscription] = await Promise.all([
+      this.repository.countByPersonal(data.personal_id),
+      this.usersService.getSubscriptionLimits(data.personal_id),
+    ]);
+    if (totalTrainings >= subscription.max_training) {
+      const resource = subscription.max_training === 1 ? 'treino' : 'treinos';
+      throw new BadRequestException(`Limite de ${subscription.max_training} ${resource} do plano ${subscription.name} atingido.`);
+    }
     const created = await this.repository.create(this.normalizeStudent(data));
     return TrainingFactory.create(created)
   }

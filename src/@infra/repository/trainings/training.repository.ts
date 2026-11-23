@@ -39,6 +39,10 @@ export default class TrainingsRepository {
     return await this.model.find({ student_id, show_to_student: true });
   }
 
+  async countByPersonal(personal_id: string): Promise<number> {
+    return await this.model.countDocuments({ personal_id }).exec();
+  }
+
   async create(data: CreateTrainingInput): Promise<Training> {
     const trainingCreated = new this.model({
       _id: new ObjectId(),

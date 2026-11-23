@@ -13,6 +13,11 @@ export class SubscriptionRepository {
     return await this.model.find().exec();
   }
 
+  async findById(id: string): Promise<Subscription | null> {
+    if (!mongoose.Types.ObjectId.isValid(id)) return null;
+    return await this.model.findById(new mongoose.Types.ObjectId(id)).exec();
+  }
+
   async create(data: SubscriptionDto): Promise<Subscription> {
     const document = new this.model({
       _id: new ObjectId(),

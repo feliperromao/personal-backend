@@ -1,18 +1,22 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsInt, IsNumber, IsString, Min } from 'class-validator';
 
 export class CreateSubscriptionInput {
   @IsString()
   name: string;
 
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   max_students: number;
 
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   max_exercises: number;
 
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   max_training: number;
 
   @IsNumber()
+  @Min(0)
   price_brl: number;
 }

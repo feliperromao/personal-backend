@@ -1,10 +1,12 @@
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { SubscriptionRepository } from '@src/@infra/repository/subscriptions/subscription.repository';
+import { UserRepository } from '@src/@infra/repository/user/user.repository';
 import { SubscriptionsService } from './subscriptions.service';
 
 describe('SubscriptionsService', () => {
   let service: SubscriptionsService;
   let repository: jest.Mocked<Pick<SubscriptionRepository, 'findAll' | 'create' | 'update' | 'delete'>>;
+  let userRepository: jest.Mocked<Pick<UserRepository, 'countPersonalsBySubscription'>>;
 
   beforeEach(() => {
     repository = {
@@ -13,7 +15,11 @@ describe('SubscriptionsService', () => {
       update: jest.fn(),
       delete: jest.fn(),
     };
-    service = new SubscriptionsService(repository as unknown as SubscriptionRepository);
+    userRepository = { countPersonalsBySubscription: jest.fn().mockResolvedValue(0) };
+    service = new SubscriptionsService(
+      repository as unknown as SubscriptionRepository,
+      userRepository as unknown as UserRepository,
+    );
   });
 
   it('should be defined', () => {
@@ -37,5 +43,13 @@ describe('SubscriptionsService', () => {
   it('deletes a subscription plan', async () => {
     repository.delete.mockResolvedValue({} as never);
     await expect(service.delete('plan-1')).resolves.toBeUndefined();
+  });
+
+  it('does not delete a subscription plan that is in use', async () => {
+    userRepository.countPersonalsBySubscription.mockResolvedValue(2);
+    await expect(service.delete('plan-1')).rejects.toThrow(
+      new ConflictException('Este plano está associado a um ou mais personals e não pode ser excluído.'),
+    );
+    expect(repository.delete).not.toHaveBeenCalled();
   });
 });

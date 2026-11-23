@@ -7,6 +7,7 @@ export class User {
   type: string;
   phone: string;
   personal_id?: string;
+  subscription_id?: string;
 }
 
 export class Student extends User {

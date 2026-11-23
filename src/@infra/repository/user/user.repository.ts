@@ -55,6 +55,13 @@ export class UserRepository {
     return await this.model.countDocuments({ personal_id: personal_id }).exec();
   }
 
+  async countPersonalsBySubscription(subscription_id: string): Promise<number> {
+    return await this.model.countDocuments({
+      type: USER_TYPE.PERSONAL,
+      subscription_id,
+    }).exec();
+  }
+
   async getByPersonal(personal_id: string, search: string, page: number, limit: number) {
     const skip = (page - 1) * limit;
     const fieldsSelection = {password: false };

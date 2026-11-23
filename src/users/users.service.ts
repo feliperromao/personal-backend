@@ -7,11 +7,17 @@ import { PersonalDto } from './dtos/personal.dto';
 import { USER_TYPE } from '@src/users/enum/user.type';
 import { User } from './user.entity';
 import { StudentFactory } from './user.factory';
+import { SubscriptionRepository } from '@src/@infra/repository/subscriptions/subscription.repository';
+import { Subscription } from '@src/subscriptions/subscription.entity';
+import SubscriptionFactory from '@src/subscriptions/subscription.factory';
 
 @Injectable()
 export class UsersService {
   private encrypt: EncryptPassword;
-  constructor(private readonly repository: UserRepository) {
+  constructor(
+    private readonly repository: UserRepository,
+    private readonly subscriptionRepository: SubscriptionRepository,
+  ) {
     this.encrypt = new Bcrypt();
   }
 
@@ -35,8 +41,9 @@ export class UsersService {
     return result; 
   }
 
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<User | null> {
     const model = await this.repository.findById(id);
+    if (!model) return null;
     return StudentFactory.create(model);
   }
 
@@ -52,10 +59,11 @@ export class UsersService {
     }
 
     const totalStudents = await this.repository.countStudents(data.personal_id);
-    const maxStudents: number | 5 = process.env.MAX_STUDENTS ? Number(process.env.MAX_STUDENTS) : 5;
+    const subscription = await this.getSubscriptionLimits(data.personal_id);
 
-    if (totalStudents >= maxStudents) {
-      throw new BadRequestException("Maximo de alunos cadastrados");
+    if (totalStudents >= subscription.max_students) {
+      const resource = subscription.max_students === 1 ? 'aluno' : 'alunos';
+      throw new BadRequestException(`Limite de ${subscription.max_students} ${resource} do plano ${subscription.name} atingido.`);
     }
 
     return await this.createUser({
@@ -65,6 +73,7 @@ export class UsersService {
   }
 
   async createPersonal(data: PersonalDto): Promise<User> {
+    await this.ensureSubscriptionExists(data.subscription_id);
     return await this.createUser({
       ...data,
       type: USER_TYPE.PERSONAL
@@ -77,8 +86,25 @@ export class UsersService {
   }
 
   async updatePersonal(userData): Promise<User> {
+    await this.ensureSubscriptionExists(userData.subscription_id);
     userData.type = USER_TYPE.PERSONAL;
     return this.updateUser(userData)
+  }
+
+  async getSubscriptionLimits(personalId: string): Promise<Subscription> {
+    const personal = await this.findById(personalId);
+    if (!personal || personal.type !== USER_TYPE.PERSONAL) {
+      throw new BadRequestException('Personal não encontrado.');
+    }
+    if (!personal.subscription_id) {
+      throw new BadRequestException('Personal não possui plano de assinatura associado.');
+    }
+
+    const document = await this.subscriptionRepository.findById(personal.subscription_id);
+    if (!document) {
+      throw new BadRequestException('O plano associado ao personal não existe mais.');
+    }
+    return SubscriptionFactory.create(document);
   }
 
   async deleteUsers(id: string): Promise<void> {
@@ -102,6 +128,13 @@ export class UsersService {
       password: await this.encrypt.encrypt(data.password)
     });
     return StudentFactory.create(userCrated);
+  }
+
+  private async ensureSubscriptionExists(subscriptionId: string): Promise<void> {
+    const subscription = await this.subscriptionRepository.findById(subscriptionId);
+    if (!subscription) {
+      throw new BadRequestException('Plano de assinatura inválido.');
+    }
   }
 
   private async updateUser(userData): Promise<User> {

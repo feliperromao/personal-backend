@@ -19,6 +19,9 @@ export class User extends Document {
   @Prop({ required: false })
   personal_id?: string;
 
+  @Prop({ required: false })
+  subscription_id?: string;
+
   @Prop({ required: true })
   type: USER_TYPE;
 

@@ -4,4 +4,5 @@ export interface PersonalDto {
   password: string;
   phone: string;
   blocked?: boolean;
+  subscription_id: string;
 }

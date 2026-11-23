@@ -53,6 +53,10 @@ export class ExerciseRepository {
     return await this.model.find({ "personal_id": "" })
   }
 
+  async countByPersonal(personal_id: string): Promise<number> {
+    return await this.model.countDocuments({ personal_id }).exec();
+  }
+
   async delete(id: string): Promise<void> {
     await this.model.findByIdAndDelete(new mongoose.Types.ObjectId(id)).exec();
   }

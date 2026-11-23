@@ -9,6 +9,7 @@ import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import { PersonalDto } from './dtos/personal.dto';
 import { StudentDto } from './dtos/student.dto';
 import { USER_TYPE } from './enum/user.type';
+import { SubscriptionRepository } from '@src/@infra/repository/subscriptions/subscription.repository';
 
 let mongod: MongoMemoryServer;
 let mongoConnection;
@@ -46,6 +47,19 @@ describe('UsersService', () => {
         UsersService,
         UserRepository,
         {
+          provide: SubscriptionRepository,
+          useValue: {
+            findById: jest.fn().mockResolvedValue({
+              _id: { toString: () => '507f1f77bcf86cd799439011' },
+              name: 'Teste',
+              max_students: 100,
+              max_exercises: 100,
+              max_training: 100,
+              price_brl: 49.9,
+            }),
+          },
+        },
+        {
           provide: CACHE_MANAGER,
           useValue: {
             get: jest.fn(),
@@ -57,6 +71,14 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
+    jest.spyOn(service, 'getSubscriptionLimits').mockResolvedValue({
+      id: '507f1f77bcf86cd799439011',
+      name: 'Teste',
+      max_students: 100,
+      max_exercises: 100,
+      max_training: 100,
+      price_brl: 49.9,
+    });
     repository = module.get<UserRepository>(UserRepository);
     model = module.get<Model<User>>(getModelToken('User'));
   });
@@ -133,6 +155,7 @@ describe('UsersService', () => {
       email: 'personal_example@example.com',
       password: 'XXXXXXXX',
       phone: "55859999999",
+      subscription_id: '507f1f77bcf86cd799439011',
     });
     const userFound = await service.findById(user.id);
     expect(userFound.id).toBe(user.id);
@@ -153,7 +176,7 @@ describe('UsersService', () => {
       personal_id: 'XXXXXXXXX',
       birthdate: "2024-01-01",
       blocked: false,
-      confirm_password: "XXXXXXXXX",
+      confirm_password: "XXXXXXXX",
       height: 190,
       weight: 60,
       phone: "55859999999",
@@ -176,7 +199,7 @@ describe('UsersService', () => {
       personal_id: "6719412f0024cd0c7a0bb59d",
       birthdate: "2024-01-01",
       blocked: false,
-      confirm_password: "XXXXXXXXX",
+      confirm_password: "XXXXXXXX",
       height: 190,
       weight: 60,
       phone: "55859999999",
@@ -196,6 +219,7 @@ const personlData = (): PersonalDto => {
     email: 'personal@example.com',
     password: 'XXXXXXXX',
     phone: "55859999999",
+    subscription_id: '507f1f77bcf86cd799439011',
   };
 }
 
@@ -207,7 +231,7 @@ const studentData = (): StudentDto => {
     personal_id: 'XXXXXXXXX',
     birthdate: "2024-01-01",
     blocked: false,
-    confirm_password: "XXXXXXXXX",
+    confirm_password: "XXXXXXXX",
     height: 190,
     weight: 60,
     phone: "55859999999",

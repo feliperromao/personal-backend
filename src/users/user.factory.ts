@@ -11,6 +11,7 @@ export class StudentFactory {
       blocked: model.blocked,
       type: model.type,
       personal_id: model.personal_id ?? null,
+      subscription_id: model.subscription_id ?? null,
       birthdate: model.birthdate,
       height: model.height,
       phone: model.phone,

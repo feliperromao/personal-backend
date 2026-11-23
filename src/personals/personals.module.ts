@@ -1,19 +1,13 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '../@infra/models/user/mongoose/user.model';
-import { UserRepository } from '../@infra/repository/user/user.repository';
 import { JwtService } from '@nestjs/jwt';
-import { CacheModule } from '@nestjs/cache-manager';
-import { UsersService } from '@src/users/users.service';
 import { PersonalsController } from './personals.controller';
+import { UsersModule } from '@src/users/users.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    CacheModule.register()
+    UsersModule,
   ],
-  providers: [UsersService, UserRepository, JwtService],
-  exports: [UsersService],
+  providers: [JwtService],
   controllers: [PersonalsController]
 })
 export class PersonalsModule {}

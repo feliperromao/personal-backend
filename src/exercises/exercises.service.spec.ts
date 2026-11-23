@@ -6,6 +6,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Model, connect } from 'mongoose';
 import { Exercise, ExerciseSchema } from '@src/@infra/models/exercise/mongoose/exercise.model';
 import { EXERCISE_TYPE } from './enum/exercise.type';
+import { UsersService } from '@src/users/users.service';
 
 let mongod: MongoMemoryServer;
 let mongoConnection;
@@ -40,6 +41,15 @@ describe('ExercisesService', () => {
       providers: [
         ExercisesService,
         ExerciseRepository,
+        {
+          provide: UsersService,
+          useValue: {
+            getSubscriptionLimits: jest.fn().mockResolvedValue({
+              id: 'plan-1', name: 'Teste', max_students: 100,
+              max_exercises: 100, max_training: 100, price_brl: 49.9,
+            }),
+          },
+        },
       ],
     }).compile();
 

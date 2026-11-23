@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsBoolean, IsEmail, IsMongoId, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreatePersonalDto {
   @IsString()
@@ -18,4 +18,7 @@ export class CreatePersonalDto {
   @IsBoolean()
   @IsOptional()
   blocked?: boolean;
+
+  @IsMongoId()
+  subscription_id: string;
 }
